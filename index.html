@@ -839,7 +839,178 @@ function loadSessions(){
 }
 
 // ══════════════════════════════════════════
-// STATE
+// AIRTABLE SYNC
+// ══════════════════════════════════════════
+const AT_BASE   = 'appXF7hdsIA8Bh8sb';
+const AT_TOKEN  = 'pateK5Pe2sjDaKfyr.71876ef10202b568024e143d3d5b481f76f6219c3b827e769d2243727628a02f';
+const AT_TABLE  = 'Profiles';
+const AT_URL    = `https://api.airtable.com/v0/${AT_BASE}/${encodeURIComponent(AT_TABLE)}`;
+const AT_HEADS  = { 'Authorization': `Bearer ${AT_TOKEN}`, 'Content-Type': 'application/json' };
+const IMGBB_KEY = 'a9f7de661e10b068c6dd6b3e447773eb';
+
+// In-memory cache of all profiles fetched from Airtable: { email -> fields }
+let atProfileCache = {};
+let atRecordIdCache = {}; // email -> airtable record id
+
+// Convert currentUser / profile object → Airtable fields
+function profileToAT(p){
+  return {
+    email:      p.email      || '',
+    name:       p.name       || '',
+    pronouns:   p.pronouns   || '',
+    role:       p.role       || '',
+    location:   p.location   || '',
+    org:        p.org        || '',
+    bio:        p.bio        || '',
+    avColor:    p.avColor    || '',
+    photo:      p.photo      || '',   // URL from ImgBB (not base64)
+    tags:       JSON.stringify(p.tags   || []),
+    isAdmin:    !!p.isAdmin,
+    optinBqm:   !!p.optinBqm,
+    dirConsent: !!p.dirConsent,
+    asks:       p.asks       || '',
+    dirType:    p.dirType    || '',
+    support:    JSON.stringify(p.support || []),
+    focus:      JSON.stringify(p.focus   || []),
+  };
+}
+
+// Convert Airtable record fields → profile object
+function atToProfile(fields){
+  return {
+    email:      fields.email      || '',
+    name:       fields.name       || '',
+    pronouns:   fields.pronouns   || '',
+    role:       fields.role       || '',
+    location:   fields.location   || '',
+    org:        fields.org        || '',
+    bio:        fields.bio        || '',
+    avColor:    fields.avColor    || '#d06339',
+    photo:      fields.photo      || null,
+    tags:       safeParseJSON(fields.tags,   []),
+    isAdmin:    !!fields.isAdmin,
+    optinBqm:   !!fields.optinBqm,
+    dirConsent: !!fields.dirConsent,
+    asks:       fields.asks       || '',
+    dirType:    fields.dirType    || '',
+    support:    safeParseJSON(fields.support, []),
+    focus:      safeParseJSON(fields.focus,   []),
+  };
+}
+
+function safeParseJSON(str, fallback){
+  try { return str ? JSON.parse(str) : fallback; } catch(e){ return fallback; }
+}
+
+// Fetch all profiles from Airtable and populate cache
+async function atFetchAllProfiles(){
+  try {
+    let records = [];
+    let offset  = '';
+    do {
+      const url = AT_URL + '?pageSize=100' + (offset ? `&offset=${offset}` : '');
+      const res = await fetch(url, { headers: AT_HEADS });
+      if(!res.ok) throw new Error('AT fetch failed: ' + res.status);
+      const data = await res.json();
+      records = records.concat(data.records || []);
+      offset  = data.offset || '';
+    } while(offset);
+
+    atProfileCache  = {};
+    atRecordIdCache = {};
+    records.forEach(r => {
+      const email = (r.fields.email || '').toLowerCase().trim();
+      if(email){
+        atProfileCache[email]  = atToProfile(r.fields);
+        atRecordIdCache[email] = r.id;
+      }
+    });
+    return true;
+  } catch(e){
+    console.warn('Airtable fetch error:', e);
+    return false;
+  }
+}
+
+// Push the current user's profile to Airtable (create or update)
+async function atSaveProfile(user){
+  if(!user.email) return;
+  const email = user.email.toLowerCase().trim();
+  const fields = profileToAT(user);
+  try {
+    const existingId = atRecordIdCache[email];
+    if(existingId){
+      // PATCH update
+      await fetch(`${AT_URL}/${existingId}`, {
+        method: 'PATCH',
+        headers: AT_HEADS,
+        body: JSON.stringify({ fields })
+      });
+    } else {
+      // POST create
+      const res = await fetch(AT_URL, {
+        method: 'POST',
+        headers: AT_HEADS,
+        body: JSON.stringify({ fields })
+      });
+      if(res.ok){
+        const data = await res.json();
+        atRecordIdCache[email] = data.id;
+      }
+    }
+    atProfileCache[email] = atToProfile(fields);
+  } catch(e){
+    console.warn('Airtable save error:', e);
+  }
+}
+
+// Merge Airtable profiles into the roster + localStorage caches
+// so rebuildPeople() picks them up correctly
+function atMergeIntoLocal(){
+  Object.entries(atProfileCache).forEach(([email, profile]) => {
+    // Update or create roster entry
+    let rEntry = userRoster.find(u => (u.email||'').toLowerCase() === email);
+    if(!rEntry){
+      // Add to roster if they're an approved email
+      const approvedEmail = APPROVED_EMAILS.find(e => e.toLowerCase() === email);
+      if(approvedEmail){
+        rEntry = {name: profile.name||approvedEmail, email: approvedEmail, tags: profile.tags||[], avColor: profile.avColor||'#d06339'};
+        userRoster.push(rEntry);
+      }
+    }
+    if(rEntry){
+      // Update roster fields from Airtable
+      if(profile.name)    rEntry.name    = profile.name;
+      if(profile.avColor) rEntry.avColor = profile.avColor;
+      if(profile.tags && profile.tags.length) rEntry.tags = profile.tags;
+      rEntry.pronouns = profile.pronouns;
+      rEntry.role     = profile.role;
+      rEntry.bio      = profile.bio;
+      rEntry.org      = profile.org;
+    }
+    // Also write to localStorage so it's available offline
+    const existing = loadUserData(email) || {};
+    saveUserData({ ...existing, ...profile, email });
+  });
+  saveRoster(userRoster);
+}
+
+// Show/hide a subtle sync indicator
+function showSyncStatus(msg, isError){
+  let el = document.getElementById('at-sync-status');
+  if(!el){
+    el = document.createElement('div');
+    el.id = 'at-sync-status';
+    el.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:rgba(30,20,15,.95);border:1px solid var(--border);border-radius:20px;padding:.35rem .9rem;font-size:.7rem;font-family:"Inter",sans-serif;color:rgba(255,255,255,.7);z-index:9999;transition:opacity .4s;pointer-events:none';
+    document.body.appendChild(el);
+  }
+  el.textContent = msg;
+  el.style.color  = isError ? '#ff8a80' : 'rgba(255,255,255,.7)';
+  el.style.opacity = '1';
+  clearTimeout(el._hide);
+  el._hide = setTimeout(() => el.style.opacity = '0', 3000);
+}
+
 // ══════════════════════════════════════════
 let currentUser = {email:'', name:'', role:'', pronouns:'', location:'', org:'', bio:'', link:'', isAdmin:false, avColor:'#d06339', avColorIdx:0, optinEvent:true, optinBqm:false, optinNone:false, photo:null, asks:'', dirType:'', support:[], focus:[], dirConsent:false};
 const avColors = ['#d06339','#d3895c','#7a5a9a','#4a7a5a','#5a6a9a','#9a5a6a'];
@@ -948,6 +1119,12 @@ function restoreSession(saved){
   }
   switchPage('home');
   announce('Welcome back ' + currentUser.name.split(' ')[0]);
+  // Sync from Airtable in background
+  showSyncStatus('⟳ Syncing profiles…');
+  atFetchAllProfiles().then(ok=>{
+    if(ok){ atMergeIntoLocal(); renderPeople(); showSyncStatus('✓ Profiles synced'); }
+    else { showSyncStatus('Offline — showing cached profiles', true); }
+  });
 }
 
 function applyUserToUI(){
@@ -1041,6 +1218,11 @@ function tryLogin(){
         if(currentUser.isAdmin) addDeleteBtnsToSeedPosts();
         switchPage('home');
         announce('Welcome back ' + currentUser.name.split(' ')[0]);
+        showSyncStatus('⟳ Syncing profiles…');
+        atFetchAllProfiles().then(ok=>{
+          if(ok){ atMergeIntoLocal(); renderPeople(); showSyncStatus('✓ Profiles synced'); }
+          else { showSyncStatus('Offline — showing cached profiles', true); }
+        });
       } else {
         // New user — show onboarding
         document.getElementById('onboarding-overlay').classList.add('open');
@@ -1086,6 +1268,12 @@ function completeOnboarding(){
   // After onboarding complete, mark visited so next login shows "welcome back"
   currentUser._hasVisited = true;
   saveUserData(currentUser);
+  // Push initial profile to Airtable and pull everyone else
+  atSaveProfile(currentUser);
+  showSyncStatus('⟳ Syncing profiles…');
+  atFetchAllProfiles().then(ok=>{
+    if(ok){ atMergeIntoLocal(); renderPeople(); showSyncStatus('✓ Profiles synced'); }
+  });
 }
 
 // ══════════════════════════════════════════
@@ -1125,9 +1313,11 @@ function switchPage(p){
   if(p==='notifications') document.getElementById('notif-dot').style.display='none';
   if(p==='agenda') injectSessionSpeakers();
   if(p==='profile'){
-    // Re-seed the country picker from currentUser.location
     const countries = (currentUser.location||'').split('/').map(s=>s.trim()).filter(Boolean);
     setSelectedCountries(countries);
+  }
+  if(p==='people'){
+    atFetchAllProfiles().then(ok=>{ if(ok){ atMergeIntoLocal(); renderPeople(); } });
   }
   window.scrollTo(0,0);
 }
@@ -1494,6 +1684,12 @@ function getStoredPosts(){
 }
 
 // Ensure posts are initialised (seed on first ever load)
+function audienceLabel(aud){
+  if(!aud || aud==='all') return 'Everyone';
+  if(aud==='event-team')  return 'Event Team';
+  return aud; // 'Speaker', 'Facilitator' etc — use as-is
+}
+
 function initPosts(){
   const existing = getStoredPosts();
   if(!existing) savePosts(SEED_POSTS);
@@ -1811,22 +2007,66 @@ function toggleDirectoryFields(forceShow){
   document.getElementById('directory-extra-fields').style.display = show ? 'block' : 'none';
 }
 
+async function uploadToImgBB(file){
+  // Resize image client-side first to keep uploads fast (max 800px)
+  const bitmap = await createImageBitmap(file);
+  const maxDim = 800;
+  const scale  = Math.min(1, maxDim / Math.max(bitmap.width, bitmap.height));
+  const w = Math.round(bitmap.width  * scale);
+  const h = Math.round(bitmap.height * scale);
+  const canvas = document.createElement('canvas');
+  canvas.width = w; canvas.height = h;
+  canvas.getContext('2d').drawImage(bitmap, 0, 0, w, h);
+  // Convert to base64 for ImgBB (they accept base64 in the API)
+  const base64 = canvas.toDataURL('image/jpeg', 0.85).split(',')[1];
+  const form = new FormData();
+  form.append('key', IMGBB_KEY);
+  form.append('image', base64);
+  const res  = await fetch('https://api.imgbb.com/1/upload', { method:'POST', body:form });
+  const data = await res.json();
+  if(!data.success) throw new Error(data.error?.message || 'ImgBB upload failed');
+  return data.data.url; // permanent direct image URL
+}
+
+function setPhotoInUI(url){
+  const profAv = document.getElementById('profile-av-display');
+  profAv.innerHTML = `<img src="${url}" alt="Profile photo">`;
+  profAv.style.background = 'transparent';
+  const hdrAv = document.getElementById('hdr-initials');
+  hdrAv.innerHTML = `<img src="${url}" alt="Profile photo">`;
+  hdrAv.style.background = 'transparent';
+  document.getElementById('cycle-color-btn').style.display = 'none';
+}
+
 function handlePhotoUpload(input){
   const file = input.files[0]; if(!file) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    currentUser.photo = e.target.result;
-    const profAv = document.getElementById('profile-av-display');
-    profAv.innerHTML = `<img src="${currentUser.photo}" alt="Profile photo">`;
-    profAv.style.background = 'transparent';
-    const hdrAv = document.getElementById('hdr-initials');
-    hdrAv.innerHTML = `<img src="${currentUser.photo}" alt="Profile photo">`;
-    hdrAv.style.background = 'transparent';
-    document.getElementById('cycle-color-btn').style.display = 'none';
+  // Show immediate local preview while uploading
+  const localUrl = URL.createObjectURL(file);
+  setPhotoInUI(localUrl);
+  showSyncStatus('⟳ Uploading photo…');
+  uploadToImgBB(file).then(url => {
+    currentUser.photo = url;           // permanent ImgBB URL
+    setPhotoInUI(url);
+    URL.revokeObjectURL(localUrl);
     saveUserData(currentUser);
     renderPeople();
-  };
-  reader.readAsDataURL(file);
+    showSyncStatus('⟳ Saving profile…');
+    return atSaveProfile(currentUser);
+  }).then(()=>{
+    showSyncStatus('✓ Photo uploaded & shared');
+  }).catch(err => {
+    console.error('Photo upload failed:', err);
+    showSyncStatus('Photo upload failed — try a smaller image', true);
+    // Fall back to base64 locally so the user still sees their photo
+    const reader = new FileReader();
+    reader.onload = e => {
+      currentUser.photo = e.target.result;
+      setPhotoInUI(currentUser.photo);
+      saveUserData(currentUser);
+      renderPeople();
+    };
+    reader.readAsDataURL(file);
+  });
 }
 
 function saveProfile(){
@@ -1872,6 +2112,9 @@ function saveProfile(){
   const s=document.getElementById('profile-success');s.style.display='block';
   announce('Profile saved.');
   setTimeout(()=>s.style.display='none',3500);
+  // Push to Airtable so others see the update
+  showSyncStatus('⟳ Saving to shared profiles…');
+  atSaveProfile(currentUser).then(()=>showSyncStatus('✓ Profile saved & shared'));
 }
 
 // Directory opt-in mutual exclusion
