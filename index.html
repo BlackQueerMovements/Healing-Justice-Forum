@@ -258,7 +258,7 @@ select.field-input option{background:var(--mid)}
         <span style="padding-left:px">galck</span><span style="color:#888;font-size:.8rem;font-family:'Inter',sans-serif;font-weight:400">+</span>
       </span>
     </div>
-    <div class="login-tagline">Nairobi, Kenya · 3–6 May 2026</div>
+    <div class="login-tagline">Nairobi, Kenya · 3rd - 6th May 2026</div>
   </div>
   <div class="login-card">
     <label class="lbl" for="email-in">Your email address</label>
@@ -676,6 +676,55 @@ function tryLogin(){
   renderDirectory('','all');
 }
 document.getElementById('email-in').addEventListener('keydown',e=>{if(e.key==='Enter')tryLogin();});
+  // 1. Define your approved email list
+const APPROVED_EMAILS = [
+  "s.rodriguez9@lse.ac.uk",
+  "chantelle.young186@gmail.com",
+  "blackqueermovements@gmail.com"
+];
+
+function tryLogin() {
+  const emailInput = document.getElementById('email-in');
+  const userEmail = emailInput.value.trim().toLowerCase();
+  const loginButton = document.querySelector('.login-btn');
+  
+  // Basic validation
+  if (!userEmail || !userEmail.includes('@')) {
+    alert("Please enter a valid email address.");
+    return;
+  }
+
+  // Check if email is in the approved list
+  if (APPROVED_EMAILS.includes(userEmail)) {
+    // SUCCESS: Proceed to App
+    showSuccess(loginButton);
+  } else {
+    // FAIL: Access Denied
+    showError();
+  }
+}
+
+function showSuccess(button) {
+  button.innerHTML = "✓ Link Sent!";
+  button.style.background = "#4caf50"; // Green for success
+  
+  setTimeout(() => {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    // If you have a nav bar, show it here too
+    const nav = document.getElementById('main-nav');
+    if (nav) nav.style.display = 'flex';
+  }, 1000);
+}
+
+function showError() {
+  const lockMsg = document.querySelector('.login-lock');
+  lockMsg.textContent = "❌ Email not found on attendee list. Please contact the team.";
+  lockMsg.style.color = "#ff5252"; // Red for error
+  
+  // Accessibility: Announce the error to screen readers
+  lockMsg.setAttribute('role', 'alert');
+}
 
 // ── NAV ──
 const navMap={home:0,agenda:1,people:2,resources:3,noticeboard:4,profile:5};
