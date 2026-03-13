@@ -14,13 +14,10 @@
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{font-family:'Inter',sans-serif;background:var(--black);color:var(--white);min-height:100vh;overflow-x:hidden; line-height:1.4;}
 
-/* UI UTILS */
-.hero-cta-btn {
-  background: none; border: 1px solid var(--border); color: var(--copper);
-  padding: 0.4rem 0.8rem; border-radius: 20px; font-size: 0.75rem;
-  cursor: pointer; margin-bottom: 1rem; display: inline-flex; align-items: center; gap: 5px;
-}
-.save-btn{width:100%; background:var(--rust); border:none; border-radius:10px; padding:.95rem; color:white; font-weight:700; text-transform:uppercase; cursor:pointer; font-family:'Syne';}
+/* UI COMPONENTS */
+.hero-cta-btn { background: none; border: 1px solid var(--border); color: var(--copper); padding: 0.4rem 0.8rem; border-radius: 20px; font-size: 0.75rem; cursor: pointer; margin-bottom: 1rem; display: inline-flex; align-items: center; gap: 5px; }
+.save-btn{width:100%; background:var(--rust); border:none; border-radius:10px; padding:.95rem; color:white; font-weight:700; text-transform:uppercase; cursor:pointer; font-family:'Syne'; margin-top:10px;}
+.admin-badge { background: #42a5f5; color: white; font-size: 0.6rem; padding: 2px 6px; border-radius: 4px; margin-left: 5px; text-transform: uppercase; }
 
 /* LOGIN */
 #login-screen{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem 1.5rem;}
@@ -37,7 +34,7 @@ body{font-family:'Inter',sans-serif;background:var(--black);color:var(--white);m
 .hdr-main{font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;}
 .hdr-avatar{width:34px;height:34px;background:var(--rust);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.8rem;}
 
-/* NAVIGATION */
+/* NAV */
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--off-black);border-top:1px solid var(--border);display:none;z-index:100}
 .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:.55rem .2rem;background:none;border:none;cursor:pointer;color:white;opacity:0.5;}
 .nav-item.active{opacity:1;color:var(--copper);}
@@ -49,20 +46,19 @@ body{font-family:'Inter',sans-serif;background:var(--black);color:var(--white);m
 @keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
 .page-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1.9rem;margin-bottom:1.4rem}
 
-/* CARDS & LISTS */
+/* CARDS & MODERATION */
 .home-hero{background:var(--dark-card);border:1px solid var(--border);border-radius:20px;padding:1.75rem 1.5rem;margin-bottom:1rem;}
-.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
-.quick-card{background:var(--dark-card);border:1px solid var(--border);border-radius:16px;padding:1.1rem;cursor:pointer;}
-.qc-label{font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;}
-.person-card, .res-card, .faq-item {background:var(--dark-card); border:1px solid var(--border); border-radius:14px; padding:1rem; margin-bottom:0.75rem; width:100%; text-align:left; color:white;}
-.p-badge {font-size:0.6rem; text-transform:uppercase; padding:2px 8px; border-radius:10px; background:rgba(211,137,92,0.2); color:var(--copper); margin-top:5px; display:inline-block;}
+.notice-post{background:var(--dark-card); border:1px solid var(--border); border-radius:14px; padding:1rem; margin-bottom:1rem; position:relative;}
+.delete-btn{position:absolute; top:10px; right:10px; background:rgba(255,0,0,0.2); color:#ff5252; border:none; padding:4px 8px; border-radius:6px; font-size:0.6rem; cursor:pointer;}
 
-/* ONBOARDING */
+.p-badge {font-size:0.6rem; text-transform:uppercase; padding:2px 8px; border-radius:10px; background:rgba(211,137,92,0.2); color:var(--copper); margin-right:5px; margin-top:5px; display:inline-block;}
+
+/* NOTIFICATION DOT */
+.notif-dot{width:8px; height:8px; background:var(--amber); border-radius:50%; position:absolute; top:10px; right:20%; display:none;}
+
+/* MODAL */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:3000;align-items:center;justify-content:center;backdrop-filter:blur(10px)}
-.modal-sheet{background:var(--off-black);border:1px solid var(--border);border-radius:24px;padding:2rem;width:90%;max-width:400px;}
-.field-group{margin-bottom:1.25rem}
-.field-label{font-size:.67rem; text-transform:uppercase; margin-bottom:.45rem; display:block}
-.field-input{width:100%; background:var(--mid); border:1px solid var(--border); border-radius:10px; padding:.75rem .9rem; color:var(--white); outline:none;}
+.modal-sheet{background:var(--off-black);border:1px solid var(--border);border-radius:24px;padding:2rem;width:90%;max-width:400px; max-height:80vh; overflow-y:auto;}
 </style>
 </head>
 <body>
@@ -73,9 +69,9 @@ body{font-family:'Inter',sans-serif;background:var(--black);color:var(--white);m
   <div class="login-tagline">Nairobi, Kenya · 3rd - 6th May 2026</div>
   
   <div class="login-card">
-    <label class="field-label">Attendee Email</label>
+    <label style="font-size: 0.7rem; text-transform: uppercase; margin-bottom: 0.5rem; display: block;">Attendee Email</label>
     <input class="login-input" id="email-in" type="email" placeholder="you@example.com">
-    <button class="login-btn" onclick="tryLogin()">Login to the event app</button>
+    <button class="login-btn" onclick="tryLogin()" style="width:100%; background:var(--rust); border:none; border-radius:10px; padding:.95rem; color:white; font-weight:700; cursor:pointer; text-transform:uppercase;">Login to the event app</button>
     <div id="login-status" class="status-msg">🔒 Access restricted to confirmed attendees</div>
   </div>
 </div>
@@ -83,23 +79,24 @@ body{font-family:'Inter',sans-serif;background:var(--black);color:var(--white);m
 <div id="app">
   <header class="app-header">
     <div>
-      <div class="hdr-main">Healing Justice Forum</div>
-      <div id="hdr-date-sub" class="hdr-sub" style="font-size:0.6rem; color:var(--copper);">3rd - 6th May 2026</div>
+      <div class="hdr-main">Healing Justice Forum <span id="admin-indicator" style="display:none;" class="admin-badge">Admin</span></div>
+      <div class="hdr-sub" style="font-size:0.6rem; color:var(--copper);">3rd - 6th May 2026</div>
     </div>
-    <button style="background:none; border:none;" onclick="switchPage('profile')">
-      <div class="hdr-avatar" id="hdr-initials">??</div>
-    </button>
+    <div style="display:flex; align-items:center; gap:15px;">
+      <button onclick="switchPage('notifications')" style="background:none; border:none; position:relative; font-size:1.2rem; cursor:pointer;">🔔<div id="notif-badge" class="notif-dot"></div></button>
+      <button style="background:none; border:none;" onclick="switchPage('profile')">
+        <div class="hdr-avatar" id="hdr-initials">??</div>
+      </button>
+    </div>
   </header>
 
   <div id="onboarding-overlay" class="modal-overlay">
     <div class="modal-sheet">
-      <h2 class="page-title" style="font-size:1.3rem; text-align:center;">Welcome to the Healing Justice Forum event app!</h2>
-      <p style="text-align:center; font-size:0.85rem; margin-bottom:1.5rem; opacity:0.8;">
-        Please enter your details to set up your event profile.
-      </p>
-      <div class="field-group"><label class="field-label">Display Name</label><input class="field-input" id="onboard-name" type="text" placeholder="Your name"></div>
-      <div class="field-group"><label class="field-label">Role</label><input class="field-input" id="onboard-role" type="text" placeholder="e.g. Healer"></div>
-      <button class="save-btn" onclick="completeOnboarding()">Start Exploring</button>
+      <h2 style="font-family:'Syne'; font-size:1.3rem; text-align:center; margin-bottom:1rem;">Welcome to the Healing Justice Forum!</h2>
+      <p style="text-align:center; font-size:0.85rem; margin-bottom:1.5rem; opacity:0.8;">Set up your profile to join the conversation.</p>
+      <input class="field-input" id="onboard-name" style="width:100%; margin-bottom:1rem; padding:10px; background:var(--mid); border:none; border-radius:8px; color:white;" type="text" placeholder="Full Name">
+      <input class="field-input" id="onboard-role" style="width:100%; margin-bottom:1rem; padding:10px; background:var(--mid); border:none; border-radius:8px; color:white;" type="text" placeholder="Role (e.g. Practitioner)">
+      <button class="save-btn" onclick="completeOnboarding()">Join Forum</button>
     </div>
   </div>
 
@@ -107,52 +104,38 @@ body{font-family:'Inter',sans-serif;background:var(--black);color:var(--white);m
     <div class="home-hero">
       <p id="hero-welcome-text" style="font-size: 0.9rem; margin-bottom: 0.5rem; font-weight: 600;"></p>
       <button onclick="switchPage('profile')" class="hero-cta-btn">Complete your profile ›</button>
-      <h2 class="hero-title" style="font-size: 2.2rem; line-height: 1;">Healing<br><em>Justice</em><br>Forum</h2>
-      <div style="font-size:0.85rem; margin-top:1rem;">📍 Nairobi, Kenya<br>🗓 3rd - 6th May 2026</div>
+      <h2 class="hero-title" style="font-family:'Syne'; font-size: 2.2rem; line-height: 1;">Healing<br><em>Justice</em><br>Forum</h2>
+      <div style="font-size:0.85rem; margin-top:1rem; opacity:0.8;">📍 Nairobi, Kenya · 3rd - 6th May 2026</div>
     </div>
-    <div class="quick-grid">
-      <div class="quick-card" onclick="switchPage('agenda')"><div class="qc-label">Agenda</div><div class="qc-sub">3rd - 6th May</div></div>
-      <div class="quick-card" onclick="switchPage('people')"><div class="qc-label">People</div><div class="qc-sub">Directory</div></div>
-      <div class="quick-card" onclick="switchPage('resources')"><div class="qc-label">Resources</div><div class="qc-sub">Materials</div></div>
-      <div class="quick-card" onclick="switchPage('faqs')"><div class="qc-label">FAQs</div><div class="qc-sub">Info</div></div>
+    <div id="latest-notif-banner" style="display:none; background:var(--rust); padding:10px; border-radius:12px; margin-bottom:15px; cursor:pointer;" onclick="switchPage('notifications')">
+        <strong>New Alert:</strong> <span id="banner-text"></span>
     </div>
-  </div>
-
-  <div id="page-agenda" class="page">
-    <h1 class="page-title">Programme</h1>
-    <div class="filter-row">
-      <button class="filter-btn active" onclick="switchDay(0)">Sun 3 May</button>
-      <button class="filter-btn" onclick="switchDay(1)">Mon 4 May</button>
-      <button class="filter-btn" onclick="switchDay(2)">Tue 5 May</button>
-    </div>
-    <div id="agenda-content">
-      <div class="res-card"><strong>Sun 3rd May:</strong> Arrivals & Settling in. Informal meet in the evening.</div>
-      <div class="res-card"><strong>Mon 4th May:</strong> Trust building, introductions, and welcome dinner (19:00).</div>
-      <div class="res-card"><strong>Tue 5th May:</strong> Full Symposium: Opening ritual, Collective Mapping, Storytelling, and Playbook Building.</div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <button class="quick-card" onclick="switchPage('agenda')"><div class="qc-label">Agenda</div></button>
+        <button class="quick-card" onclick="switchPage('board')"><div class="qc-label">Notice Board</div></button>
     </div>
   </div>
 
-  <div id="page-people" class="page">
-    <h1 class="page-title">People</h1>
-    <input class="search-bar" type="search" placeholder="Search by name..." oninput="searchPeople(this.value)">
-    <div id="people-list">
-      <div class="person-card" data-name="Chantelle M."><strong>Chantelle M.</strong><br><span class="p-badge">BQM Team</span><br><small>London, UK</small></div>
-      <div class="person-card" data-name="Whitney O."><strong>Whitney O.</strong><br><span class="p-badge">BQM Team</span><br><small>London, UK</small></div>
-      <div class="person-card" data-name="Eve K."><strong>Eve K.</strong><br><span class="p-badge">galck+</span><br><small>Nairobi, Kenya</small></div>
-      <div class="person-card" data-name="Tay B."><strong>Tay B.</strong><br><span class="p-badge">Attendee</span><br><small>Caribbean</small></div>
+  <div id="page-board" class="page">
+    <h1 class="page-title">Notice Board</h1>
+    <div style="background:var(--dark-card); padding:15px; border-radius:15px; margin-bottom:20px;">
+        <textarea id="post-input" placeholder="Post an update..." style="width:100%; background:none; border:none; color:white; resize:none; outline:none;"></textarea>
+        <button class="save-btn" style="margin-top:10px;" onclick="addPost()">Post to Board</button>
     </div>
+    <div id="posts-container">
+        </div>
   </div>
 
-  <div id="page-resources" class="page">
-    <h1 class="page-title">Resources</h1>
-    <div class="res-card"><strong>Research:</strong> Reconceptualizing Gender Transitioning<br><small>Dr SM Rodriguez</small></div>
-    <div class="res-card"><strong>Toolkit:</strong> Inclusive Futures Factsheet 2025<br><small>CAISO</small></div>
-  </div>
-
-  <div id="page-faqs" class="page">
-    <h1 class="page-title">FAQs</h1>
-    <div class="faq-item"><strong>Is accommodation covered?</strong><br>Yes, all accommodation for 3rd - 6th May is fully provided.</div>
-    <div class="faq-item"><strong>Is the venue safe?</strong><br>Yes. Arranged via queer-informed travel agents and galck+ Nairobi.</div>
+  <div id="page-notifications" class="page">
+    <h1 class="page-title">Notifications</h1>
+    <div id="admin-notif-tool" style="display:none; background:var(--mid); padding:15px; border-radius:15px; margin-bottom:20px;">
+        <p style="font-size:0.7rem; text-transform:uppercase; margin-bottom:5px;">Admin: Send Alert to all</p>
+        <input id="admin-notif-input" type="text" placeholder="e.g. Lunch is now served in the courtyard" class="field-input" style="width:100%; margin-bottom:10px;">
+        <button class="save-btn" onclick="sendGlobalNotif()">Blast Notification</button>
+    </div>
+    <div id="notif-list">
+        <p style="text-align:center; opacity:0.5;">No recent notifications.</p>
+    </div>
   </div>
 
   <div id="page-profile" class="page">
@@ -160,31 +143,60 @@ body{font-family:'Inter',sans-serif;background:var(--black);color:var(--white);m
     <div style="text-align:center; margin-bottom:1.5rem;">
       <div class="hdr-avatar" id="profile-av-display" style="width:70px; height:70px; margin: 0 auto; font-size:1.5rem;">??</div>
     </div>
-    <div class="field-group"><label class="field-label">Display name</label><input class="field-input" id="pf-name" type="text"></div>
-    <div class="field-group"><label class="field-label">Role</label><input class="field-input" id="pf-role" type="text"></div>
-    <button class="save-btn" onclick="saveProfile()">Save Profile</button>
+    <div id="admin-access-btn" style="display:none; margin-bottom:20px;">
+        <button class="save-btn" style="background:#42a5f5;" onclick="toggleAdminModal()">Open Admin User Manager</button>
+    </div>
+    <input class="field-input" id="pf-name" style="width:100%; margin-bottom:10px;" type="text" placeholder="Display Name">
+    <input class="field-input" id="pf-role" style="width:100%; margin-bottom:20px;" type="text" placeholder="Role">
+    <button class="save-btn" onclick="saveProfile()">Update Profile</button>
+  </div>
+
+  <div id="admin-modal" class="modal-overlay">
+      <div class="modal-sheet">
+          <h2 style="font-family:'Syne'; margin-bottom:10px;">User Tag Manager</h2>
+          <input type="text" placeholder="Search user to tag..." class="field-input" style="width:100%; margin-bottom:15px;" oninput="searchAdminUsers(this.value)">
+          <div id="admin-user-list">
+              </div>
+          <button class="save-btn" style="background:grey;" onclick="toggleAdminModal()">Close</button>
+      </div>
   </div>
 
   <nav class="bottom-nav" id="main-nav">
     <button class="nav-item active" onclick="switchPage('home')"><span class="nav-icon">🏠</span><div class="nav-label">Home</div></button>
-    <button class="nav-item" onclick="switchPage('agenda')"><span class="nav-icon">📅</span><div class="nav-label">Agenda</div></button>
-    <button class="nav-item" onclick="switchPage('people')"><span class="nav-icon">👥</span><div class="nav-label">People</div></button>
-    <button class="nav-item" onclick="switchPage('resources')"><span class="nav-icon">📚</span><div class="nav-label">Resources</div></button>
-    <button class="nav-item" onclick="switchPage('faqs')"><span class="nav-icon">🙋</span><div class="nav-label">FAQs</div></button>
+    <button class="nav-item" onclick="switchPage('board')"><span class="nav-icon">📌</span><div class="nav-label">Board</div></button>
     <button class="nav-item" onclick="switchPage('profile')"><span class="nav-icon">👤</span><div class="nav-label">Profile</div></button>
   </nav>
 </div>
 
 <script>
 const APPROVED = ["s.rodriguez9@lse.ac.uk", "samar.rod18@gmail.com", "chantelle.young186@gmail.com", "blackqueermovements@gmail.com"];
+const ADMIN_EMAIL = "chantelle.young186@gmail.com";
+let currentUser = { email: "", name: "", role: "", isAdmin: false, tags: [] };
+
+// Dummy Data for Admin Demo
+let allUsers = [
+    { name: "Chantelle M.", email: "chantelle.young186@gmail.com", tags: ["BQM Team"] },
+    { name: "Eve K.", email: "eve@galck.org", tags: ["galck+ team"] },
+    { name: "Dr SM Rodriguez", email: "s.rodriguez9@lse.ac.uk", tags: ["Speaker"] }
+];
 
 function tryLogin() {
   const e = document.getElementById('email-in').value.trim().toLowerCase();
   const status = document.getElementById('login-status');
   
   if (APPROVED.includes(e)) {
+    currentUser.email = e;
+    currentUser.isAdmin = (e === ADMIN_EMAIL);
+    
     status.textContent = "✓ You're in!";
     status.style.color = "#4caf50";
+    
+    if(currentUser.isAdmin) {
+        document.getElementById('admin-indicator').style.display = 'inline-block';
+        document.getElementById('admin-access-btn').style.display = 'block';
+        document.getElementById('admin-notif-tool').style.display = 'block';
+    }
+
     setTimeout(() => {
       document.getElementById('login-screen').style.display = 'none';
       document.getElementById('app').style.display = 'block';
@@ -199,15 +211,16 @@ function tryLogin() {
 function completeOnboarding() {
   const n = document.getElementById('onboard-name').value.trim();
   const r = document.getElementById('onboard-role').value.trim();
-  if (!n) return alert("Please enter your name");
+  if (!n) return alert("Name required");
+  
+  currentUser.name = n;
+  currentUser.role = r;
   
   const ini = n.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
   document.getElementById('hdr-initials').textContent = ini;
   document.getElementById('profile-av-display').textContent = ini;
   document.getElementById('pf-name').value = n;
   document.getElementById('pf-role').value = r;
-  
-  // Update Hero UI
   document.getElementById('hero-welcome-text').textContent = `Welcome, ${n.split(' ')[0]}`;
   
   document.getElementById('onboarding-overlay').style.display = 'none';
@@ -218,33 +231,78 @@ function completeOnboarding() {
 function switchPage(p) {
   document.querySelectorAll('.page').forEach(pg => pg.classList.remove('active'));
   document.getElementById('page-' + p).classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(ni => {
-    ni.classList.remove('active');
-    if(ni.querySelector('.nav-label').textContent.toLowerCase() === p) ni.classList.add('active');
-  });
+  document.querySelectorAll('.nav-item').forEach(ni => ni.classList.remove('active'));
+  if(p === 'notifications') document.getElementById('notif-badge').style.display = 'none';
   window.scrollTo(0,0);
 }
 
-function saveProfile() {
-  const n = document.getElementById('pf-name').value.trim();
-  if (n) {
-    const ini = n.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
-    document.getElementById('hdr-initials').textContent = ini;
-    document.getElementById('profile-av-display').textContent = ini;
-    document.getElementById('hero-welcome-text').textContent = `Welcome, ${n.split(' ')[0]}`;
-  }
-  alert("Profile Saved!");
+// BOARD SYSTEM
+function addPost() {
+    const txt = document.getElementById('post-input').value;
+    if(!txt) return;
+    const container = document.getElementById('posts-container');
+    const post = document.createElement('div');
+    post.className = 'notice-post';
+    post.innerHTML = `
+        <div style="font-weight:700; font-size:0.8rem;">${currentUser.name}</div>
+        <div style="font-size:0.9rem; margin-top:5px;">${txt}</div>
+        ${currentUser.isAdmin ? `<button class="delete-btn" onclick="this.parentElement.remove()">Delete</button>` : ''}
+    `;
+    container.prepend(post);
+    document.getElementById('post-input').value = "";
 }
 
-function searchPeople(val) {
-  const q = val.toLowerCase();
-  document.querySelectorAll('.person-card').forEach(c => {
-    c.style.display = c.dataset.name.toLowerCase().includes(q) ? 'block' : 'none';
-  });
+// NOTIFICATION SYSTEM
+function sendGlobalNotif() {
+    const txt = document.getElementById('admin-notif-input').value;
+    if(!txt) return;
+    const list = document.getElementById('notif-list');
+    if(list.querySelector('p')) list.innerHTML = "";
+    
+    const item = document.createElement('div');
+    item.style = "background:var(--dark-card); padding:10px; border-radius:10px; margin-bottom:10px; border-left:4px solid var(--amber);";
+    item.innerHTML = `<div style="font-size:0.8rem;">${txt}</div><div style="font-size:0.6rem; opacity:0.5; margin-top:5px;">Just now</div>`;
+    list.prepend(item);
+    
+    // Alert UI
+    document.getElementById('notif-badge').style.display = 'block';
+    document.getElementById('latest-notif-banner').style.display = 'block';
+    document.getElementById('banner-text').textContent = txt;
+    document.getElementById('admin-notif-input').value = "";
 }
 
-function switchDay(idx) {
-  document.querySelectorAll('.filter-btn').forEach((b, i) => b.classList.toggle('active', i === idx));
+// ADMIN MODAL LOGIC
+function toggleAdminModal() {
+    const modal = document.getElementById('admin-modal');
+    modal.style.display = (modal.style.display === 'flex') ? 'none' : 'flex';
+    if(modal.style.display === 'flex') renderAdminUsers();
+}
+
+function renderAdminUsers() {
+    const container = document.getElementById('admin-user-list');
+    container.innerHTML = allUsers.map(u => `
+        <div style="padding:10px; border-bottom:1px solid var(--border);">
+            <strong>${u.name}</strong><br>
+            <div id="tags-${u.name}">${u.tags.map(t => `<span class="p-badge">${t}</span>`).join('')}</div>
+            <select style="margin-top:5px; background:var(--mid); color:white; border:none; padding:3px;" onchange="addTagToUser('${u.name}', this.value)">
+                <option value="">+ Add Tag</option>
+                <option>Speaker</option>
+                <option>Attendee</option>
+                <option>BQM Team</option>
+                <option>galck+ Team</option>
+                <option>Facilitator</option>
+            </select>
+        </div>
+    `).join('');
+}
+
+function addTagToUser(userName, tag) {
+    if(!tag) return;
+    const user = allUsers.find(u => u.name === userName);
+    if(!user.tags.includes(tag)) {
+        user.tags.push(tag);
+        renderAdminUsers();
+    }
 }
 </script>
 </body>
