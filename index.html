@@ -265,7 +265,7 @@ select.field-input option{background:var(--mid)}
     <input class="login-input" id="email-in" type="email" placeholder="you@example.com">
     <button class="login-btn" onclick="tryLogin()">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-      Send me a secure login link
+      Login to the event app
     </button>
     <p class="login-lock">🔒 Access restricted to confirmed attendees only</p>
   </div>
@@ -705,7 +705,7 @@ function tryLogin() {
 }
 
 function showSuccess(button) {
-  button.innerHTML = "✓ Link Sent!";
+  button.innerHTML = "✓ You're in!";
   button.style.background = "#4caf50"; // Green for success
   
   setTimeout(() => {
