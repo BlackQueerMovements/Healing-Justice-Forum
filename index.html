@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Healing Justice Forum — BQM + GALCK+</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --copper:#d3895c;--rust:#d06339;--amber:#f7b168;
+  --black:#000;--off-black:#111;--dark-card:#1a1a1a;--mid:#2a2a2a;--mid2:#333;
+  --white:#fff;--border:rgba(211,137,92,0.18);--muted:rgba(255,255,255,0.45);--text:rgba(255,255,255,0.9);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Inter',sans-serif;background:var(--black);color:var(--text);min-height:100vh;overflow-x:hidden}
+
+/* LOGIN */
+#login-screen{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--black);padding:2rem 1.5rem;position:relative;overflow:hidden}
+.login-bg-chevs{position:absolute;bottom:-30px;left:50%;transform:translateX(-50%);display:flex;opacity:0.07;pointer-events:none}
+.login-wordmark{font-family:'Syne',sans-serif;font-weight:800;font-size:2.5rem;line-height:0.92;color:var(--white);text-align:center;letter-spacing:-0.01em}
+.login-wordmark em{color:var(--copper);font-style:normal;display:block}
+.collab-bar{display:flex;align-items:center;justify-content:center;gap:0.75rem;margin:1rem 0 0.4rem;flex-wrap:wrap}
+.collab-label{font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted)}
+.login-tagline{font-size:0.78rem;color:var(--muted);text-align:center;font-style:italic;margin-bottom:2.5rem}
+.login-card{width:100%;max-width:400px;background:var(--dark-card);border:1px solid var(--border);border-radius:20px;padding:2rem 1.75rem;margin-bottom:1.5rem}
+.lbl{font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem;display:block}
+.login-input{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(211,137,92,0.25);border-radius:10px;padding:.85rem 1rem;color:var(--white);font-family:'Inter',sans-serif;font-size:.95rem;outline:none;transition:border-color .2s;margin-bottom:1.25rem}
+.login-input::placeholder{color:rgba(255,255,255,0.2)}
+.login-input:focus{border-color:var(--copper)}
+.login-btn{width:100%;background:var(--rust);border:none;border-radius:10px;padding:.95rem;color:var(--white);font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;letter-spacing:.07em;text-transform:uppercase;cursor:pointer;transition:background .15s,transform .1s;margin-bottom:1rem;display:flex;align-items:center;justify-content:center;gap:.5rem}
+.login-btn:hover{background:#b8562e;transform:translateY(-1px)}
+.login-lock{font-size:.7rem;color:rgba(255,255,255,.22);text-align:center}
+
+/* APP */
+#app{display:none;min-height:100vh;padding-bottom:5.5rem}
+.app-header{background:var(--black);border-bottom:1px solid var(--border);padding:.75rem 1.1rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.header-left{display:flex;align-items:center;gap:.65rem}
+.hdr-chevs{display:flex;gap:3px;flex-shrink:0}
+.hdr-main{font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;color:var(--white)}
+.hdr-sub{font-size:.56rem;letter-spacing:.09em;text-transform:uppercase;color:var(--copper);display:flex;align-items:center;gap:4px;margin-top:1px}
+.hdr-avatar-btn{background:none;border:none;cursor:pointer}
+.hdr-avatar{width:34px;height:34px;background:var(--rust);border-radius:50%;font-family:'Syne',sans-serif;font-weight:700;font-size:.75rem;color:var(--white);display:flex;align-items:center;justify-content:center}
+
+/* NAV */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--off-black);border-top:1px solid var(--border);display:flex;z-index:100}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:.55rem .2rem;background:none;border:none;cursor:pointer;gap:.2rem}
+.nav-icon{font-size:1.15rem;opacity:.4}
+.nav-label{font-size:.55rem;text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,.3)}
+.nav-item.active .nav-icon{opacity:1}
+.nav-item.active .nav-label{color:var(--copper)}
+
+/* PAGES */
+.page{display:none;padding:1.25rem;animation:fadeIn .25s ease}
+.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.page-eyebrow{font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--copper);margin-bottom:.3rem}
+.page-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1.9rem;color:var(--white);line-height:1;margin-bottom:1.4rem}
+
+/* HOME */
+.home-hero{background:var(--dark-card);border:1px solid var(--border);border-radius:20px;padding:1.75rem 1.5rem;margin-bottom:1rem;position:relative;overflow:hidden}
+.hero-bg{position:absolute;right:-12px;bottom:-18px;display:flex;gap:5px;opacity:.06;pointer-events:none}
+.hero-eyebrow{font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--amber);margin-bottom:.6rem}
+.hero-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1.65rem;color:var(--white);line-height:1.05;margin-bottom:.4rem}
+.hero-title em{color:var(--copper);font-style:normal}
+.hero-meta{font-size:.8rem;color:var(--muted);margin-bottom:.9rem;display:flex;flex-direction:column;gap:.15rem}
+.hero-collab{display:flex;align-items:center;gap:.6rem;margin-bottom:1rem;padding:.6rem .75rem;background:rgba(255,255,255,.04);border-radius:10px;border:1px solid rgba(255,255,255,.07)}
+.hero-collab-label{font-size:.58rem;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.3);margin-right:.25rem}
+.hero-tags{display:flex;flex-wrap:wrap;gap:.4rem}
+.tag{font-size:.66rem;padding:.2rem .6rem;border:1px solid rgba(211,137,92,.25);border-radius:20px;color:rgba(255,255,255,.45)}
+.notice-banner{background:var(--rust);border-radius:14px;padding:.9rem 1rem;display:flex;align-items:center;gap:.75rem;cursor:pointer;margin-bottom:1rem;transition:transform .15s}
+.notice-banner:hover{transform:translateX(3px)}
+.nb-label{font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.6)}
+.nb-text{font-size:.88rem;font-weight:500;color:var(--white);margin-top:.1rem}
+.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.quick-card{background:var(--dark-card);border:1px solid var(--border);border-radius:16px;padding:1.1rem;cursor:pointer;transition:transform .15s,border-color .15s}
+.quick-card:hover{transform:translateY(-2px);border-color:var(--copper)}
+.qc-icon{font-size:1.4rem;margin-bottom:.5rem}
+.qc-label{font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;color:var(--white)}
+.qc-sub{font-size:.7rem;color:var(--muted);margin-top:.15rem}
+
+/* AGENDA */
+.day-tabs{display:flex;gap:.4rem;margin-bottom:1.25rem;overflow-x:auto;padding-bottom:2px}
+.day-tab{flex-shrink:0;background:none;border:1px solid var(--border);border-radius:8px;padding:.45rem .9rem;font-family:'Inter',sans-serif;font-size:.74rem;font-weight:500;color:var(--muted);cursor:pointer;transition:all .15s}
+.day-tab.active{background:var(--rust);border-color:var(--rust);color:var(--white)}
+.agenda-day{display:none}.agenda-day.active{display:block}
+.agenda-day-hdr{border-left:3px solid var(--copper);padding:.9rem 1rem;background:var(--dark-card);border-radius:0 12px 12px 0;margin-bottom:1rem}
+.adh-name{font-family:'Syne',sans-serif;font-weight:700;font-size:1.05rem;color:var(--white)}
+.adh-theme{font-size:.73rem;color:var(--muted);margin-top:.2rem}
+.s-row{display:flex;gap:.65rem;margin-bottom:.75rem;align-items:flex-start}
+.s-time{flex-shrink:0;width:48px;font-size:.67rem;font-weight:600;color:var(--copper);padding-top:.85rem;text-align:right}
+.s-line{flex-shrink:0;width:1px;background:rgba(211,137,92,.2);align-self:stretch;position:relative;margin:0 .2rem}
+.s-line::before{content:'';position:absolute;top:.85rem;left:50%;transform:translateX(-50%);width:7px;height:7px;background:var(--rust);border-radius:50%;border:2px solid var(--black)}
+.s-card{flex:1;background:var(--dark-card);border:1px solid var(--border);border-radius:12px;padding:.8rem .9rem}
+.s-type{font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;font-weight:600;color:var(--amber);margin-bottom:.2rem}
+.s-title{font-size:.9rem;font-weight:500;color:var(--white)}
+.s-desc{font-size:.76rem;color:var(--muted);margin-top:.25rem;line-height:1.45}
+
+/* PEOPLE */
+.search-bar{width:100%;background:var(--dark-card);border:1px solid var(--border);border-radius:10px;padding:.7rem 1rem;color:var(--white);font-family:'Inter',sans-serif;font-size:.88rem;outline:none;margin-bottom:1rem;transition:border-color .2s}
+.search-bar:focus{border-color:var(--copper)}.search-bar::placeholder{color:rgba(255,255,255,.2)}
+.filter-row{display:flex;gap:.4rem;margin-bottom:1.25rem;overflow-x:auto}
+.filter-btn{flex-shrink:0;background:none;border:1px solid var(--border);border-radius:20px;padding:.3rem .85rem;font-family:'Inter',sans-serif;font-size:.72rem;color:var(--muted);cursor:pointer;transition:all .15s}
+.filter-btn.active{background:var(--rust);border-color:var(--rust);color:white}
+.people-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.person-card{background:var(--dark-card);border:1px solid var(--border);border-radius:16px;padding:1rem .9rem;cursor:pointer;text-align:center;transition:transform .15s,border-color .15s}
+.person-card:hover{transform:translateY(-2px);border-color:var(--copper)}
+.p-av{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;color:white;margin:0 auto .6rem}
+.p-name{font-family:'Syne',sans-serif;font-weight:700;font-size:.82rem;color:var(--white)}
+.p-role{font-size:.7rem;color:var(--muted);margin-top:.15rem;line-height:1.3}
+.p-loc{font-size:.65rem;color:var(--copper);margin-top:.3rem}
+.p-badge{display:inline-block;font-size:.58rem;text-transform:uppercase;letter-spacing:.07em;padding:.12rem .5rem;border-radius:20px;margin-top:.4rem}
+.b-speaker{background:rgba(208,99,57,.2);color:var(--amber)}
+.b-attendee{background:rgba(211,137,92,.12);color:var(--copper)}
+.b-team{background:rgba(247,177,104,.15);color:var(--amber)}
+
+/* SEC LABEL */
+.sec-lbl{font-size:.62rem;text-transform:uppercase;letter-spacing:.14em;color:var(--copper);margin-bottom:.75rem;margin-top:1.5rem;display:flex;align-items:center;gap:.5rem}
+.sec-lbl:first-child{margin-top:0}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* DIRECTORY */
+.dir-search-row{display:flex;gap:.5rem;margin-bottom:.75rem}
+.dir-search{flex:1;background:var(--dark-card);border:1px solid var(--border);border-radius:10px;padding:.65rem .9rem;color:var(--white);font-family:'Inter',sans-serif;font-size:.85rem;outline:none;transition:border-color .2s}
+.dir-search:focus{border-color:var(--copper)}.dir-search::placeholder{color:rgba(255,255,255,.2)}
+.dir-filter-row{display:flex;gap:.4rem;margin-bottom:1.1rem;overflow-x:auto;padding-bottom:2px}
+.dir-card{background:var(--dark-card);border:1px solid var(--border);border-radius:14px;padding:1rem;margin-bottom:.65rem;cursor:pointer;transition:border-color .15s,transform .15s}
+.dir-card:hover{border-color:var(--copper);transform:translateX(2px)}
+.dir-card-header{display:flex;align-items:flex-start;gap:.75rem;margin-bottom:.5rem}
+.dir-av{width:42px;height:42px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:.9rem;color:white}
+.dir-name{font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;color:var(--white);line-height:1.2}
+.dir-type{font-size:.68rem;color:var(--muted);margin-top:.15rem}
+.dir-country{font-size:.68rem;color:var(--copper);margin-top:.1rem}
+.dir-bio{font-size:.78rem;color:rgba(255,255,255,.6);line-height:1.5;margin-bottom:.6rem;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.dir-focus-tags{display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:.5rem}
+.dir-focus-tag{font-size:.6rem;padding:.15rem .5rem;border-radius:20px;background:rgba(211,137,92,.1);border:1px solid rgba(211,137,92,.2);color:rgba(255,255,255,.55)}
+.dir-links{display:flex;gap:.5rem;flex-wrap:wrap}
+.dir-link{font-size:.7rem;color:var(--copper);text-decoration:none;border:1px solid rgba(211,137,92,.25);border-radius:20px;padding:.2rem .6rem;transition:border-color .15s}
+.dir-link:hover{border-color:var(--copper)}
+.dir-support{font-size:.72rem;color:var(--muted);line-height:1.4;margin-top:.5rem;padding-top:.5rem;border-top:1px solid var(--border)}
+.dir-support strong{color:rgba(255,255,255,.6);font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;display:block;margin-bottom:.2rem}
+.dir-empty{text-align:center;padding:2rem;color:var(--muted);font-size:.85rem}
+
+/* RESOURCES */
+.res-search{width:100%;background:var(--dark-card);border:1px solid var(--border);border-radius:10px;padding:.65rem .9rem;color:var(--white);font-family:'Inter',sans-serif;font-size:.85rem;outline:none;margin-bottom:.75rem;transition:border-color .2s}
+.res-search:focus{border-color:var(--copper)}.res-search::placeholder{color:rgba(255,255,255,.2)}
+.res-filter-row{display:flex;gap:.4rem;margin-bottom:1rem;overflow-x:auto;padding-bottom:2px}
+.res-card{background:var(--dark-card);border:1px solid var(--border);border-radius:14px;padding:1rem;margin-bottom:.65rem;transition:border-color .15s}
+.res-card:hover{border-color:var(--copper)}
+.res-card-header{display:flex;align-items:flex-start;gap:.75rem;margin-bottom:.5rem}
+.res-icon{width:40px;height:40px;flex-shrink:0;background:var(--mid);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem}
+.res-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;color:var(--white);line-height:1.25}
+.res-submitter{font-size:.68rem;color:var(--muted);margin-top:.15rem}
+.res-type-chip{display:inline-block;font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;padding:.15rem .55rem;border-radius:20px;background:rgba(208,99,57,.18);color:var(--amber);margin-bottom:.5rem}
+.res-desc{font-size:.78rem;color:rgba(255,255,255,.6);line-height:1.5;margin-bottom:.6rem;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.res-focus-tags{display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:.6rem}
+.res-focus-tag{font-size:.6rem;padding:.15rem .5rem;border-radius:20px;background:rgba(211,137,92,.1);border:1px solid rgba(211,137,92,.2);color:rgba(255,255,255,.55)}
+.res-link-btn{display:inline-flex;align-items:center;gap:.35rem;font-size:.75rem;color:var(--copper);text-decoration:none;border:1px solid rgba(211,137,92,.3);border-radius:20px;padding:.3rem .75rem;transition:border-color .15s}
+.res-link-btn:hover{border-color:var(--copper)}
+
+/* SHARE RESOURCE FORM */
+.share-toggle-btn{width:100%;background:none;border:1px dashed rgba(211,137,92,.35);border-radius:12px;padding:1rem;font-family:'Inter',sans-serif;font-size:.85rem;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.5rem;transition:border-color .2s,color .2s;margin-top:.5rem}
+.share-toggle-btn:hover{border-color:var(--copper);color:var(--copper)}
+.share-resource-form{background:var(--dark-card);border:1px dashed rgba(211,137,92,.35);border-radius:14px;padding:1.25rem;margin-top:.5rem}
+.share-resource-form.hidden{display:none}
+.field-group{margin-bottom:1rem}
+.field-label{font-size:.67rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:.45rem;display:block}
+.field-input{width:100%;background:var(--mid);border:1px solid var(--border);border-radius:10px;padding:.75rem .9rem;color:var(--white);font-family:'Inter',sans-serif;font-size:.9rem;outline:none;transition:border-color .2s}
+.field-input:focus{border-color:var(--copper)}.field-input::placeholder{color:rgba(255,255,255,.2)}
+textarea.field-input{resize:vertical;min-height:80px;line-height:1.5}
+select.field-input{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23d3895c' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .9rem center}
+select.field-input option{background:var(--mid)}
+.perm-block{background:var(--mid);border-radius:12px;padding:1rem;margin-top:.75rem}
+.perm-title{font-size:.72rem;font-weight:600;color:var(--white);margin-bottom:.6rem}
+.perm-option{display:flex;align-items:flex-start;gap:.65rem;margin-bottom:.55rem;cursor:pointer}
+.perm-option:last-child{margin-bottom:0}
+.perm-check{width:18px;height:18px;flex-shrink:0;border:1.5px solid rgba(211,137,92,.5);border-radius:5px;background:none;appearance:none;-webkit-appearance:none;cursor:pointer;position:relative;margin-top:1px;transition:background .15s}
+.perm-check:checked{background:var(--rust);border-color:var(--rust)}
+.perm-check:checked::after{content:'✓';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:.65rem;color:white;font-weight:700}
+.perm-text{font-size:.78rem;color:rgba(255,255,255,.75);line-height:1.4}
+.perm-text strong{color:var(--white);display:block;font-size:.8rem;margin-bottom:.1rem}
+.save-btn{width:100%;background:var(--rust);border:none;border-radius:10px;padding:.85rem;color:white;font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:background .15s,transform .1s;margin-top:.75rem}
+.save-btn:hover{background:#b8562e;transform:translateY(-1px)}
+.save-success{display:none;text-align:center;font-size:.82rem;color:var(--amber);margin-top:.75rem;padding:.6rem;background:rgba(247,177,104,.1);border-radius:8px}
+
+/* NOTICE BOARD */
+.compose{background:var(--dark-card);border:1px solid var(--border);border-radius:14px;padding:1rem;margin-bottom:1.25rem}
+.compose-ta{width:100%;background:none;border:none;font-family:'Inter',sans-serif;font-size:.88rem;color:var(--white);resize:none;outline:none;min-height:64px}
+.compose-ta::placeholder{color:rgba(255,255,255,.2)}
+.compose-foot{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);padding-top:.6rem;margin-top:.5rem}
+.compose-note{font-size:.68rem;color:rgba(255,255,255,.2)}
+.post-btn{background:var(--rust);border:none;border-radius:8px;padding:.4rem 1rem;color:white;font-family:'Syne',sans-serif;font-weight:700;font-size:.76rem;letter-spacing:.05em;text-transform:uppercase;cursor:pointer}
+.post-btn:hover{background:#b8562e}
+.notice-post{background:var(--dark-card);border:1px solid var(--border);border-radius:14px;padding:1rem;margin-bottom:.65rem}
+.n-head{display:flex;align-items:center;gap:.6rem;margin-bottom:.6rem}
+.n-av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:.7rem;color:white;flex-shrink:0}
+.n-poster{font-size:.82rem;font-weight:600;color:var(--white)}
+.n-time{font-size:.68rem;color:var(--muted)}
+.team-chip{font-size:.58rem;text-transform:uppercase;background:rgba(208,99,57,.2);color:var(--amber);padding:.1rem .45rem;border-radius:10px}
+.n-text{font-size:.85rem;color:rgba(255,255,255,.8);line-height:1.55}
+
+/* FAQs */
+.faq-item{background:var(--dark-card);border:1px solid var(--border);border-radius:12px;margin-bottom:.5rem;overflow:hidden}
+.faq-q{width:100%;background:none;border:none;padding:.9rem 1rem;text-align:left;font-family:'Inter',sans-serif;font-size:.88rem;font-weight:500;color:var(--white);cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:.5rem}
+.faq-chev{flex-shrink:0;font-size:.7rem;color:var(--copper);transition:transform .2s}
+.faq-item.open .faq-chev{transform:rotate(180deg)}
+.faq-a{display:none;padding:.75rem 1rem .9rem;font-size:.82rem;color:var(--muted);line-height:1.6;border-top:1px solid var(--border)}
+.faq-item.open .faq-a{display:block}
+
+/* PROFILE */
+.profile-avatar-area{display:flex;flex-direction:column;align-items:center;margin-bottom:1.5rem}
+.profile-av-large{width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:1.8rem;color:white;margin-bottom:.75rem;background:var(--rust)}
+.profile-av-edit{font-size:.75rem;color:var(--copper);cursor:pointer;background:none;border:1px solid rgba(211,137,92,.3);border-radius:20px;padding:.3rem .8rem;font-family:'Inter',sans-serif}
+.optin-card{background:var(--dark-card);border:1px solid var(--border);border-radius:14px;padding:1.1rem;margin-bottom:1rem}
+.optin-card-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;color:var(--white);margin-bottom:.35rem}
+.optin-card-desc{font-size:.78rem;color:var(--muted);line-height:1.5;margin-bottom:.9rem}
+.optin-option{display:flex;align-items:flex-start;gap:.65rem;margin-bottom:.6rem;cursor:pointer}
+.optin-option:last-child{margin-bottom:0}
+.optin-check{width:18px;height:18px;flex-shrink:0;border:1.5px solid rgba(211,137,92,.5);border-radius:5px;background:none;appearance:none;-webkit-appearance:none;cursor:pointer;position:relative;margin-top:2px;transition:background .15s}
+.optin-check:checked{background:var(--rust);border-color:var(--rust)}
+.optin-check:checked::after{content:'✓';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:.65rem;color:white;font-weight:700}
+.optin-text{font-size:.8rem;color:rgba(255,255,255,.75);line-height:1.4}
+.optin-text strong{color:var(--white);display:block;font-size:.82rem;margin-bottom:.1rem}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:200;align-items:flex-end;backdrop-filter:blur(6px)}
+.modal-overlay.open{display:flex}
+.modal-sheet{background:var(--off-black);border:1px solid var(--border);border-radius:24px 24px 0 0;padding:1.5rem;width:100%;max-height:85vh;overflow-y:auto;animation:slideUp .3s ease}
+@keyframes slideUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-close{display:block;margin-left:auto;background:var(--mid);border:none;width:30px;height:30px;border-radius:50%;color:var(--muted);font-size:.9rem;cursor:pointer;margin-bottom:1.25rem}
+.m-av{width:66px;height:66px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;color:white;margin:0 auto 1rem}
+.m-name{font-family:'Syne',sans-serif;font-weight:800;font-size:1.4rem;text-align:center;color:var(--white)}
+.m-role{font-size:.8rem;color:var(--muted);text-align:center;margin-top:.3rem}
+.m-loc{font-size:.75rem;color:var(--copper);text-align:center;margin-top:.2rem}
+.m-pro{font-size:.72rem;color:var(--muted);text-align:center;font-style:italic;margin-top:.15rem}
+.m-bio{font-size:.85rem;color:rgba(255,255,255,.65);line-height:1.65;margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--border)}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-bg-chevs">
+    <svg width="90" height="100" viewBox="0 0 24 28" fill="none"><path d="M4 2L20 14L4 26" stroke="#d3895c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <svg width="90" height="100" viewBox="0 0 24 28" fill="none"><path d="M4 2L20 14L4 26" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <svg width="90" height="100" viewBox="0 0 24 28" fill="none"><path d="M4 2L20 14L4 26" stroke="#d06339" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <svg width="90" height="100" viewBox="0 0 24 28" fill="none"><path d="M4 2L20 14L4 26" stroke="#d3895c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+  <div style="text-align:center;margin-bottom:2rem;position:relative">
+    <div style="display:flex;justify-content:center;gap:5px;margin-bottom:1.25rem">
+      <svg width="22" height="26" viewBox="0 0 24 28" fill="none"><path d="M4 2L20 14L4 26" stroke="#d3895c" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg width="22" height="26" viewBox="0 0 24 28" fill="none"><path d="M4 2L20 14L4 26" stroke="#fff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg width="22" height="26" viewBox="0 0 24 28" fill="none"><path d="M4 2L20 14L4 26" stroke="#d06339" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="login-wordmark">BLACK<em>QUEER</em>MOVEMENTS</div>
+    <div class="collab-bar">
+      <span class="collab-label">in collaboration with</span>
+      <span style="font-family:'Georgia',serif;font-weight:700;font-size:1rem;color:#fff;display:inline-flex;align-items:center;gap:2px;position:relative">
+        <svg style="position:absolute;left:-4px;top:50%;transform:translateY(-50%);pointer-events:none" width="36" height="32" viewBox="0 0 36 32" fill="none">
+          <path d="M8 28 Q12 8 18 4 Q22 16 16 28" stroke="url(#lg1)" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+          <path d="M12 28 Q16 12 20 6 Q26 18 20 28" stroke="url(#lg2)" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <defs>
+            <linearGradient id="lg1" x1="8" y1="28" x2="18" y2="4" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#f7b200"/><stop offset="40%" stop-color="#e040fb"/><stop offset="70%" stop-color="#42a5f5"/><stop offset="100%" stop-color="#26d9b0"/></linearGradient>
+            <linearGradient id="lg2" x1="12" y1="28" x2="20" y2="6" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ff7043"/><stop offset="50%" stop-color="#7e57c2"/><stop offset="100%" stop-color="#26d9b0"/></linearGradient>
+          </defs>
+        </svg>
+        <span style="padding-left:28px">galck</span><span style="color:#888;font-size:.8rem;font-family:'Inter',sans-serif;font-weight:400">+</span>
+      </span>
+    </div>
+    <div class="login-tagline">Nairobi, Kenya · 3–6 May 2026</div>
+  </div>
+  <div class="login-card">
+    <label class="lbl" for="email-in">Your email address</label>
+    <input class="login-input" id="email-in" type="email" placeholder="you@example.com">
+    <button class="login-btn" onclick="tryLogin()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      Send me a secure login link
+    </button>
+    <p class="login-lock">🔒 Access restricted to confirmed attendees only</p>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <header class="app-header">
+    <div class="header-left">
+      <div class="hdr-chevs">
+        <svg width="14" height="17" viewBox="0 0 24 28" fill="none"><path d="M4 2L20 14L4 26" stroke="#d3895c" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg width="14" height="17" viewBox="0 0 24 28" fill="none"><path d="M4 2L20 14L4 26" stroke="#fff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg width="14" height="17" viewBox="0 0 24 28" fill="none"><path d="M4 2L20 14L4 26" stroke="#d06339" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div>
+        <div class="hdr-main">Healing Justice Forum</div>
+        <div class="hdr-sub">BQM <span style="color:rgba(255,255,255,.2)">×</span> <span style="font-family:'Georgia',serif;font-weight:700;color:rgba(255,255,255,.65)">galck<span style="font-size:.5rem;color:#888;font-family:'Inter',sans-serif;font-weight:400">+</span></span> · May 2026</div>
+      </div>
+    </div>
+    <button class="hdr-avatar-btn" onclick="switchPage('profile')">
+      <div class="hdr-avatar" id="hdr-initials">AK</div>
+    </button>
+  </header>
+
+  <!-- HOME -->
+  <div id="page-home" class="page active">
+    <div class="home-hero">
+      <div class="hero-bg">
+        <svg width="75" height="85" viewBox="0 0 24 28" fill="none"><path d="M4 2L20 14L4 26" stroke="#d3895c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg width="75" height="85" viewBox="0 0 24 28" fill="none"><path d="M4 2L20 14L4 26" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <p class="hero-eyebrow">Welcome, <span id="hero-name">Amara</span> ›</p>
+      <h2 class="hero-title">Healing<br><em>Justice</em><br>Forum</h2>
+      <div class="hero-meta"><span>📍 Nairobi, Kenya</span><span>🗓 3–6 May 2026</span></div>
+      <div class="hero-collab">
+        <span style="font-size:.58rem;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.3);margin-right:.25rem">Presented by</span>
+        <span style="font-family:'Syne',sans-serif;font-weight:800;font-size:.78rem;color:var(--copper)">BQM</span>
+        <div style="width:3px;height:3px;background:rgba(255,255,255,.2);border-radius:50%"></div>
+        <span style="font-family:'Georgia',serif;font-weight:700;font-size:.78rem;color:rgba(255,255,255,.75);display:inline-flex;align-items:center;gap:2px">galck<span style="font-size:.62rem;color:#888;font-family:'Inter',sans-serif;font-weight:400">+</span></span>
+      </div>
+      <div class="hero-tags">
+        <span class="tag">~25 participants</span>
+        <span class="tag">Africa · Caribbean · Diaspora</span>
+        <span class="tag">Co-creation</span>
+      </div>
+    </div>
+    <div class="notice-banner" onclick="switchPage('noticeboard')">
+      <span>📌</span>
+      <div><div class="nb-label">Latest from the team</div><div class="nb-text">Visa letter requests — submit by 1 April</div></div>
+      <span style="margin-left:auto;opacity:.7">›</span>
+    </div>
+    <div class="quick-grid">
+      <div class="quick-card" onclick="switchPage('agenda')"><div class="qc-icon">📅</div><div class="qc-label">Agenda</div><div class="qc-sub">3–6 May programme</div></div>
+      <div class="quick-card" onclick="switchPage('people')"><div class="qc-icon">👥</div><div class="qc-label">People</div><div class="qc-sub">Attendees & speakers</div></div>
+      <div class="quick-card" onclick="switchPage('resources')"><div class="qc-icon">📚</div><div class="qc-label">Resources</div><div class="qc-sub">Materials & directory</div></div>
+      <div class="quick-card" onclick="switchPage('faqs')"><div class="qc-icon">🙋</div><div class="qc-label">FAQs</div><div class="qc-sub">Practical info</div></div>
+    </div>
+  </div>
+
+  <!-- AGENDA -->
+  <div id="page-agenda" class="page">
+    <p class="page-eyebrow">Healing Justice Forum</p>
+    <h1 class="page-title">Programme</h1>
+    <div class="day-tabs">
+      <button class="day-tab active" onclick="switchDay(0)">Sun 3 May</button>
+      <button class="day-tab" onclick="switchDay(1)">Mon 4 May</button>
+      <button class="day-tab" onclick="switchDay(2)">Tue 5 May</button>
+      <button class="day-tab" onclick="switchDay(3)">Wed 6 May</button>
+    </div>
+    <div class="agenda-day active">
+      <div class="agenda-day-hdr"><div class="adh-name">Day 0 — Arrival & Rest</div><div class="adh-theme">Travel day. Settle in, recover, acclimatise.</div></div>
+      <div class="s-row"><div class="s-time">All day</div><div class="s-line"></div><div class="s-card"><div class="s-type">Arrival</div><div class="s-title">International participants arrive in Nairobi</div><div class="s-desc">Transfer to accommodation. Time to rest and settle in.</div></div></div>
+      <div class="s-row"><div class="s-time">Eve</div><div class="s-line"></div><div class="s-card"><div class="s-type">Optional</div><div class="s-title">Early arrivals informal meet</div><div class="s-desc">Low-key gathering for anyone who arrives early.</div></div></div>
+    </div>
+    <div class="agenda-day">
+      <div class="agenda-day-hdr"><div class="adh-name">Day 1 — Trust-Building & Introductions</div><div class="adh-theme">Morning rest · Evening welcome dinner</div></div>
+      <div class="s-row"><div class="s-time">AM</div><div class="s-line"></div><div class="s-card"><div class="s-type">Rest</div><div class="s-title">Free morning</div><div class="s-desc">Further arrivals. Personal time to rest and explore Nairobi.</div></div></div>
+      <div class="s-row"><div class="s-time">19:00</div><div class="s-line"></div><div class="s-card"><div class="s-type">Welcome</div><div class="s-title">Welcome dinner & grounding ritual</div><div class="s-desc">Informal social, introductions, grounding. Space to connect before the work begins.</div></div></div>
+    </div>
+    <div class="agenda-day">
+      <div class="agenda-day-hdr"><div class="adh-name">Day 2 — Full Symposium Day</div><div class="adh-theme">Opening ritual · Four session types · Synthesis & close</div></div>
+      <div class="s-row"><div class="s-time">09:00</div><div class="s-line"></div><div class="s-card"><div class="s-type">Ritual</div><div class="s-title">Opening ceremony</div><div class="s-desc">Grounding and opening of the space.</div></div></div>
+      <div class="s-row"><div class="s-time">10:00</div><div class="s-line"></div><div class="s-card"><div class="s-type">Collective Mapping</div><div class="s-title">What healing justice looks like across our contexts</div><div class="s-desc">Participants map what is present and absent in their geographies.</div></div></div>
+      <div class="s-row"><div class="s-time">12:00</div><div class="s-line"></div><div class="s-card"><div class="s-type">Break</div><div class="s-title">Communal lunch</div><div class="s-desc">Rest and nourishment.</div></div></div>
+      <div class="s-row"><div class="s-time">13:30</div><div class="s-line"></div><div class="s-card"><div class="s-type">Listening & Storytelling</div><div class="s-title">Story-based prompts</div><div class="s-desc">When healing work failed or caused harm; a practice that saved your community; what revolution requires of our bodies and spirits.</div></div></div>
+      <div class="s-row"><div class="s-time">15:30</div><div class="s-line"></div><div class="s-card"><div class="s-type">Frameworking</div><div class="s-title">Building the Playbook — core questions</div><div class="s-desc">What is healing justice, why does it matter to Black queer people, how does place shape priorities.</div></div></div>
+      <div class="s-row"><div class="s-time">17:00</div><div class="s-line"></div><div class="s-card"><div class="s-type">Building Blocks</div><div class="s-title">Working groups — Playbook sections</div><div class="s-desc">Definitions, case studies, tools, guidance and questions for the final publication.</div></div></div>
+      <div class="s-row"><div class="s-time">18:30</div><div class="s-line"></div><div class="s-card"><div class="s-type">Synthesis</div><div class="s-title">Closing circle & next steps</div><div class="s-desc">Synthesis, commitments, close.</div></div></div>
+    </div>
+    <div class="agenda-day">
+      <div class="agenda-day-hdr"><div class="adh-name">Day 3 — Departures</div><div class="adh-theme">Safe travels home</div></div>
+      <div class="s-row"><div class="s-time">AM</div><div class="s-line"></div><div class="s-card"><div class="s-type">Debrief</div><div class="s-title">BQM + GALCK+ team debrief</div><div class="s-desc">Internal reflection and next steps for the Playbook.</div></div></div>
+      <div class="s-row"><div class="s-time">All day</div><div class="s-line"></div><div class="s-card"><div class="s-type">Departures</div><div class="s-title">Participants depart Nairobi</div><div class="s-desc">Airport transfers arranged via queer-informed travel agent.</div></div></div>
+    </div>
+  </div>
+
+  <!-- PEOPLE -->
+  <div id="page-people" class="page">
+    <p class="page-eyebrow">Confirmed participants</p>
+    <h1 class="page-title">People</h1>
+    <input class="search-bar" type="text" placeholder="Search by name or location…" oninput="searchPeople(this.value)">
+    <div class="filter-row">
+      <button class="filter-btn active" onclick="filterPeople(this,'all')">All</button>
+      <button class="filter-btn" onclick="filterPeople(this,'speaker')">Speakers</button>
+      <button class="filter-btn" onclick="filterPeople(this,'attendee')">Attendees</button>
+      <button class="filter-btn" onclick="filterPeople(this,'team')">BQM Team</button>
+    </div>
+    <div class="people-grid" id="people-grid">
+      <div class="person-card" data-type="team" data-search="chantelle london" onclick="openPerson('Chantelle M.','Event Lead · BQM','London, UK','she/her','Chantelle leads event operations for the Healing Justice Forum, managing international participant coordination, budget, and logistics across the BQM + GALCK+ partnership.','#d06339',false)">
+        <div class="p-av" style="background:#d06339">CM</div><div class="p-name">Chantelle M.</div><div class="p-role">Event Lead · BQM</div><div class="p-loc">🇬🇧 London, UK</div><span class="p-badge b-team">BQM Team</span>
+      </div>
+      <div class="person-card" data-type="team" data-search="whitney london" onclick="openPerson('Whitney O.','Event Support · BQM','London, UK','she/they','Whitney handles admin and logistical support, social media and marketing, and leads virtual participant involvement for the Forum.','#d3895c',false)">
+        <div class="p-av" style="background:#d3895c">WO</div><div class="p-name">Whitney O.</div><div class="p-role">Event Support · BQM</div><div class="p-loc">🇬🇧 London, UK</div><span class="p-badge b-team">BQM Team</span>
+      </div>
+      <div class="person-card" data-type="speaker" data-search="eve nairobi kenya galck" onclick="openPerson('Eve K.','Co-organiser · GALCK+','Nairobi, Kenya','she/her','Eve is part of the GALCK+ co-organising team, curating the Kenyan delegation and ensuring the space is safe and community-grounded.','#f7b168',true)">
+        <div class="p-av" style="background:#f7b168;color:#000">EK</div><div class="p-name">Eve K.</div><div class="p-role">Co-organiser · GALCK+</div><div class="p-loc">🇰🇪 Nairobi, Kenya</div><span class="p-badge b-speaker">Speaker</span>
+      </div>
+      <div class="person-card" data-type="attendee" data-search="tay caribbean healer" onclick="openPerson('Tay B.','Healer & Practitioner','Caribbean','they/them','Tay is a healer and community practitioner bringing Caribbean healing justice traditions to the Forum.','#7a5a9a',false)">
+        <div class="p-av" style="background:#7a5a9a">TB</div><div class="p-name">Tay B.</div><div class="p-role">Healer & Practitioner</div><div class="p-loc">🌊 Caribbean</div><span class="p-badge b-attendee">Attendee</span>
+      </div>
+      <div class="person-card" data-type="attendee" data-search="zuzi south africa" onclick="openPerson('Zuzi N.','Cultural Worker','South Africa','she/her','Zuzi is a cultural worker and activist from South Africa, bringing a continental African perspective to the co-creation of the Healing Justice Playbook.','#4a7a5a',false)">
+        <div class="p-av" style="background:#4a7a5a">ZN</div><div class="p-name">Zuzi N.</div><div class="p-role">Cultural Worker</div><div class="p-loc">🇿🇦 South Africa</div><span class="p-badge b-attendee">Attendee</span>
+      </div>
+      <div class="person-card" data-type="speaker" data-search="ak nigeria diaspora academic" onclick="openPerson('AK','Academic & Activist','Nigeria / UK diaspora','they/she','AK is an academic and activist whose work sits at the intersection of queer theory, diasporic identity and community organising.','#d06339',false)">
+        <div class="p-av" style="background:#d06339">AK</div><div class="p-name">AK</div><div class="p-role">Academic & Activist</div><div class="p-loc">🌍 Nigeria / UK diaspora</div><span class="p-badge b-speaker">Speaker</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESOURCES -->
+  <div id="page-resources" class="page">
+    <p class="page-eyebrow">Shared materials</p>
+    <h1 class="page-title">Resources</h1>
+
+    <!-- RESOURCES section -->
+    <input class="res-search" type="text" placeholder="Search resources…" oninput="filterResources(this.value, null)">
+    <div class="res-filter-row" id="res-filter-row">
+      <button class="filter-btn active" onclick="filterResources('',this,'all')">All</button>
+      <button class="filter-btn" onclick="filterResources('',this,'Research / Report')">Research</button>
+      <button class="filter-btn" onclick="filterResources('',this,'Guide / Toolkit')">Guides</button>
+    </div>
+    <div id="res-list"></div>
+
+    <div class="sec-lbl" style="margin-top:1.5rem">Community Directory</div>
+    <div class="dir-search-row">
+      <input class="dir-search" type="text" placeholder="Search directory…" oninput="filterDirectory(this.value, null)">
+    </div>
+    <div class="dir-filter-row" id="dir-filter-row">
+      <button class="filter-btn active" onclick="filterDirectory('',this,'all')">All</button>
+      <button class="filter-btn" onclick="filterDirectory('',this,'Individual (researcher)')">Researchers</button>
+      <button class="filter-btn" onclick="filterDirectory('',this,'Individual (practitioner)')">Practitioners</button>
+      <button class="filter-btn" onclick="filterDirectory('',this,'Organisation')">Organisations</button>
+    </div>
+    <div id="dir-list"></div>
+
+    <div class="sec-lbl">Share a resource</div>
+    <button class="share-toggle-btn" id="share-toggle" onclick="toggleShareForm()">＋ Share a resource with the group</button>
+    <div class="share-resource-form hidden" id="share-form">
+      <div class="field-group">
+        <label class="field-label">Resource title</label>
+        <input class="field-input" type="text" placeholder="e.g. Community listening notes">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Link or description</label>
+        <textarea class="field-input" placeholder="Paste a URL or briefly describe the resource…"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Resource type</label>
+        <select class="field-input">
+          <option value="">Select type…</option>
+          <option>Research / Report</option>
+          <option>Guide / Toolkit</option>
+          <option>Article / Reading</option>
+          <option>Video</option>
+          <option>Tool / Template</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="perm-block">
+        <div class="perm-title">🔒 Sharing permissions</div>
+        <p style="font-size:.75rem;color:var(--muted);margin-bottom:.75rem;line-height:1.5">Please choose how you'd like this resource to be used.</p>
+        <label class="perm-option"><input type="checkbox" class="perm-check" checked><div class="perm-text"><strong>For this event only</strong>Visible to Forum attendees during and immediately after the event only.</div></label>
+        <label class="perm-option"><input type="checkbox" class="perm-check"><div class="perm-text"><strong>Share with BQM more widely</strong>May be included in BQM's broader resource library and future programming. You will be credited unless you indicate otherwise.</div></label>
+        <p style="font-size:.7rem;color:rgba(255,255,255,.3);margin-top:.65rem;line-height:1.4">You can update these preferences at any time by contacting the BQM team.</p>
+      </div>
+      <button class="save-btn" onclick="submitResource(this)">Submit resource</button>
+      <div class="save-success" id="resource-success">✓ Resource submitted — thank you!</div>
+    </div>
+  </div>
+
+  <!-- NOTICE BOARD -->
+  <div id="page-noticeboard" class="page">
+    <p class="page-eyebrow">Team updates</p>
+    <h1 class="page-title">Notice Board</h1>
+    <div class="compose">
+      <textarea class="compose-ta" placeholder="Share something with the group…"></textarea>
+      <div class="compose-foot"><span class="compose-note">Visible to all attendees</span><button class="post-btn">Post</button></div>
+    </div>
+    <div class="notice-post">
+      <div class="n-head"><div class="n-av" style="background:#d06339">CM</div><div><div class="n-poster">Chantelle M. <span class="team-chip">Team</span></div><div class="n-time">Today · 11:32</div></div></div>
+      <p class="n-text">📋 <strong>Visa letter requests</strong> — if you need a support letter for your visa application, please fill in the form linked in the welcome email by <strong>1 April</strong>. Reply here or email me directly with any questions.</p>
+    </div>
+    <div class="notice-post">
+      <div class="n-head"><div class="n-av" style="background:#d3895c">WO</div><div><div class="n-poster">Whitney O. <span class="team-chip">Team</span></div><div class="n-time">Yesterday · 09:15</div></div></div>
+      <p class="n-text">✈️ <strong>Travel arrangements:</strong> All flights and accommodation are being coordinated through our trusted travel partner. You'll receive a personalised itinerary by <strong>mid-April</strong>. No costs will be passed to you.</p>
+    </div>
+    <div class="notice-post">
+      <div class="n-head"><div class="n-av" style="background:#f7b168;color:#000">EK</div><div><div class="n-poster">Eve K. <span class="team-chip">Team</span></div><div class="n-time">2 days ago</div></div></div>
+      <p class="n-text">🇰🇪 A warm <em>karibu</em> from the GALCK+ team in Nairobi! The venue is confirmed — wheelchair accessible, quiet spaces available, and in a safe, welcoming neighbourhood.</p>
+    </div>
+  </div>
+
+  <!-- FAQs -->
+  <div id="page-faqs" class="page">
+    <p class="page-eyebrow">Practical information</p>
+    <h1 class="page-title">FAQs</h1>
+    <div class="sec-lbl">🏨 Accommodation</div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Is accommodation provided?<span class="faq-chev">▼</span></button><div class="faq-a">Yes — all accommodation for 3–6 May is fully covered. You'll receive details in your personalised travel itinerary by mid-April.</div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Is the venue safe?<span class="faq-chev">▼</span></button><div class="faq-a">Yes. Accommodation and the venue have been arranged through a queer-informed travel agent with longstanding community relationships in Nairobi. GALCK+ has ensured the space is welcoming and safe.</div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">What if I have accessibility needs?<span class="faq-chev">▼</span></button><div class="faq-a">The venue is wheelchair accessible with a quiet/low-stimulation space. Live captioning and dietary accommodations are confirmed. Contact Chantelle for specific needs.</div></div>
+    <div class="sec-lbl">🍽 Food</div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Are meals covered?<span class="faq-chev">▼</span></button><div class="faq-a">All meals during the Forum are covered, including the welcome dinner on 4 May. Let Whitney know if your dietary requirements have changed.</div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Can you cater for dietary requirements?<span class="faq-chev">▼</span></button><div class="faq-a">Yes. Ensure your dietary needs are in the onboarding form. Contact Whitney if you haven't submitted them yet.</div></div>
+    <div class="sec-lbl">✈️ Travel</div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Are flights covered?<span class="faq-chev">▼</span></button><div class="faq-a">Yes — international flights and accommodation for international participants are fully covered. A participation stipend is also available.</div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Do I need a visa?<span class="faq-chev">▼</span></button><div class="faq-a">Visa requirements depend on your nationality. If you need a support or invitation letter, request one by 1 April — see the pinned notice on the Notice Board.</div></div>
+    <div class="sec-lbl">🔒 Safety & Privacy</div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Who can see my profile?<span class="faq-chev">▼</span></button><div class="faq-a">Your profile is only visible to other confirmed attendees. This app is private — only email addresses on our confirmed list can log in.</div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">What is the Playbook attribution policy?<span class="faq-chev">▼</span></button><div class="faq-a">All participants are considered co-authors. Attribution options range from full co-author to contributing author to anonymous. You have full control — consent is managed through a pre-event process.</div></div>
+  </div>
+
+  <!-- PROFILE -->
+  <div id="page-profile" class="page">
+    <p class="page-eyebrow">Your account</p>
+    <h1 class="page-title">My Profile</h1>
+    <div class="profile-avatar-area">
+      <div class="profile-av-large" id="profile-av-display">AK</div>
+      <button class="profile-av-edit" onclick="cycleAvatarColor()">Change colour</button>
+    </div>
+    <div class="field-group"><label class="field-label">Display name</label><input class="field-input" id="pf-name" type="text" placeholder="Your name or preferred name" value="Amara K."></div>
+    <div class="field-group"><label class="field-label">Pronouns</label><input class="field-input" id="pf-pronouns" type="text" placeholder="e.g. she/her, they/them" value="they/she"></div>
+    <div class="field-group"><label class="field-label">Role / discipline</label><input class="field-input" id="pf-role" type="text" placeholder="e.g. Healer, Organiser, Academic" value="Academic & Activist"></div>
+    <div class="field-group"><label class="field-label">Location</label><input class="field-input" id="pf-location" type="text" placeholder="e.g. Lagos, Nigeria" value="Nigeria / UK diaspora"></div>
+    <div class="field-group"><label class="field-label">Organisation (optional)</label><input class="field-input" id="pf-org" type="text" placeholder="Your organisation or collective"></div>
+    <div class="field-group"><label class="field-label">Bio (optional)</label><textarea class="field-input" id="pf-bio" placeholder="A short intro — who you are, what you do, what brings you to this Forum…"></textarea></div>
+    <div class="field-group"><label class="field-label">Website or social link (optional)</label><input class="field-input" id="pf-link" type="url" placeholder="https://…"></div>
+    <div class="optin-card">
+      <div class="optin-card-title">📖 Post-event directory</div>
+      <div class="optin-card-desc">After the Forum, BQM will compile a directory of participants and organisations. Choose how you'd like your profile to be included — you can change this at any time.</div>
+      <label class="optin-option"><input type="checkbox" class="optin-check" id="optin-event" checked><div class="optin-text"><strong>Include me in the event directory</strong>Visible to fellow attendees during and immediately after the Forum only.</div></label>
+      <label class="optin-option"><input type="checkbox" class="optin-check" id="optin-bqm"><div class="optin-text"><strong>Include me in BQM's People & Organisations directory</strong>Your profile may be included in BQM's ongoing community directory and future programming. You choose what information is shown.</div></label>
+      <label class="optin-option"><input type="checkbox" class="optin-check" id="optin-none"><div class="optin-text"><strong>Do not include my profile in any directory</strong>Your information stays private to this event app only.</div></label>
+      <p style="font-size:.7rem;color:rgba(255,255,255,.28);margin-top:.65rem;line-height:1.4">You can update these preferences at any time by editing your profile here or contacting the BQM team.</p>
+    </div>
+    <button class="save-btn" onclick="saveProfile()">Save profile</button>
+    <div class="save-success" id="profile-success">✓ Profile saved successfully</div>
+  </div>
+
+  <!-- NAV -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" onclick="switchPage('home')"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></button>
+    <button class="nav-item" onclick="switchPage('agenda')"><span class="nav-icon">📅</span><span class="nav-label">Agenda</span></button>
+    <button class="nav-item" onclick="switchPage('people')"><span class="nav-icon">👥</span><span class="nav-label">People</span></button>
+    <button class="nav-item" onclick="switchPage('resources')"><span class="nav-icon">📚</span><span class="nav-label">Resources</span></button>
+    <button class="nav-item" onclick="switchPage('noticeboard')"><span class="nav-icon">📌</span><span class="nav-label">Board</span></button>
+    <button class="nav-item" onclick="switchPage('profile')"><span class="nav-icon">👤</span><span class="nav-label">Profile</span></button>
+  </nav>
+</div>
+
+<!-- PERSON MODAL -->
+<div class="modal-overlay" id="person-modal" onclick="closeModalOut(event)">
+  <div class="modal-sheet">
+    <button class="modal-close" onclick="document.getElementById('person-modal').classList.remove('open')">✕</button>
+    <div class="m-av" id="m-av"></div>
+    <div class="m-name" id="m-name"></div>
+    <div class="m-role" id="m-role"></div>
+    <div class="m-pro" id="m-pro"></div>
+    <div class="m-loc" id="m-loc"></div>
+    <div class="m-bio" id="m-bio"></div>
+  </div>
+</div>
+
+<script>
+// ── DATA ──
+const DIRECTORY = [
+  {
+    name: "Dr SM Rodriguez",
+    type: "Individual (researcher)",
+    country: "United Kingdom, United States of America",
+    bio: "SM Rodriguez is a scholar-activist committed to anti-violence in their community and research. Their work spans concerns of the criminalized, queer, and/or disabled people of African descent and relies on engaged methodologies to answer questions of transformative change. They are the author of The Economies of Queer Inclusion: Transnational Organizing for LGBTI Rights in Uganda (2019).",
+    focus: ["Black Feminism", "Gender Based Rights", "LGBTQ+ Rights", "Trans Inclusion"],
+    support: ["Advice and Information", "Safety and Protection", "Community and Social Support"],
+    website: "https://www.smrodriguez.com/",
+    instagram: "https://www.instagram.com/dr_simplicity/",
+    asks: "To add to this directory!"
+  },
+  {
+    name: "CAISO",
+    type: "Organisation",
+    country: "Trinidad and Tobago",
+    bio: "A feminist non-profit civil society organisation committed to ensuring wholeness, justice and inclusion for Trinidad and Tobago's LGBTQI+ communities, by developing analysis, alliances and advocacy.",
+    focus: ["Black Feminism", "LGBTQ+ Rights"],
+    support: ["Health and Wellbeing", "Legal Aid"],
+    website: "https://caisott.org/",
+    instagram: "https://www.instagram.com/caisott",
+    asks: "Community Food Bank — accepting canned goods, frozen goods, non-perishables, clothing, vouchers and cash."
+  },
+  {
+    name: "Shantae Porteous",
+    type: "Individual (practitioner)",
+    country: "Jamaica",
+    bio: "A recovering people pleaser, pleasure seeker, and neurodivergent cocoon maker. Shantae's purpose is to curate safe spaces and resources to help others process their health, worth and well-being, integrating practical, emotional and spiritual dimensions of healing.",
+    focus: ["Black Feminism", "Gender Based Rights", "Racial Justice"],
+    support: ["Advice and Information", "Health and Wellbeing"],
+    website: "https://taes-intentional-agenda.mailchimpsites.com/",
+    instagram: "https://www.instagram.com/shantaeporteous/",
+    asks: ""
+  },
+  {
+    name: "The Woven Foundation",
+    type: "Organisation",
+    country: "Trinidad and Tobago",
+    bio: "A queer feminist, youth-led organization in Trinidad and Tobago that mobilizes women, girls, and gender-diverse people toward collective liberation. Operating at the intersection of political education, community care, advocacy, and movement building.",
+    focus: ["Black Feminism", "Gender Based Rights", "Youth", "LGBTQ+ Rights"],
+    support: ["Community and Social Support", "Advice and Information", "Employment and Skills", "Family and Child Support", "Practical Assistance"],
+    website: "",
+    instagram: "https://www.instagram.com/wovenfoundationtt/",
+    asks: ""
+  },
+  {
+    name: "Sandra Mamai",
+    type: "Individual (practitioner)",
+    country: "Kenya",
+    bio: "Working at the intersection of digital systems, economic survival and safety for young LGBTIQ+ people across Africa. As Executive Coordinator of the African Queer Youth Initiative (AQYI), Sandra helps hold together a regional network of youth leaders organising under criminalisation, stigma and shrinking civic space.",
+    focus: ["Youth", "Gender Based Rights", "LGBTQ+ Rights", "Policy, Law and Advocacy"],
+    support: ["Advice and Information", "Community and Social Support"],
+    website: "https://www.linkedin.com/in/mamaisandrahrim",
+    instagram: "",
+    asks: ""
+  },
+  {
+    name: "Queer Women Human Rights Defenders (QwomenHRDs)",
+    type: "Organisation",
+    country: "Kenya",
+    city: "Nairobi, Kiambu",
+    bio: "A feminist, community-led initiative advancing the rights, inclusion, and mental wellness of LBQ women in Kenya. Providing affirming SRHR education, creating safe healing spaces, and advocating for gender equality and social justice.",
+    focus: ["Policy, Law and Advocacy", "LGBTQ+ Rights", "Gender Based Rights"],
+    support: ["Health and Wellbeing", "Community and Social Support"],
+    website: "",
+    instagram: "@QWomenHRDs",
+    asks: ""
+  },
+  {
+    name: "Gerald Hayo",
+    type: "Individual (practitioner)",
+    country: "Kenya, United Kingdom",
+    city: "Mombasa, England and York",
+    bio: "For over 15 years, Gerald has worked to promote LGBTQIA+ rights in Kenya. She founded and led Rainbow Women of Kenya, the first LBQ-led organization in Mombasa. Currently based in the UK studying Politics and International Relations at York St John University, and chairs Queer Refugee Unite.",
+    focus: ["LGBTQ+ Rights"],
+    support: ["Community and Social Support", "Safety and Protection"],
+    website: "",
+    instagram: "@Jiradgates",
+    asks: "Equal rights, accessibility and fair treatment of queer refugees and people claiming asylum."
+  }
+];
+
+const RESOURCES = [
+  {
+    title: "Reconceptualizing Gender Transitioning: Recognition, Flexibility, and Safety in Nonbinary Identity Journeys",
+    type: "Research / Report",
+    submitter: "Dr SM Rodriguez",
+    desc: "This article interrogates gender transitioning by centering nonbinary experiences, which challenge the binary-driven narratives that dominate both medical and sociological frameworks of transition. Drawing on seven focus groups with 48 nonbinary participants across multiple countries, it explores social, medical, and flexible aesthetic transitioning as an ongoing, fluid process.",
+    focus: ["Black Feminism", "LGBTQ+ Rights", "Trans Inclusion", "Gender Based Rights"],
+    link: "https://www.researchgate.net/publication/392908300_Reconceptualizing_Gender_Transitioning_Recognition_Flexibility_and_Safety_in_Nonbinary_Identity_Journeys",
+    icon: "📄"
+  },
+  {
+    title: "Inclusive Futures Factsheet 2025",
+    type: "Guide / Toolkit",
+    submitter: "CAISO",
+    desc: "Part of the Inclusive Futures campaign tackling antigender and anti-rights discourses through local, regional, and global research. Provides information about anti-rights movements affecting the Caribbean region, barriers faced by LGBTQI+ communities, affirmation of trans identities, and SRHR insights.",
+    focus: ["Gender Based Rights", "LGBTQ+ Rights", "Black Feminism", "Trans Inclusion"],
+    link: "",
+    icon: "📋"
+  }
+];
+
+// ── AVATAR COLOURS ──
+const avColors = ['#d06339','#d3895c','#7a5a9a','#4a7a5a','#5a6a9a','#9a5a6a'];
+let avIdx = 0;
+function cycleAvatarColor(){
+  avIdx=(avIdx+1)%avColors.length;
+  document.getElementById('profile-av-display').style.background=avColors[avIdx];
+}
+
+// ── LOGIN ──
+function tryLogin(){
+  const e=document.getElementById('email-in').value.trim();
+  if(!e.includes('@')){alert('Please enter a valid email address.');return;}
+  const name=e.split('@')[0].split(/[._]/).map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(' ');
+  document.getElementById('hero-name').textContent=name.split(' ')[0];
+  const initials=name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  document.getElementById('hdr-initials').textContent=initials;
+  document.getElementById('profile-av-display').textContent=initials;
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('app').style.display='block';
+  renderResources('','all');
+  renderDirectory('','all');
+}
+document.getElementById('email-in').addEventListener('keydown',e=>{if(e.key==='Enter')tryLogin();});
+
+// ── NAV ──
+const navMap={home:0,agenda:1,people:2,resources:3,noticeboard:4,profile:5};
+function switchPage(page){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.querySelectorAll('.nav-item')[navMap[page]].classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// ── AGENDA ──
+function switchDay(idx){
+  document.querySelectorAll('.day-tab').forEach((t,i)=>t.classList.toggle('active',i===idx));
+  document.querySelectorAll('.agenda-day').forEach((d,i)=>d.classList.toggle('active',i===idx));
+}
+
+// ── PEOPLE ──
+function filterPeople(btn,type){
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.person-card').forEach(c=>{
+    c.style.display=(type==='all'||c.dataset.type===type)?'block':'none';
+  });
+}
+function searchPeople(q){
+  const lq=q.toLowerCase();
+  document.querySelectorAll('.person-card').forEach(c=>{
+    const s=(c.dataset.search||'')+(c.querySelector('.p-name')||{textContent:''}).textContent;
+    c.style.display=s.toLowerCase().includes(lq)?'block':'none';
+  });
+}
+function openPerson(name,role,location,pronouns,bio,color,dark){
+  const initials=name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  const av=document.getElementById('m-av');
+  av.textContent=initials;av.style.background=color;av.style.color=dark?'#000':'#fff';
+  document.getElementById('m-name').textContent=name;
+  document.getElementById('m-role').textContent=role;
+  document.getElementById('m-pro').textContent=pronouns;
+  document.getElementById('m-loc').textContent='📍 '+location;
+  document.getElementById('m-bio').textContent=bio;
+  document.getElementById('person-modal').classList.add('open');
+}
+function closeModalOut(e){
+  if(e.target===document.getElementById('person-modal'))
+    document.getElementById('person-modal').classList.remove('open');
+}
+
+// ── DIRECTORY RENDER ──
+const dirColors=['#d06339','#7a5a9a','#4a7a5a','#5a6a9a','#d3895c','#9a5a6a','#3a7a8a'];
+function initials(name){return name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();}
+
+function renderDirectory(query, typeFilter){
+  const container=document.getElementById('dir-list');
+  const q=(query||'').toLowerCase();
+  const filtered=DIRECTORY.filter(d=>{
+    const matchType=(!typeFilter||typeFilter==='all')||d.type===typeFilter;
+    const matchQ=!q||(d.name+d.bio+d.country+(d.city||'')+d.focus.join(' ')).toLowerCase().includes(q);
+    return matchType&&matchQ;
+  });
+  if(!filtered.length){container.innerHTML='<div class="dir-empty">No results found</div>';return;}
+  container.innerHTML=filtered.map((d,i)=>{
+    const col=dirColors[i%dirColors.length];
+    const links=[];
+    if(d.website) links.push(`<a class="dir-link" href="${d.website}" target="_blank" rel="noopener">🌐 Website</a>`);
+    if(d.instagram&&d.instagram.startsWith('http')) links.push(`<a class="dir-link" href="${d.instagram}" target="_blank" rel="noopener">📸 Instagram</a>`);
+    else if(d.instagram) links.push(`<span class="dir-link">📸 ${d.instagram}</span>`);
+    const supportHtml=d.support.length?`<div class="dir-support"><strong>Support offered</strong>${d.support.join(' · ')}</div>`:'';
+    const asksHtml=d.asks?`<div class="dir-support"><strong>Community asks</strong>${d.asks}</div>`:'';
+    return `<div class="dir-card">
+      <div class="dir-card-header">
+        <div class="dir-av" style="background:${col}">${initials(d.name)}</div>
+        <div>
+          <div class="dir-name">${d.name}</div>
+          <div class="dir-type">${d.type}</div>
+          <div class="dir-country">📍 ${d.city?d.city+', ':''} ${d.country}</div>
+        </div>
+      </div>
+      <div class="dir-bio">${d.bio}</div>
+      <div class="dir-focus-tags">${d.focus.map(f=>`<span class="dir-focus-tag">${f}</span>`).join('')}</div>
+      ${links.length?`<div class="dir-links">${links.join('')}</div>`:''}
+      ${supportHtml}
+      ${asksHtml}
+    </div>`;
+  }).join('');
+}
+
+function filterDirectory(query, btn, type){
+  if(btn){
+    document.querySelectorAll('#dir-filter-row .filter-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  const activeType=type||(document.querySelector('#dir-filter-row .filter-btn.active')||{}).dataset?.type||'all';
+  const q=query!==''?query:(document.querySelector('.dir-search')||{}).value||'';
+  renderDirectory(q, activeType==='all'?null:activeType);
+}
+
+// ── RESOURCES RENDER ──
+const resIcons={'Research / Report':'📄','Guide / Toolkit':'📋','Article / Reading':'📖','Video':'🎬','Tool / Template':'🛠','Other':'📁'};
+function renderResources(query, typeFilter){
+  const container=document.getElementById('res-list');
+  const q=(query||'').toLowerCase();
+  const filtered=RESOURCES.filter(r=>{
+    const matchType=(!typeFilter||typeFilter==='all')||r.type===typeFilter;
+    const matchQ=!q||(r.title+r.desc+r.submitter+r.focus.join(' ')).toLowerCase().includes(q);
+    return matchType&&matchQ;
+  });
+  if(!filtered.length){container.innerHTML='<div class="dir-empty">No results found</div>';return;}
+  container.innerHTML=filtered.map(r=>{
+    const icon=resIcons[r.type]||'📁';
+    const linkHtml=r.link?`<a class="res-link-btn" href="${r.link}" target="_blank" rel="noopener">→ View resource</a>`:'';
+    return `<div class="res-card">
+      <div class="res-card-header">
+        <div class="res-icon">${icon}</div>
+        <div>
+          <div class="res-title">${r.title}</div>
+          <div class="res-submitter">Shared by ${r.submitter}</div>
+        </div>
+      </div>
+      <span class="res-type-chip">${r.type}</span>
+      <div class="res-desc">${r.desc}</div>
+      <div class="res-focus-tags">${r.focus.map(f=>`<span class="res-focus-tag">${f}</span>`).join('')}</div>
+      ${linkHtml}
+    </div>`;
+  }).join('');
+}
+
+function filterResources(query, btn, type){
+  if(btn){
+    document.querySelectorAll('#res-filter-row .filter-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  const activeType=type||(document.querySelector('#res-filter-row .filter-btn.active')||{}).textContent||'all';
+  const q=query!==''?query:(document.querySelector('.res-search')||{}).value||'';
+  renderResources(q, activeType==='All'||activeType==='all'?null:activeType);
+}
+
+// ── SHARE FORM ──
+function toggleShareForm(){
+  const form=document.getElementById('share-form');
+  const btn=document.getElementById('share-toggle');
+  form.classList.toggle('hidden');
+  btn.style.display=form.classList.contains('hidden')?'flex':'none';
+}
+function submitResource(btn){
+  btn.textContent='Submitting…';
+  setTimeout(()=>{
+    btn.textContent='Submit resource';
+    const s=document.getElementById('resource-success');
+    s.style.display='block';
+    setTimeout(()=>s.style.display='none',4000);
+  },800);
+}
+
+// ── FAQs ──
+function toggleFaq(btn){btn.parentElement.classList.toggle('open');}
+
+// ── PROFILE ──
+function saveProfile(){
+  const name=document.getElementById('pf-name').value.trim();
+  if(name){
+    const ini=name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    document.getElementById('hdr-initials').textContent=ini;
+    document.getElementById('profile-av-display').textContent=ini;
+    document.getElementById('hero-name').textContent=name.split(' ')[0];
+  }
+  const s=document.getElementById('profile-success');
+  s.style.display='block';
+  setTimeout(()=>s.style.display='none',3500);
+}
+
+// Directory opt-in mutual exclusion
+document.getElementById('optin-none').addEventListener('change',function(){
+  if(this.checked){document.getElementById('optin-event').checked=false;document.getElementById('optin-bqm').checked=false;}
+});
+['optin-event','optin-bqm'].forEach(id=>{
+  document.getElementById(id).addEventListener('change',function(){
+    if(this.checked)document.getElementById('optin-none').checked=false;
+  });
+});
+</script>
+</body>
+</html>
