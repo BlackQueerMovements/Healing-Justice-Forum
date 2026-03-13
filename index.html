@@ -13,6 +13,26 @@
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{font-family:'Inter',sans-serif;background:var(--black);color:var(--text);min-height:100vh;overflow-x:hidden}
+  .hero-cta-btn {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--copper);
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  margin-bottom: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.2s;
+}
+
+.hero-cta-btn:hover {
+  background: rgba(227, 166, 131, 0.1);
+  border-color: var(--copper);
+}
 
 /* LOGIN */
 #login-screen{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--black);padding:2rem 1.5rem;position:relative;overflow:hidden}
@@ -282,7 +302,7 @@ select.field-input option{background:var(--mid)}
       </div>
       <div>
         <div class="hdr-main">Healing Justice Forum</div>
-        <div class="hdr-sub">BQM <span style="color:rgba(255,255,255,.2)">×</span> <span style="font-family:'Georgia',serif;font-weight:700;color:rgba(255,255,255,.65)">galck<span style="font-size:.5rem;color:#fff;font-family:'Inter',sans-serif;font-weight:400">+</span></span> · May 2026</div>
+        <div class="hdr-sub">BQM <span style="color:rgba(255,255,255)">×</span> <span style="font-family:'Georgia',serif;font-weight:700;color:rgba(255,255,255,.65)">galck<span style="font-size:.5rem;color:#fff;font-family:'Inter',sans-serif;font-weight:400">+</span></span> · May 2026</div>
       </div>
     </div>
     <button class="hdr-avatar-btn" onclick="switchPage('profile')">
@@ -292,14 +312,18 @@ select.field-input option{background:var(--mid)}
 
   <!-- HOME -->
   <div id="page-home" class="page active">
-    <div class="home-hero">
-      <div class="hero-bg">
-        <svg width="75" height="85" viewBox="0 0 24 28" fill="none"><path d="M4 2L20 14L4 26" stroke="#d3895c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <svg width="75" height="85" viewBox="0 0 24 28" fill="none"><path d="M4 2L20 14L4 26" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <p class="hero-eyebrow">Welcome, <span id="hero-name">Amara</span> ›</p>
-      <h2 class="hero-title">Healing<br><em>Justice</em><br>Forum</h2>
-      <div class="hero-meta"><span>📍 Nairobi, Kenya</span><span>🗓 3–6 May 2026</span></div>
+  <div class="home-hero">
+  <div class="hero-bg" aria-hidden="true">
+    </div>
+  <button onclick="switchPage('profile')" class="hero-cta-btn" aria-label="Edit your profile">
+    Edit your profile <span aria-hidden="true">›</span>
+  </button>
+  <h2 class="hero-title">Healing<br><em>Justice</em><br>Forum</h2>
+  <div class="hero-meta">
+    <span>📍 Nairobi, Kenya</span>
+    <span>🗓 3–6 May 2026</span>
+  </div>
+</div>
       <div class="hero-collab">
         <span style="font-size:.58rem;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.3);margin-right:.25rem">Presented by</span>
         <span style="font-family:'Syne',sans-serif;font-weight:800;font-size:.78rem;color:var(--copper)">BQM</span>
@@ -505,10 +529,10 @@ select.field-input option{background:var(--mid)}
       <div class="profile-av-large" id="profile-av-display">AK</div>
       <button class="profile-av-edit" onclick="cycleAvatarColor()">Change colour</button>
     </div>
-    <div class="field-group"><label class="field-label">Display name</label><input class="field-input" id="pf-name" type="text" placeholder="Your name or preferred name" value="Amara K."></div>
-    <div class="field-group"><label class="field-label">Pronouns</label><input class="field-input" id="pf-pronouns" type="text" placeholder="e.g. she/her, they/them" value="they/she"></div>
-    <div class="field-group"><label class="field-label">Role / discipline</label><input class="field-input" id="pf-role" type="text" placeholder="e.g. Healer, Organiser, Academic" value="Academic & Activist"></div>
-    <div class="field-group"><label class="field-label">Location</label><input class="field-input" id="pf-location" type="text" placeholder="e.g. Lagos, Nigeria" value="Nigeria / UK diaspora"></div>
+    <div class="field-group"><label class="field-label">Display name</label><input class="field-input" id="pf-name" type="text" placeholder="Your name or preferred name"></div>
+    <div class="field-group"><label class="field-label">Pronouns</label><input class="field-input" id="pf-pronouns" type="text" placeholder="e.g. she/her, they/them"></div>
+    <div class="field-group"><label class="field-label">Role / discipline</label><input class="field-input" id="pf-role" type="text" placeholder="e.g. Healer, Organiser, Academic"></div>
+    <div class="field-group"><label class="field-label">Location</label><input class="field-input" id="pf-location" type="text" placeholder="e.g. Lagos, Nigeria"></div>
     <div class="field-group"><label class="field-label">Organisation (optional)</label><input class="field-input" id="pf-org" type="text" placeholder="Your organisation or collective"></div>
     <div class="field-group"><label class="field-label">Bio (optional)</label><textarea class="field-input" id="pf-bio" placeholder="A short intro — who you are, what you do, what brings you to this Forum…"></textarea></div>
     <div class="field-group"><label class="field-label">Website or social link (optional)</label><input class="field-input" id="pf-link" type="url" placeholder="https://…"></div>
@@ -679,6 +703,7 @@ document.getElementById('email-in').addEventListener('keydown',e=>{if(e.key==='E
   // 1. Define your approved email list
 const APPROVED_EMAILS = [
   "s.rodriguez9@lse.ac.uk",
+  "samar.rod18@gmail.com",
   "chantelle.young186@gmail.com",
   "blackqueermovements@gmail.com"
 ];
@@ -704,6 +729,43 @@ function tryLogin() {
   }
 }
 
+  function tryLogin() {
+  const userEmail = document.getElementById('email-in').value.trim().toLowerCase();
+  
+  if (APPROVED_EMAILS.includes(userEmail)) {
+    // Hide login, show app
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    document.getElementById('main-nav').style.display = 'flex';
+
+    // Set default empty state for avatar
+    document.getElementById('hdr-initials').textContent = "??";
+    document.getElementById('profile-av-display').textContent = "??";
+  } else {
+    alert("Access restricted.");
+  }
+}
+
+function saveProfile() {
+  const name = document.getElementById('pf-name').value.trim();
+  
+  if (name) {
+    // Generate initials from user input
+    const ini = name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+    
+    // Update Header and Profile avatars
+    document.getElementById('hdr-initials').textContent = ini;
+    document.getElementById('profile-av-display').textContent = ini;
+    
+    // Optional: Update the CTA on the home page to say "Hi, [Name]" 
+    // instead of "Edit your profile" once they've saved.
+    document.querySelector('.hero-cta-btn').innerHTML = `Hi, ${name.split(' ')[0]} <span aria-hidden="true">›</span>`;
+  }
+
+  const s = document.getElementById('profile-success');
+  s.style.display = 'block';
+  setTimeout(() => s.style.display = 'none', 3500);
+}
 function showSuccess(button) {
   button.innerHTML = "✓ You're in!";
   button.style.background = "#4caf50"; // Green for success
