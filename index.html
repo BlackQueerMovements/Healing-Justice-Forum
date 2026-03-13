@@ -1,0 +1,2118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="HJF">
+<meta name="theme-color" content="#000000">
+<title>Healing Justice Forum — BQM + GALCK+</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ── */
+:root{
+  --copper:#e09060;--rust:#d06339;--amber:#f7b168;
+  --black:#000;--off-black:#111;--dark-card:#1a1a1a;--mid:#2a2a2a;--mid2:#333;
+  --white:#fff;--border:rgba(224,144,96,0.2);
+  --text:#fff;--text-sec:rgba(255,255,255,0.9);--text-muted:#ffffff;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Inter',sans-serif;background:var(--black);color:var(--text);min-height:100vh;overflow-x:hidden;line-height:1.5}
+
+/* ── ACCESSIBILITY ── */
+.skip-link{position:absolute;top:-100px;left:1rem;background:var(--rust);color:#fff;padding:.5rem 1rem;border-radius:8px;font-size:.85rem;font-weight:600;text-decoration:none;z-index:9999;transition:top .15s}
+.skip-link:focus{top:1rem}
+*:focus-visible{outline:2px solid var(--copper);outline-offset:2px}
+.nav-item:focus-visible{outline:2px solid var(--copper);outline-offset:-2px}
+/* Aria-live announcer */
+#a11y-announcer{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+
+/* ── LOGIN ── */
+#login-screen{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--black);padding:2rem 1.5rem;position:relative;overflow:hidden}
+.login-bg-chevs{position:absolute;bottom:-30px;left:50%;transform:translateX(-50%);display:flex;opacity:.07;pointer-events:none}
+.login-wordmark{font-family:'Syne',sans-serif;font-weight:800;font-size:2.6rem;line-height:.92;color:#fff;text-align:center;letter-spacing:-.01em}
+.login-wordmark em{color:var(--copper);font-style:normal;display:block}
+.collab-row{margin:.9rem 0 1.4rem;text-align:center}
+.collab-small{font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text-muted);display:block;margin-bottom:.55rem}
+.collab-name{font-family:'Syne',sans-serif;font-weight:700;font-size:1.95rem;color:#fff}
+.login-tagline{font-size:.82rem;color:var(--text-muted);text-align:center;font-style:italic;margin-bottom:2.5rem}
+.login-card{width:100%;max-width:400px;background:var(--dark-card);border:1px solid var(--border);border-radius:20px;padding:2rem 1.75rem;margin-bottom:1.5rem}
+.lbl{font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:#fff;margin-bottom:.5rem;display:block}
+.login-input{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(224,144,96,.25);border-radius:10px;padding:.85rem 1rem;color:#fff;font-family:'Inter',sans-serif;font-size:.95rem;outline:none;transition:border-color .2s;margin-bottom:1.25rem}
+.login-input::placeholder{color:rgba(255,255,255,.25)}
+.login-input:focus{border-color:var(--copper)}
+.login-btn{width:100%;background:var(--rust);border:none;border-radius:10px;padding:.95rem;color:#fff;font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;letter-spacing:.07em;text-transform:uppercase;cursor:pointer;transition:background .15s,transform .1s;margin-bottom:1rem;display:flex;align-items:center;justify-content:center;gap:.5rem}
+.login-btn:hover{background:#b8562e;transform:translateY(-1px)}
+.login-status{font-size:.78rem;text-align:center;min-height:1.2em;transition:color .2s}
+
+/* ── APP ── */
+#app{display:none;min-height:100vh;padding-bottom:5.5rem}
+.app-header{background:var(--black);border-bottom:1px solid var(--border);padding:.75rem 1.1rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.header-left{display:flex;align-items:center;gap:.65rem}
+.hdr-chevs{display:flex;gap:3px;flex-shrink:0}
+.hdr-main{font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;color:#fff}
+.hdr-sub{font-size:.56rem;letter-spacing:.09em;text-transform:uppercase;color:var(--copper);display:flex;align-items:center;gap:4px;margin-top:1px}
+.admin-badge{background:#42a5f5;color:#fff;font-size:.55rem;padding:2px 6px;border-radius:4px;text-transform:uppercase;letter-spacing:.06em;margin-left:5px;vertical-align:middle}
+.header-right{display:flex;align-items:center;gap:.5rem}
+.hdr-icon-btn{background:none;border:none;cursor:pointer;font-size:1.2rem;position:relative;padding:.25rem;color:#fff;opacity:.7;transition:opacity .15s}
+.hdr-icon-btn:hover{opacity:1}
+.notif-dot{width:8px;height:8px;background:var(--amber);border-radius:50%;position:absolute;top:2px;right:2px;display:none;border:1.5px solid var(--black)}
+.hdr-avatar-btn{background:none;border:none;cursor:pointer}
+.hdr-avatar{width:34px;height:34px;background:var(--rust);border-radius:50%;font-family:'Syne',sans-serif;font-weight:700;font-size:.8rem;color:#fff;display:flex;align-items:center;justify-content:center;transition:background .2s;overflow:hidden}
+.hdr-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+
+/* ── NAV ── */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--off-black);border-top:1px solid var(--border);display:none;z-index:100}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:.55rem .2rem;background:none;border:none;cursor:pointer;gap:.2rem;color:#fff}
+.nav-icon{font-size:1.1rem;opacity:.55}
+.nav-label{font-size:.6rem;text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,.55)}
+.nav-item.active .nav-icon{opacity:1}
+.nav-item.active .nav-label{color:var(--copper)}
+
+/* ── PAGES ── */
+.page{display:none;padding:1.25rem;animation:fadeIn .2s ease}
+.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.page-eyebrow{font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--copper);margin-bottom:.3rem}
+.page-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1.9rem;color:#fff;line-height:1;margin-bottom:1.4rem}
+.sec-lbl{font-size:.62rem;text-transform:uppercase;letter-spacing:.14em;color:var(--copper);margin-bottom:.75rem;margin-top:1.5rem;display:flex;align-items:center;gap:.5rem}
+.sec-lbl:first-child{margin-top:0}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ── HOME ── */
+.home-hero{background:var(--dark-card);border:1px solid var(--border);border-radius:20px;padding:1.75rem 1.5rem;margin-bottom:1rem;position:relative;overflow:hidden}
+.hero-bg-chevs{position:absolute;right:-12px;bottom:-18px;display:flex;gap:5px;opacity:.06;pointer-events:none}
+.hero-welcome{font-size:.88rem;font-weight:600;color:#fff;margin-bottom:.25rem}
+.hero-cta-btn{background:none;border:1px solid var(--border);color:var(--copper);padding:.35rem .75rem;border-radius:20px;font-size:.72rem;cursor:pointer;margin-bottom:1rem;font-family:'Inter',sans-serif;transition:border-color .15s}
+.hero-cta-btn:hover{border-color:var(--copper)}
+.hero-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1.65rem;color:#fff;line-height:1.05;margin-bottom:.4rem}
+.hero-title em{color:var(--copper);font-style:normal}
+.hero-meta{font-size:.8rem;color:var(--text-sec);margin-top:.6rem}
+.alert-banner{display:none;background:var(--amber);border-radius:12px;padding:.75rem 1rem;margin-bottom:1rem;cursor:pointer;color:#000;font-size:.85rem;font-weight:600;width:100%;text-align:left;border:none;font-family:'Inter',sans-serif}
+.alert-banner-label{font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;font-weight:700;opacity:.7;display:block;margin-bottom:.15rem}
+.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.quick-card{background:var(--dark-card);border:1px solid var(--border);border-radius:16px;padding:1.1rem;cursor:pointer;transition:transform .15s,border-color .15s;text-align:left;width:100%;font-family:inherit}
+.quick-card:hover{transform:translateY(-2px);border-color:var(--copper)}
+.qc-icon{font-size:1.35rem;margin-bottom:.45rem}
+.qc-label{font-family:'Syne',sans-serif;font-weight:700;font-size:.85rem;color:#fff}
+.qc-sub{font-size:.68rem;color:var(--text-muted);margin-top:.12rem}
+
+/* ── AGENDA ── */
+.day-tabs{display:flex;gap:.4rem;margin-bottom:1.25rem;overflow-x:auto;padding-bottom:2px}
+.day-tab{flex-shrink:0;background:none;border:1px solid var(--border);border-radius:8px;padding:.45rem .9rem;font-family:'Inter',sans-serif;font-size:.74rem;font-weight:500;color:var(--text-muted);cursor:pointer;transition:all .15s}
+.day-tab.active{background:var(--rust);border-color:var(--rust);color:#fff}
+.agenda-day{display:none}.agenda-day.active{display:block}
+.agenda-day-hdr{border-left:3px solid var(--copper);padding:.9rem 1rem;background:var(--dark-card);border-radius:0 12px 12px 0;margin-bottom:1rem}
+.adh-name{font-family:'Syne',sans-serif;font-weight:700;font-size:1.05rem;color:#fff}
+.adh-theme{font-size:.73rem;color:var(--text-sec);margin-top:.2rem}
+.s-row{display:flex;gap:.65rem;margin-bottom:.75rem;align-items:flex-start}
+.s-time{flex-shrink:0;width:48px;font-size:.67rem;font-weight:600;color:var(--copper);padding-top:.85rem;text-align:right}
+.s-line{flex-shrink:0;width:1px;background:rgba(224,144,96,.2);align-self:stretch;position:relative;margin:0 .2rem}
+.s-line::before{content:'';position:absolute;top:.85rem;left:50%;transform:translateX(-50%);width:7px;height:7px;background:var(--rust);border-radius:50%;border:2px solid var(--black)}
+.s-card{flex:1;background:var(--dark-card);border:1px solid var(--border);border-radius:12px;padding:.8rem .9rem}
+.s-type{font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;font-weight:600;color:var(--amber);margin-bottom:.2rem}
+.s-title{font-size:.9rem;font-weight:500;color:#fff}
+.s-desc{font-size:.76rem;color:var(--text-sec);margin-top:.25rem;line-height:1.45}
+
+/* ── PEOPLE ── */
+.search-bar{width:100%;background:var(--dark-card);border:1px solid var(--border);border-radius:10px;padding:.7rem 1rem;color:#fff;font-family:'Inter',sans-serif;font-size:.88rem;outline:none;margin-bottom:.5rem;transition:border-color .2s}
+.search-bar:focus{border-color:var(--copper)}.search-bar::placeholder{color:rgba(255,255,255,.25)}
+.search-result-count{font-size:.7rem;color:var(--text-muted);margin-bottom:.9rem;min-height:1.1em}
+.filter-row{display:flex;gap:.4rem;margin-bottom:1.25rem;overflow-x:auto}
+.filter-btn{flex-shrink:0;background:none;border:1px solid var(--border);border-radius:20px;padding:.3rem .85rem;font-family:'Inter',sans-serif;font-size:.72rem;color:var(--text-muted);cursor:pointer;transition:all .15s}
+.filter-btn.active{background:var(--rust);border-color:var(--rust);color:#fff}
+.people-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.person-card{background:var(--dark-card);border:1px solid var(--border);border-radius:16px;padding:1rem .9rem;cursor:pointer;text-align:center;transition:transform .15s,border-color .15s;width:100%;font-family:inherit}
+.person-card:hover{transform:translateY(-2px);border-color:var(--copper)}
+.p-av{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;color:#fff;margin:0 auto .6rem;overflow:hidden}
+.p-av img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.p-name{font-family:'Syne',sans-serif;font-weight:700;font-size:.82rem;color:#fff}
+.p-role{font-size:.7rem;color:var(--text-muted);margin-top:.15rem;line-height:1.3}
+.p-loc{font-size:.65rem;color:var(--copper);margin-top:.3rem}
+.p-tags{display:flex;flex-wrap:wrap;justify-content:center;gap:.3rem;margin-top:.4rem}
+.p-badge{font-size:.58rem;text-transform:uppercase;letter-spacing:.06em;padding:.12rem .5rem;border-radius:20px;background:rgba(208,99,57,.2);color:var(--amber)}
+.b-team{background:rgba(247,177,104,.15);color:var(--amber)}
+.b-galck{background:rgba(66,165,245,.15);color:#90caf9}
+.b-facilitator{background:rgba(102,187,106,.15);color:#a5d6a7}
+.b-attendee{background:rgba(224,144,96,.12);color:var(--copper)}
+
+/* ── DIRECTORY ── */
+.dir-search{flex:1;background:var(--dark-card);border:1px solid var(--border);border-radius:10px;padding:.65rem .9rem;color:#fff;font-family:'Inter',sans-serif;font-size:.85rem;outline:none;transition:border-color .2s;width:100%;margin-bottom:.75rem}
+.dir-search:focus{border-color:var(--copper)}.dir-search::placeholder{color:rgba(255,255,255,.25)}
+.dir-filter-row{display:flex;gap:.4rem;margin-bottom:1.1rem;overflow-x:auto;padding-bottom:2px}
+.dir-card{background:var(--dark-card);border:1px solid var(--border);border-radius:14px;padding:1rem;margin-bottom:.65rem;transition:border-color .15s,transform .1s}
+.dir-card:hover{border-color:var(--copper);transform:translateX(2px)}
+.dir-card-header{display:flex;align-items:flex-start;gap:.75rem;margin-bottom:.5rem}
+.dir-av{width:42px;height:42px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:.9rem;color:#fff}
+.dir-name{font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;color:#fff;line-height:1.2}
+.dir-type{font-size:.68rem;color:var(--text-muted);margin-top:.15rem}
+.dir-country{font-size:.68rem;color:var(--copper);margin-top:.1rem}
+.dir-bio{font-size:.78rem;color:var(--text-sec);line-height:1.5;margin-bottom:.6rem;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.dir-focus-tags{display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:.5rem}
+.dir-focus-tag{font-size:.63rem;padding:.15rem .5rem;border-radius:20px;background:rgba(224,144,96,.12);border:1px solid rgba(224,144,96,.3);color:rgba(255,255,255,.75)}
+.dir-links{display:flex;gap:.5rem;flex-wrap:wrap}
+.dir-link{font-size:.7rem;color:var(--copper);text-decoration:none;border:1px solid rgba(224,144,96,.25);border-radius:20px;padding:.2rem .6rem;transition:border-color .15s}
+.dir-link:hover{border-color:var(--copper)}
+.dir-support{font-size:.72rem;color:var(--text-muted);line-height:1.4;margin-top:.5rem;padding-top:.5rem;border-top:1px solid var(--border)}
+.dir-support strong{color:var(--text-sec);font-size:.63rem;text-transform:uppercase;letter-spacing:.07em;display:block;margin-bottom:.2rem}
+.dir-empty{text-align:center;padding:2rem;color:var(--text-muted);font-size:.85rem}
+
+/* ── RESOURCES ── */
+.res-search{width:100%;background:var(--dark-card);border:1px solid var(--border);border-radius:10px;padding:.65rem .9rem;color:#fff;font-family:'Inter',sans-serif;font-size:.85rem;outline:none;margin-bottom:.75rem;transition:border-color .2s}
+.res-search:focus{border-color:var(--copper)}.res-search::placeholder{color:rgba(255,255,255,.25)}
+.res-card{background:var(--dark-card);border:1px solid var(--border);border-radius:14px;padding:1rem;margin-bottom:.65rem}
+.res-card-header{display:flex;gap:.75rem;margin-bottom:.5rem}
+.res-icon{width:40px;height:40px;flex-shrink:0;background:var(--mid);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem}
+.res-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;color:#fff;line-height:1.25}
+.res-submitter{font-size:.68rem;color:var(--text-muted);margin-top:.15rem}
+.res-type-chip{display:inline-block;font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;padding:.15rem .55rem;border-radius:20px;background:rgba(208,99,57,.18);color:var(--amber);margin-bottom:.5rem}
+.res-desc{font-size:.78rem;color:var(--text-sec);line-height:1.5;margin-bottom:.6rem;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.res-focus-tags{display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:.6rem}
+.res-focus-tag{font-size:.63rem;padding:.15rem .5rem;border-radius:20px;background:rgba(224,144,96,.12);border:1px solid rgba(224,144,96,.3);color:rgba(255,255,255,.75)}
+.res-link-btn{display:inline-flex;align-items:center;gap:.35rem;font-size:.75rem;color:var(--copper);text-decoration:none;border:1px solid rgba(224,144,96,.3);border-radius:20px;padding:.3rem .75rem}
+.res-link-btn:hover{border-color:var(--copper)}
+.share-toggle-btn{width:100%;background:none;border:1px dashed rgba(224,144,96,.35);border-radius:12px;padding:1rem;font-family:'Inter',sans-serif;font-size:.85rem;color:var(--text-muted);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.5rem;margin-top:.5rem}
+.share-toggle-btn:hover{border-color:var(--copper);color:var(--copper)}
+.share-resource-form{background:var(--dark-card);border:1px dashed rgba(224,144,96,.35);border-radius:14px;padding:1.25rem;margin-top:.5rem}
+.share-resource-form.hidden{display:none}
+
+/* ── NOTICE BOARD ── */
+.compose{background:var(--dark-card);border:1px solid var(--border);border-radius:14px;padding:1rem;margin-bottom:1.25rem}
+.compose-ta{width:100%;background:none;border:none;font-family:'Inter',sans-serif;font-size:.88rem;color:#fff;resize:none;outline:none;min-height:64px}
+.compose-ta::placeholder{color:rgba(255,255,255,.25)}
+.compose-foot{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);padding-top:.6rem;margin-top:.5rem}
+.compose-note{font-size:.68rem;color:var(--text-muted)}
+.post-btn{background:var(--rust);border:none;border-radius:8px;padding:.4rem 1rem;color:#fff;font-family:'Syne',sans-serif;font-weight:700;font-size:.76rem;letter-spacing:.05em;text-transform:uppercase;cursor:pointer}
+.post-btn:hover{background:#b8562e}
+.notice-post{background:var(--dark-card);border:1px solid var(--border);border-radius:14px;padding:1rem;margin-bottom:.65rem;position:relative}
+.n-head{display:flex;align-items:center;gap:.6rem;margin-bottom:.6rem}
+.n-av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:.7rem;color:#fff;flex-shrink:0}
+.n-poster{font-size:.82rem;font-weight:600;color:#fff}
+.n-time{font-size:.68rem;color:var(--text-muted)}
+.team-chip{font-size:.58rem;text-transform:uppercase;background:rgba(208,99,57,.2);color:var(--amber);padding:.1rem .45rem;border-radius:10px}
+.n-text{font-size:.85rem;color:var(--text-sec);line-height:1.55}
+.delete-btn{position:absolute;top:.75rem;right:.75rem;background:rgba(255,82,82,.15);color:#ff5252;border:1px solid rgba(255,82,82,.25);border-radius:6px;padding:.25rem .6rem;font-size:.62rem;cursor:pointer;font-family:'Inter',sans-serif;transition:background .15s}
+.delete-btn:hover{background:rgba(255,82,82,.3)}
+.post-action-btn{background:none;border:1px solid var(--border);color:rgba(255,255,255,.6);border-radius:8px;padding:.2rem .6rem;font-size:.68rem;cursor:pointer;font-family:'Inter',sans-serif;transition:border-color .15s,color .15s}
+.post-action-btn:hover{border-color:rgba(255,255,255,.4);color:#fff}
+
+/* ── NOTIFICATIONS ── */
+.notif-card{background:var(--dark-card);border-left:3px solid var(--amber);border-radius:0 12px 12px 0;padding:.85rem 1rem;margin-bottom:.65rem}
+.notif-text{font-size:.85rem;color:#fff}
+.notif-time{font-size:.65rem;color:var(--text-muted);margin-top:.3rem}
+.admin-blast-tool{background:var(--mid);border:1px solid var(--border);border-radius:14px;padding:1.1rem;margin-bottom:1.5rem}
+.admin-blast-label{font-size:.62rem;text-transform:uppercase;letter-spacing:.12em;color:var(--amber);margin-bottom:.75rem;display:flex;align-items:center;gap:.4rem}
+
+/* ── FAQS ── */
+.faq-item{background:var(--dark-card);border:1px solid var(--border);border-radius:12px;margin-bottom:.5rem;overflow:hidden}
+.faq-q{width:100%;background:none;border:none;padding:.9rem 1rem;text-align:left;font-family:'Inter',sans-serif;font-size:.88rem;font-weight:500;color:#fff;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:.5rem}
+.faq-chev{flex-shrink:0;font-size:.7rem;color:var(--copper);transition:transform .2s}
+.faq-item.open .faq-chev{transform:rotate(180deg)}
+.faq-a{display:none;padding:.75rem 1rem .9rem;font-size:.82rem;color:var(--text-sec);line-height:1.6;border-top:1px solid var(--border)}
+.faq-item.open .faq-a{display:block}
+
+/* ── PROFILE PHOTO ── */
+.profile-photo-wrap{position:relative;width:80px;height:80px;margin:0 auto .75rem}
+.profile-av-large{width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:1.8rem;color:#fff;transition:background .3s;overflow:hidden}
+.profile-av-large img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.photo-upload-btn{position:absolute;bottom:0;right:0;width:26px;height:26px;background:var(--rust);border:2px solid var(--black);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.75rem}
+#photo-file-input{display:none}
+/* ── SPEAKER ASSIGNMENT ── */
+.session-speaker-row{display:flex;align-items:center;justify-content:space-between;font-size:.78rem;color:#fff;padding:.3rem 0;border-bottom:1px solid var(--border)}
+.assign-speaker-btn{background:var(--rust);border:none;border-radius:6px;padding:.2rem .55rem;color:#fff;font-size:.65rem;cursor:pointer;font-family:'Inter',sans-serif}
+/* ── INSTALL BANNER ── */
+.install-banner{display:none;position:fixed;bottom:5.5rem;left:1rem;right:1rem;background:var(--dark-card);border:1px solid var(--copper);border-radius:14px;padding:.85rem 1rem;z-index:150;align-items:center;justify-content:space-between;gap:.75rem}
+.install-banner.show{display:flex}
+.install-banner-text{font-size:.82rem;color:#fff;flex:1}
+.install-yes{background:var(--rust);border:none;border-radius:8px;padding:.35rem .8rem;color:#fff;font-size:.76rem;cursor:pointer;font-family:'Syne',sans-serif;font-weight:700;white-space:nowrap}
+.install-no{background:none;border:none;color:var(--text-muted);font-size:.8rem;cursor:pointer;padding:.3rem}
+/* ── AUDIENCE SELECTOR ── */
+.audience-row{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.75rem}
+.aud-btn{background:none;border:1px solid var(--border);border-radius:20px;padding:.28rem .75rem;font-family:'Inter',sans-serif;font-size:.72rem;color:#fff;cursor:pointer;transition:all .15s}
+.aud-btn.active{background:var(--rust);border-color:var(--rust)}
+/* ── MULTISELECT ── */
+.multiselect-wrap{background:var(--mid);border:1px solid var(--border);border-radius:10px;padding:.6rem .8rem;max-height:180px;overflow-y:auto}
+.multiselect-wrap label{display:flex;align-items:center;gap:.5rem;font-size:.82rem;color:#fff;padding:.25rem 0;cursor:pointer}
+.multiselect-wrap input[type=checkbox]{width:15px;height:15px;accent-color:var(--rust);flex-shrink:0}
+/* ── COUNTRY SELECT ── */
+#pf-location{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23e09060' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .9rem center;background-color:var(--mid)}
+/* ── PROFILE layout ── */
+.profile-avatar-area{display:flex;flex-direction:column;align-items:center;margin-bottom:1.5rem}
+.profile-av-edit{font-size:.75rem;color:var(--copper);cursor:pointer;background:none;border:1px solid rgba(224,144,96,.3);border-radius:20px;padding:.3rem .8rem;font-family:'Inter',sans-serif;margin-top:.4rem}
+.optin-card{background:var(--dark-card);border:1px solid var(--border);border-radius:14px;padding:1.1rem;margin-bottom:1rem}
+.optin-card-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;color:#fff;margin-bottom:.35rem}
+.optin-card-desc{font-size:.78rem;color:var(--text-muted);line-height:1.5;margin-bottom:.9rem}
+.optin-option{display:flex;align-items:flex-start;gap:.65rem;margin-bottom:.6rem;cursor:pointer}
+.optin-check{width:18px;height:18px;flex-shrink:0;border:1.5px solid rgba(224,144,96,.5);border-radius:5px;background:none;appearance:none;-webkit-appearance:none;cursor:pointer;position:relative;margin-top:2px;transition:background .15s}
+.optin-check:checked{background:var(--rust);border-color:var(--rust)}
+.optin-check:checked::after{content:'✓';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:.65rem;color:#fff;font-weight:700}
+.optin-check:focus{outline:2px solid var(--copper);outline-offset:2px}
+.optin-text strong{color:#fff;display:block;font-size:.82rem;margin-bottom:.1rem}
+.optin-text{font-size:.8rem;color:var(--text-sec);line-height:1.4}
+
+/* ── FORMS ── */
+.field-group{margin-bottom:1rem}
+.field-label{font-size:.67rem;letter-spacing:.12em;text-transform:uppercase;color:#fff;margin-bottom:.45rem;display:block}
+.field-input{width:100%;background:var(--mid);border:1px solid var(--border);border-radius:10px;padding:.75rem .9rem;color:#fff;font-family:'Inter',sans-serif;font-size:.9rem;outline:none;transition:border-color .2s}
+.field-input:focus{border-color:var(--copper)}.field-input::placeholder{color:rgba(255,255,255,.25)}
+textarea.field-input{resize:vertical;min-height:80px;line-height:1.5}
+select.field-input{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23e09060' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .9rem center;background-color:var(--mid)}
+select.field-input option{background:var(--mid)}
+.perm-block{background:var(--mid);border-radius:12px;padding:1rem;margin-top:.75rem}
+.perm-title{font-size:.72rem;font-weight:600;color:#fff;margin-bottom:.6rem}
+.perm-option{display:flex;align-items:flex-start;gap:.65rem;margin-bottom:.55rem;cursor:pointer}
+.perm-check{width:18px;height:18px;flex-shrink:0;border:1.5px solid rgba(224,144,96,.5);border-radius:5px;background:none;appearance:none;-webkit-appearance:none;cursor:pointer;position:relative;margin-top:1px;transition:background .15s}
+.perm-check:checked{background:var(--rust);border-color:var(--rust)}
+.perm-check:checked::after{content:'✓';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:.65rem;color:#fff;font-weight:700}
+.perm-check:focus{outline:2px solid var(--copper);outline-offset:2px}
+.perm-text strong{color:#fff;display:block;font-size:.8rem;margin-bottom:.1rem}
+.perm-text{font-size:.78rem;color:var(--text-sec);line-height:1.4}
+.save-btn{width:100%;background:var(--rust);border:none;border-radius:10px;padding:.85rem;color:#fff;font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:background .15s,transform .1s;margin-top:.75rem}
+.save-btn:hover{background:#b8562e;transform:translateY(-1px)}
+.save-btn.blue{background:#42a5f5}.save-btn.blue:hover{background:#1e88e5}
+.save-success{display:none;text-align:center;font-size:.82rem;margin-top:.75rem;padding:.6rem;border-radius:8px}
+.save-success.green{color:#81c784;background:rgba(129,199,132,.1)}
+.save-success.amber{color:var(--amber);background:rgba(247,177,104,.1)}
+
+/* ── ADMIN MODAL ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(8px)}
+.modal-overlay.open{display:flex}
+.modal-sheet{background:var(--off-black);border:1px solid var(--border);border-radius:20px;padding:1.5rem;width:92%;max-width:420px;max-height:85vh;overflow-y:auto}
+.modal-close{display:block;margin-left:auto;background:var(--mid);border:none;width:30px;height:30px;border-radius:50%;color:var(--text-muted);font-size:.9rem;cursor:pointer;margin-bottom:1.25rem}
+
+/* ── PERSON MODAL ── */
+.person-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:200;align-items:flex-end;backdrop-filter:blur(6px)}
+.person-modal.open{display:flex}
+.person-sheet{background:var(--off-black);border:1px solid var(--border);border-radius:24px 24px 0 0;padding:1.5rem;width:100%;max-height:85vh;overflow-y:auto;animation:slideUp .28s ease}
+@keyframes slideUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+.m-av{width:66px;height:66px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;color:#fff;margin:0 auto 1rem;transition:background .3s}
+.m-name{font-family:'Syne',sans-serif;font-weight:800;font-size:1.4rem;text-align:center;color:#fff}
+.m-detail{font-size:.8rem;color:var(--text-muted);text-align:center;margin-top:.25rem}
+.m-bio{font-size:.85rem;color:var(--text-sec);line-height:1.65;margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--border)}
+</style>
+</head>
+<body>
+<a href="#main-content" class="skip-link">Skip to main content</a>
+<div id="a11y-announcer" role="status" aria-live="polite" aria-atomic="true"></div>
+
+<!-- ═══════════ LOGIN ═══════════ -->
+<div id="login-screen" role="main">
+  <div aria-hidden="true" class="login-bg-chevs">
+    <svg width="90" height="100" viewBox="0 0 24 28" fill="none"><path d="M4 2L20 14L4 26" stroke="#e09060" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <svg width="90" height="100" viewBox="0 0 24 28" fill="none"><path d="M4 2L20 14L4 26" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <svg width="90" height="100" viewBox="0 0 24 28" fill="none"><path d="M4 2L20 14L4 26" stroke="#d06339" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+  <div style="text-align:center;margin-bottom:2rem">
+    <div aria-hidden="true" style="display:flex;justify-content:center;gap:5px;margin-bottom:1.25rem">
+      <svg width="22" height="26" viewBox="0 0 24 28" fill="none"><path d="M4 2L20 14L4 26" stroke="#e09060" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg width="22" height="26" viewBox="0 0 24 28" fill="none"><path d="M4 2L20 14L4 26" stroke="#fff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg width="22" height="26" viewBox="0 0 24 28" fill="none"><path d="M4 2L20 14L4 26" stroke="#d06339" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="login-wordmark">BLACK<em>QUEER</em>MOVEMENTS</div>
+    <div class="collab-row">
+      <span class="collab-small">in collaboration with</span>
+      <span class="collab-name">galck+</span>
+    </div>
+    <div class="login-tagline">Nairobi, Kenya · 3rd – 6th May 2026</div>
+  </div>
+  <div class="login-card">
+    <label class="lbl" for="email-in">Attendee email address</label>
+    <input class="login-input" id="email-in" type="email" placeholder="you@example.com" autocomplete="email">
+    <button class="login-btn" onclick="tryLogin()">
+      <svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      Login to the event app
+    </button>
+    <div id="login-status" role="status" aria-live="polite" style="font-size:.78rem;text-align:center;min-height:1.2em;color:var(--text-muted)">🔒 Access restricted to confirmed attendees</div>
+  </div>
+</div>
+
+<!-- ═══════════ ONBOARDING MODAL ═══════════ -->
+<div id="onboarding-overlay" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="onboard-title">
+  <div class="modal-sheet">
+    <h2 id="onboard-title" style="font-family:'Syne';font-size:1.3rem;text-align:center;margin-bottom:.5rem">Welcome!</h2>
+    <p style="text-align:center;font-size:.82rem;color:var(--text-muted);margin-bottom:1.5rem">Set up your profile to join the conversation.</p>
+    <div class="field-group">
+      <label class="field-label" for="onboard-name">Your name</label>
+      <input class="field-input" id="onboard-name" type="text" placeholder="Full name or preferred name" autocomplete="name">
+    </div>
+    <div class="field-group">
+      <label class="field-label" for="onboard-role">Role or discipline</label>
+      <input class="field-input" id="onboard-role" type="text" placeholder="e.g. Practitioner, Researcher, Organiser">
+    </div>
+    <button class="save-btn" onclick="completeOnboarding()">Join Forum</button>
+  </div>
+</div>
+
+<!-- ═══════════ APP ═══════════ -->
+<div id="app">
+  <header class="app-header">
+    <div class="header-left">
+      <div aria-hidden="true" class="hdr-chevs">
+        <svg width="14" height="17" viewBox="0 0 24 28" fill="none"><path d="M4 2L20 14L4 26" stroke="#e09060" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg width="14" height="17" viewBox="0 0 24 28" fill="none"><path d="M4 2L20 14L4 26" stroke="#fff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg width="14" height="17" viewBox="0 0 24 28" fill="none"><path d="M4 2L20 14L4 26" stroke="#d06339" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div>
+        <div class="hdr-main">Healing Justice Forum <span id="admin-badge" style="display:none" class="admin-badge">Admin</span></div>
+        <div class="hdr-sub">BQM × galck+ · 3rd – 6th May 2026</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <button class="hdr-icon-btn" onclick="switchPage('notifications')" aria-label="Notifications">
+        🔔<div id="notif-dot" class="notif-dot" aria-hidden="true"></div>
+      </button>
+      <button class="hdr-avatar-btn" onclick="switchPage('profile')" aria-label="My profile">
+        <div class="hdr-avatar" id="hdr-initials">??</div>
+      </button>
+    </div>
+  </header>
+
+  <main id="main-content">
+
+  <!-- HOME -->
+  <div id="page-home" class="page active">
+    <div class="home-hero">
+      <div aria-hidden="true" class="hero-bg-chevs">
+        <svg width="75" height="85" viewBox="0 0 24 28" fill="none"><path d="M4 2L20 14L4 26" stroke="#e09060" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg width="75" height="85" viewBox="0 0 24 28" fill="none"><path d="M4 2L20 14L4 26" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <p class="hero-welcome" id="hero-welcome">Welcome</p>
+      <button onclick="switchPage('profile')" class="hero-cta-btn">Complete your profile ›</button>
+      <h2 class="hero-title">Healing<br><em>Justice</em><br>Forum</h2>
+      <div class="hero-meta">📍 Nairobi, Kenya · 3rd – 6th May 2026</div>
+    </div>
+    <button id="alert-banner" class="alert-banner" onclick="switchPage('notifications')" aria-live="polite">
+      <span class="alert-banner-label">🔔 New alert</span>
+      <span id="alert-banner-text"></span>
+    </button>
+    <div class="quick-grid">
+      <button class="quick-card" onclick="switchPage('agenda')" aria-label="View programme agenda"><div aria-hidden="true" class="qc-icon">📅</div><div class="qc-label">Agenda</div><div class="qc-sub">3rd–6th May programme</div></button>
+      <button class="quick-card" onclick="switchPage('people')" aria-label="View people directory"><div aria-hidden="true" class="qc-icon">👥</div><div class="qc-label">People</div><div class="qc-sub">Attendees & speakers</div></button>
+      <button class="quick-card" onclick="switchPage('resources')" aria-label="View resources and directory"><div aria-hidden="true" class="qc-icon">📚</div><div class="qc-label">Resources</div><div class="qc-sub">Materials & directory</div></button>
+      <button class="quick-card" onclick="switchPage('faqs')" aria-label="View FAQs"><div aria-hidden="true" class="qc-icon">🙋</div><div class="qc-label">FAQs</div><div class="qc-sub">Practical info</div></button>
+    </div>
+  </div>
+
+  <!-- AGENDA -->
+  <div id="page-agenda" class="page">
+    <p class="page-eyebrow">Healing Justice Forum</p>
+    <h1 class="page-title">Programme</h1>
+    <div class="day-tabs" role="tablist" aria-label="Programme days">
+      <button class="day-tab active" role="tab" aria-selected="true" onclick="switchDay(0)">Sun 3 May</button>
+      <button class="day-tab" role="tab" aria-selected="false" onclick="switchDay(1)">Mon 4 May</button>
+      <button class="day-tab" role="tab" aria-selected="false" onclick="switchDay(2)">Tue 5 May</button>
+      <button class="day-tab" role="tab" aria-selected="false" onclick="switchDay(3)">Wed 6 May</button>
+    </div>
+    <div class="agenda-day active" role="tabpanel">
+      <div class="agenda-day-hdr"><div class="adh-name">Day 0 — Arrival & Rest</div><div class="adh-theme">Travel day. Settle in, recover, acclimatise.</div></div>
+      <div class="s-row"><div class="s-time">All day</div><div aria-hidden="true" class="s-line"></div><div class="s-card"><div class="s-type">Arrival</div><div class="s-title">International participants arrive in Nairobi</div><div class="s-desc">Transfer to accommodation. Time to rest and settle in.</div></div></div>
+      <div class="s-row"><div class="s-time">Eve</div><div aria-hidden="true" class="s-line"></div><div class="s-card"><div class="s-type">Optional</div><div class="s-title">Early arrivals informal meet</div><div class="s-desc">Low-key gathering for anyone who arrives early.</div></div></div>
+    </div>
+    <div class="agenda-day" role="tabpanel">
+      <div class="agenda-day-hdr"><div class="adh-name">Day 1 — Trust-Building & Introductions</div><div class="adh-theme">Morning rest · Evening welcome dinner</div></div>
+      <div class="s-row"><div class="s-time">AM</div><div aria-hidden="true" class="s-line"></div><div class="s-card"><div class="s-type">Rest</div><div class="s-title">Free morning</div><div class="s-desc">Further arrivals. Personal time to rest and explore Nairobi.</div></div></div>
+      <div class="s-row"><div class="s-time">19:00</div><div aria-hidden="true" class="s-line"></div><div class="s-card"><div class="s-type">Welcome</div><div class="s-title">Welcome dinner & grounding ritual</div><div class="s-desc">Informal social, introductions, grounding. Space to connect before the work begins.</div></div></div>
+    </div>
+    <div class="agenda-day" role="tabpanel">
+      <div class="agenda-day-hdr"><div class="adh-name">Day 2 — Full Symposium Day</div><div class="adh-theme">Opening ritual · Four session types · Synthesis & close</div></div>
+      <div class="s-row"><div class="s-time">09:00</div><div aria-hidden="true" class="s-line"></div><div class="s-card"><div class="s-type">Ritual</div><div class="s-title">Opening ceremony</div><div class="s-desc">Grounding and opening of the space.</div></div></div>
+      <div class="s-row"><div class="s-time">10:00</div><div aria-hidden="true" class="s-line"></div><div class="s-card"><div class="s-type">Collective Mapping</div><div class="s-title">What healing justice looks like across our contexts</div><div class="s-desc">Participants map what is present and absent in their geographies.</div></div></div>
+      <div class="s-row"><div class="s-time">12:00</div><div aria-hidden="true" class="s-line"></div><div class="s-card"><div class="s-type">Break</div><div class="s-title">Communal lunch</div><div class="s-desc">Rest and nourishment.</div></div></div>
+      <div class="s-row"><div class="s-time">13:30</div><div aria-hidden="true" class="s-line"></div><div class="s-card"><div class="s-type">Listening & Storytelling</div><div class="s-title">Story-based prompts</div><div class="s-desc">When healing work failed or caused harm; a practice that saved your community; what revolution requires of our bodies and spirits.</div></div></div>
+      <div class="s-row"><div class="s-time">15:30</div><div aria-hidden="true" class="s-line"></div><div class="s-card"><div class="s-type">Frameworking</div><div class="s-title">Building the Playbook — core questions</div><div class="s-desc">What is healing justice, why does it matter to Black queer people, how does place shape priorities.</div></div></div>
+      <div class="s-row"><div class="s-time">17:00</div><div aria-hidden="true" class="s-line"></div><div class="s-card"><div class="s-type">Building Blocks</div><div class="s-title">Working groups — Playbook sections</div><div class="s-desc">Definitions, case studies, tools, guidance and questions for the final publication.</div></div></div>
+      <div class="s-row"><div class="s-time">18:30</div><div aria-hidden="true" class="s-line"></div><div class="s-card"><div class="s-type">Synthesis</div><div class="s-title">Closing circle & next steps</div><div class="s-desc">Synthesis, commitments, close.</div></div></div>
+    </div>
+    <div class="agenda-day" role="tabpanel">
+      <div class="agenda-day-hdr"><div class="adh-name">Day 3 — Departures</div><div class="adh-theme">Safe travels home</div></div>
+      <div class="s-row"><div class="s-time">AM</div><div aria-hidden="true" class="s-line"></div><div class="s-card"><div class="s-type">Debrief</div><div class="s-title">BQM + GALCK+ team debrief</div><div class="s-desc">Internal reflection and next steps for the Playbook.</div></div></div>
+      <div class="s-row"><div class="s-time">All day</div><div aria-hidden="true" class="s-line"></div><div class="s-card"><div class="s-type">Departures</div><div class="s-title">Participants depart Nairobi</div><div class="s-desc">Airport transfers arranged via queer-informed travel agent.</div></div></div>
+    </div>
+  </div>
+
+  <!-- PEOPLE -->
+  <div id="page-people" class="page">
+    <p class="page-eyebrow">Confirmed participants</p>
+    <h1 class="page-title">People</h1>
+    <input class="search-bar" type="text" placeholder="Search by name or location…" aria-label="Search people by name or location" oninput="searchPeople(this.value)">
+    <div class="search-result-count" id="people-count" aria-live="polite"></div>
+    <div class="filter-row" role="group" aria-label="Filter by role">
+      <button class="filter-btn active" onclick="filterPeople(this,'all')">All</button>
+      <button class="filter-btn" onclick="filterPeople(this,'speaker')">Speakers</button>
+      <button class="filter-btn" onclick="filterPeople(this,'attendee')">Attendees</button>
+      <button class="filter-btn" onclick="filterPeople(this,'team')">BQM Team</button>
+    </div>
+    <div class="people-grid" id="people-grid" aria-live="polite"></div>
+  </div>
+
+  <!-- RESOURCES -->
+  <div id="page-resources" class="page">
+    <p class="page-eyebrow">Shared materials</p>
+    <h1 class="page-title">Resources</h1>
+    <input class="res-search" type="text" placeholder="Search resources…" aria-label="Search resources" oninput="filterResources(this.value,null)">
+    <div class="filter-row" id="res-filter-row" role="group" aria-label="Filter by resource type">
+      <button class="filter-btn active" onclick="filterResources('',this,'all')">All</button>
+      <button class="filter-btn" onclick="filterResources('',this,'Research / Report')">Research</button>
+      <button class="filter-btn" onclick="filterResources('',this,'Guide / Toolkit')">Guides</button>
+      <button class="filter-btn" onclick="filterResources('',this,'Funding / Opportunity')">Funding</button>
+      <button class="filter-btn" onclick="filterResources('',this,'Creative work (zine, art, podcast, film)')">Creative</button>
+      <button class="filter-btn" onclick="filterResources('',this,'Training / Educational material')">Training</button>
+    </div>
+    <div id="res-list" aria-live="polite" aria-label="Resources list"></div>
+
+    <div class="sec-lbl">Community Directory</div>
+    <input class="dir-search" type="text" placeholder="Search directory…" aria-label="Search community directory" oninput="filterDirectory(this.value,null)">
+    <div class="dir-filter-row" id="dir-filter-row" role="group" aria-label="Filter directory by type">
+      <button class="filter-btn active" onclick="filterDirectory('',this,'all')">All</button>
+      <button class="filter-btn" onclick="filterDirectory('',this,'Individual (researcher)')">Researchers</button>
+      <button class="filter-btn" onclick="filterDirectory('',this,'Individual (practitioner)')">Practitioners</button>
+      <button class="filter-btn" onclick="filterDirectory('',this,'Organisation')">Organisations</button>
+    </div>
+    <div id="dir-list" aria-live="polite" aria-label="Community directory"></div>
+
+    <div class="sec-lbl">Share a resource</div>
+    <button class="share-toggle-btn" id="share-toggle" onclick="toggleShareForm()">＋ Share a resource with the group</button>
+    <div class="share-resource-form hidden" id="share-form">
+      <div class="field-group"><label class="field-label" for="res-title-in">Resource title</label><input class="field-input" id="res-title-in" type="text" placeholder="e.g. Community listening notes"></div>
+      <div class="field-group"><label class="field-label" for="res-desc-in">Description</label><textarea class="field-input" id="res-desc-in" placeholder="What is this resource about? Why are you sharing it?"></textarea></div>
+      <div class="field-group"><label class="field-label" for="res-link-in">Link (paste URL)</label><input class="field-input" id="res-link-in" type="url" placeholder="https://…"></div>
+      <div class="field-group"><label class="field-label" for="res-file-in">Or upload a file (optional)</label><input class="field-input" id="res-file-in" type="file" accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.jpg,.png" style="padding:.5rem .9rem;cursor:pointer"></div>
+      <div class="field-group"><label class="field-label" for="res-type-in">Resource type</label>
+        <select class="field-input" id="res-type-in">
+          <option value="">Select type…</option>
+          <option>Creative work (zine, art, podcast, film)</option>
+          <option>Event / Recording</option>
+          <option>Funding / Opportunity</option>
+          <option>Guide / Toolkit</option>
+          <option>Research / Report</option>
+          <option>Service directory / Signposting</option>
+          <option>Template / Policy document</option>
+          <option>Training / Educational material</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Focus areas (select all that apply)</label>
+        <div class="multiselect-wrap" id="res-focus-wrap">
+          <label><input type="checkbox" value="Black Feminism"> Black Feminism</label>
+          <label><input type="checkbox" value="Climate and Environment"> Climate and Environment</label>
+          <label><input type="checkbox" value="Disability and Neurodiversity"> Disability and Neurodiversity</label>
+          <label><input type="checkbox" value="Gender Based Rights"> Gender Based Rights</label>
+          <label><input type="checkbox" value="Housing and Homelessness"> Housing and Homelessness</label>
+          <label><input type="checkbox" value="LGBTQ+ Rights"> LGBTQ+ Rights</label>
+          <label><input type="checkbox" value="Migrant Rights"> Migrant Rights</label>
+          <label><input type="checkbox" value="Policy, Law and Advocacy"> Policy, Law and Advocacy</label>
+          <label><input type="checkbox" value="Racial Justice"> Racial Justice</label>
+          <label><input type="checkbox" value="Trans Inclusion"> Trans Inclusion</label>
+          <label><input type="checkbox" value="Youth"> Youth</label>
+        </div>
+      </div>
+      <div class="perm-block">
+        <div class="perm-title">🔒 Sharing permissions</div>
+        <p style="font-size:.75rem;color:#fff;margin-bottom:.75rem;line-height:1.5">Choose how you'd like this resource to be used. Both options can be selected.</p>
+        <label class="perm-option"><input type="checkbox" class="perm-check" id="res-perm-event" checked aria-label="Share with attendees for this event"><div class="perm-text"><strong>Share with this event's attendees</strong>Visible to Forum attendees during and immediately after the event.</div></label>
+        <label class="perm-option"><input type="checkbox" class="perm-check" id="res-perm-public" aria-label="I consent to this resource being published publicly"><div class="perm-text"><strong>I consent to this resource being published publicly</strong>May also be included in BQM's broader resource library. You will be credited unless indicated otherwise.</div></label>
+        <p style="font-size:.7rem;color:rgba(255,255,255,.5);margin-top:.65rem;line-height:1.4">You can update these preferences at any time by contacting the BQM team.</p>
+      </div>
+      <button class="save-btn" onclick="submitResource(this)">Submit resource</button>
+      <div class="save-success amber" id="resource-success" role="status" aria-live="polite">✓ Resource submitted — thank you!</div>
+    </div>
+
+    <!-- Add Organisation button (#12) -->
+    <div class="sec-lbl" style="margin-top:1.5rem">Add to Community Directory</div>
+    <a href="https://airtable.com/appgHdBAyY384JlKx/pagKICN2vJDDQzP8i/form" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:.5rem;background:none;border:1px dashed rgba(224,144,96,.35);border-radius:12px;padding:1rem;font-family:'Inter',sans-serif;font-size:.85rem;color:var(--copper);text-decoration:none;margin-bottom:.5rem;transition:border-color .15s" onmouseover="this.style.borderColor='var(--copper)'" onmouseout="this.style.borderColor='rgba(224,144,96,.35)'">
+      🏢 Add your organisation to the directory
+    </a>
+  </div>
+
+  <!-- NOTICE BOARD -->
+  <div id="page-noticeboard" class="page">
+    <p class="page-eyebrow">Team updates & discussion</p>
+    <h1 class="page-title">Notice Board</h1>
+    <div class="compose">
+      <label class="field-label" for="post-input">Post an update</label>
+      <textarea class="compose-ta" id="post-input" placeholder="Share something with the group…" rows="3"></textarea>
+      <div class="compose-foot">
+        <div>
+          <div style="font-size:.62rem;color:#fff;margin-bottom:.3rem">Visible to:</div>
+          <div class="audience-row" id="post-audience-row" style="margin-bottom:0">
+            <button class="aud-btn active" onclick="setPostAudience(this,'all')">Everyone</button>
+            <button class="aud-btn" onclick="setPostAudience(this,'Speaker')">Speakers</button>
+            <button class="aud-btn" onclick="setPostAudience(this,'event-team')">Event Team</button>
+            <button class="aud-btn" onclick="setPostAudience(this,'Facilitator')">Facilitators</button>
+          </div>
+        </div>
+        <button class="post-btn" onclick="addPost()">Post</button>
+      </div>
+    </div>
+    <div id="posts-container"></div>
+  </div>
+
+  <!-- NOTIFICATIONS -->
+  <div id="page-notifications" class="page">
+    <p class="page-eyebrow">Updates from the team</p>
+    <h1 class="page-title">Notifications</h1>
+    <div id="admin-blast-tool" style="display:none">
+      <div class="admin-blast-tool">
+        <div class="admin-blast-label">⚡ Admin — send alert</div>
+        <div class="field-group" style="margin-bottom:.5rem">
+          <label class="field-label">Send to</label>
+          <div class="audience-row" id="notif-audience-row">
+            <button class="aud-btn active" onclick="setAudience(this,'all')">Everyone</button>
+            <button class="aud-btn" onclick="setAudience(this,'Speaker')">Speakers</button>
+            <button class="aud-btn" onclick="setAudience(this,'event-team')">Event Team</button>
+            <button class="aud-btn" onclick="setAudience(this,'Facilitator')">Facilitators</button>
+          </div>
+        </div>
+        <div class="field-group"><label class="field-label" for="blast-input">Alert message</label><input class="field-input" id="blast-input" type="text" placeholder="e.g. Lunch is now served in the courtyard"></div>
+        <button class="save-btn" onclick="sendBlastNotif()">Send Alert</button>
+        <div class="save-success amber" id="blast-success" role="status" aria-live="polite">✓ Alert sent</div>
+      </div>
+    </div>
+    <div id="notif-list">
+      <p style="text-align:center;color:var(--text-muted);font-size:.85rem;padding:2rem 0">No notifications yet.</p>
+    </div>
+  </div>
+
+  <!-- FAQs -->
+  <div id="page-faqs" class="page">
+    <p class="page-eyebrow">Practical information</p>
+    <h1 class="page-title">FAQs</h1>
+    <div class="sec-lbl">🏨 Accommodation</div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">Is accommodation provided?<span aria-hidden="true" class="faq-chev">▼</span></button><div class="faq-a" role="region">Yes — all accommodation for 3rd–6th May is fully covered. You'll receive details in your personalised travel itinerary by mid-April.</div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">Is the venue safe?<span aria-hidden="true" class="faq-chev">▼</span></button><div class="faq-a" role="region">Yes. Accommodation and the venue have been arranged through a queer-informed travel agent with longstanding community relationships in Nairobi. GALCK+ has ensured the space is welcoming and safe.</div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">What if I have accessibility needs?<span aria-hidden="true" class="faq-chev">▼</span></button><div class="faq-a" role="region">The venue is wheelchair accessible with a quiet/low-stimulation space. Live captioning and dietary accommodations are confirmed. Contact Chantelle for specific needs.</div></div>
+    <div class="sec-lbl">🍽 Food</div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">Are meals covered?<span aria-hidden="true" class="faq-chev">▼</span></button><div class="faq-a" role="region">All meals during the Forum are covered, including the welcome dinner on 4th May. Let Whitney know if your dietary requirements have changed.</div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">Can you cater for dietary requirements?<span aria-hidden="true" class="faq-chev">▼</span></button><div class="faq-a" role="region">Yes. Ensure your dietary needs are in the onboarding form. Contact Whitney if you haven't submitted them yet.</div></div>
+    <div class="sec-lbl">✈️ Travel</div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">Are flights covered?<span aria-hidden="true" class="faq-chev">▼</span></button><div class="faq-a" role="region">Yes — international flights and accommodation for international participants are fully covered. A participation stipend is also available.</div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">Do I need a visa?<span aria-hidden="true" class="faq-chev">▼</span></button><div class="faq-a" role="region">Visa requirements depend on your nationality. If you need a support or invitation letter, request one by 1 April — see the pinned notice on the Notice Board.</div></div>
+    <div class="sec-lbl">🔒 Safety & Privacy</div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">Who can see my profile?<span aria-hidden="true" class="faq-chev">▼</span></button><div class="faq-a" role="region">Your profile is only visible to other confirmed attendees. This app is private — only email addresses on our confirmed list can log in.</div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">What is the Playbook attribution policy?<span aria-hidden="true" class="faq-chev">▼</span></button><div class="faq-a" role="region">All participants are considered co-authors. Attribution options range from full co-author to contributing author to anonymous. You have full control — consent is managed through a pre-event process.</div></div>
+  </div>
+
+  <!-- PROFILE -->
+  <div id="page-profile" class="page">
+    <p class="page-eyebrow">Your account</p>
+    <h1 class="page-title">My Profile</h1>
+    <div class="profile-avatar-area">
+      <div class="profile-photo-wrap">
+        <div class="profile-av-large" id="profile-av-display" style="background:var(--rust)">??</div>
+        <label class="photo-upload-btn" title="Upload photo" aria-label="Upload profile photo">📷<input type="file" id="photo-file-input" accept="image/*" onchange="handlePhotoUpload(this)"></label>
+      </div>
+      <button class="profile-av-edit" onclick="cycleAvatarColor()" aria-label="Change avatar colour" id="cycle-color-btn">Change colour</button>
+    </div>
+    <div id="admin-panel-btn" style="display:none;margin-bottom:1rem">
+      <button class="save-btn blue" onclick="openAdminModal()">Open Admin Panel</button>
+    </div>
+    <div class="field-group"><label class="field-label" for="pf-name">Display name</label><input class="field-input" id="pf-name" type="text" placeholder="Your name or preferred name"></div>
+    <div class="field-group"><label class="field-label" for="pf-pronouns">Pronouns</label><input class="field-input" id="pf-pronouns" type="text" placeholder="e.g. she/her, they/them"></div>
+    <div class="field-group"><label class="field-label" for="pf-role">Role / discipline</label><input class="field-input" id="pf-role" type="text" placeholder="e.g. Healer, Organiser, Academic"></div>
+    <div class="field-group"><label class="field-label" for="pf-location">Location (country)</label>
+      <select class="field-input" id="pf-location"><option value="">Select country…</option><option>Afghanistan</option><option>Albania</option><option>Algeria</option><option>Angola</option><option>Argentina</option><option>Australia</option><option>Austria</option><option>Bangladesh</option><option>Belgium</option><option>Belize</option><option>Bolivia</option><option>Bosnia and Herzegovina</option><option>Botswana</option><option>Brazil</option><option>Burkina Faso</option><option>Burundi</option><option>Cambodia</option><option>Cameroon</option><option>Canada</option><option>Chad</option><option>Chile</option><option>China</option><option>Colombia</option><option>Congo (DRC)</option><option>Costa Rica</option><option>Côte d'Ivoire</option><option>Croatia</option><option>Cuba</option><option>Czech Republic</option><option>Denmark</option><option>Dominican Republic</option><option>Ecuador</option><option>Egypt</option><option>El Salvador</option><option>Ethiopia</option><option>Finland</option><option>France</option><option>Germany</option><option>Ghana</option><option>Greece</option><option>Guatemala</option><option>Guinea</option><option>Haiti</option><option>Honduras</option><option>Hungary</option><option>India</option><option>Indonesia</option><option>Iran</option><option>Iraq</option><option>Ireland</option><option>Israel</option><option>Italy</option><option>Jamaica</option><option>Japan</option><option>Jordan</option><option>Kazakhstan</option><option>Kenya</option><option>Malawi</option><option>Malaysia</option><option>Mali</option><option>Mexico</option><option>Morocco</option><option>Mozambique</option><option>Myanmar</option><option>Namibia</option><option>Nepal</option><option>Netherlands</option><option>New Zealand</option><option>Nicaragua</option><option>Niger</option><option>Nigeria</option><option>Norway</option><option>Pakistan</option><option>Panama</option><option>Peru</option><option>Philippines</option><option>Poland</option><option>Portugal</option><option>Romania</option><option>Russia</option><option>Rwanda</option><option>Senegal</option><option>Sierra Leone</option><option>Somalia</option><option>South Africa</option><option>South Sudan</option><option>Spain</option><option>Sri Lanka</option><option>Sudan</option><option>Sweden</option><option>Switzerland</option><option>Syria</option><option>Tanzania</option><option>Thailand</option><option>Trinidad and Tobago</option><option>Tunisia</option><option>Turkey</option><option>Uganda</option><option>Ukraine</option><option>United Kingdom</option><option>United States of America</option><option>Uruguay</option><option>Venezuela</option><option>Vietnam</option><option>Yemen</option><option>Zambia</option><option>Zimbabwe</option></select>
+    </div>
+    <div class="field-group"><label class="field-label" for="pf-org">Organisation (optional)</label><input class="field-input" id="pf-org" type="text" placeholder="Your organisation or collective"></div>
+    <div class="field-group"><label class="field-label" for="pf-bio">Bio (optional)</label><textarea class="field-input" id="pf-bio" placeholder="A short intro — who you are, what brings you here…"></textarea></div>
+    <div class="field-group"><label class="field-label" for="pf-link">Website or social link (optional)</label><input class="field-input" id="pf-link" type="url" placeholder="https://…"></div>
+    <div class="optin-card">
+      <div class="optin-card-title">📖 Post-event directory</div>
+      <div class="optin-card-desc">Choose how you'd like your profile included after the Forum — you can update this any time.</div>
+      <label class="optin-option"><input type="checkbox" class="optin-check" id="optin-event" checked aria-label="Include me in the event directory"><div class="optin-text"><strong>Include me in the event directory</strong>Visible to fellow attendees during and immediately after the Forum only.</div></label>
+      <label class="optin-option"><input type="checkbox" class="optin-check" id="optin-bqm" aria-label="Include me in BQM's wider directory"><div class="optin-text"><strong>Include me in BQM's People & Organisations directory</strong>Your profile may feature in BQM's ongoing community directory and future programming.</div></label>
+      <label class="optin-option"><input type="checkbox" class="optin-check" id="optin-none" aria-label="Do not include my profile in any directory"><div class="optin-text"><strong>Do not include my profile in any directory</strong>Your information stays private to this app only.</div></label>
+      <p style="font-size:.7rem;color:rgba(255,255,255,.5);margin-top:.65rem;line-height:1.4">You can update these preferences at any time by editing your profile here or contacting the BQM team.</p>
+    </div>
+
+    <!-- Directory extra fields (shown when optin-bqm checked) -->
+    <div id="directory-extra-fields" style="display:none">
+      <div style="background:var(--dark-card);border:1px solid var(--copper);border-radius:14px;padding:1.1rem;margin-bottom:1rem">
+        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;color:var(--copper);margin-bottom:.75rem">📋 Wider Directory Details</div>
+        <div class="field-group">
+          <label class="field-label">Support offered (select all that apply)</label>
+          <div class="multiselect-wrap" id="support-offered-wrap">
+            <label><input type="checkbox" value="Advice and Information"> Advice and Information <span style="font-size:.7rem;color:rgba(255,255,255,.6)">(general guidance, signposting, awareness)</span></label>
+            <label><input type="checkbox" value="Community and Social Support"> Community and Social Support <span style="font-size:.7rem;color:rgba(255,255,255,.6)">(peer groups, events, integration, befriending)</span></label>
+            <label><input type="checkbox" value="Employment and Skills"> Employment and Skills <span style="font-size:.7rem;color:rgba(255,255,255,.6)">(training, education, mentoring, volunteering)</span></label>
+            <label><input type="checkbox" value="Family and Child Support"> Family and Child Support <span style="font-size:.7rem;color:rgba(255,255,255,.6)">(parenting, childcare, youth services, safeguarding)</span></label>
+            <label><input type="checkbox" value="Financial Aid"> Financial Aid <span style="font-size:.7rem;color:rgba(255,255,255,.6)">(grants, debt support, benefits advice)</span></label>
+            <label><input type="checkbox" value="Health and Wellbeing"> Health and Wellbeing <span style="font-size:.7rem;color:rgba(255,255,255,.6)">(mental health, counselling, addiction services, disability support)</span></label>
+            <label><input type="checkbox" value="Housing Support"> Housing Support <span style="font-size:.7rem;color:rgba(255,255,255,.6)">(homelessness, shelter, tenancy advice)</span></label>
+            <label><input type="checkbox" value="Legal Aid"> Legal Aid <span style="font-size:.7rem;color:rgba(255,255,255,.6)">(legal advice, advocacy, representation)</span></label>
+            <label><input type="checkbox" value="Practical Assistance"> Practical Assistance <span style="font-size:.7rem;color:rgba(255,255,255,.6)">(food banks, clothing, essentials, transport help)</span></label>
+            <label><input type="checkbox" value="Safety and Protection"> Safety and Protection <span style="font-size:.7rem;color:rgba(255,255,255,.6)">(community security, domestic abuse, safeguarding, refugee/asylum support)</span></label>
+          </div>
+        </div>
+        <div class="field-group"><label class="field-label" for="pf-asks">Community asks</label><input class="field-input" id="pf-asks" type="text" placeholder="e.g. support with grant applications"></div>
+        <div class="field-group">
+          <label class="field-label">Type (optional)</label>
+          <select class="field-input" id="pf-dir-type"><option value="">Select type…</option><option>Individual (researcher)</option><option>Individual (practitioner)</option></select>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Focus areas (select all that apply)</label>
+          <div class="multiselect-wrap" id="focus-areas-wrap">
+            <label><input type="checkbox" value="Black Feminism"> Black Feminism</label>
+            <label><input type="checkbox" value="Climate and Environment"> Climate and Environment</label>
+            <label><input type="checkbox" value="Disability and Neurodiversity"> Disability and Neurodiversity</label>
+            <label><input type="checkbox" value="Gender Based Rights"> Gender Based Rights</label>
+            <label><input type="checkbox" value="Housing and Homelessness"> Housing and Homelessness</label>
+            <label><input type="checkbox" value="LGBTQ+ Rights"> LGBTQ+ Rights</label>
+            <label><input type="checkbox" value="Migrant Rights"> Migrant Rights</label>
+            <label><input type="checkbox" value="Policy, Law and Advocacy"> Policy, Law and Advocacy</label>
+            <label><input type="checkbox" value="Racial Justice"> Racial Justice</label>
+            <label><input type="checkbox" value="Trans Inclusion"> Trans Inclusion</label>
+            <label><input type="checkbox" value="Youth"> Youth</label>
+          </div>
+        </div>
+        <label class="optin-option" style="margin-top:.5rem"><input type="checkbox" class="optin-check" id="dir-consent" aria-label="Consent to public directory"><div class="optin-text"><strong>I consent to this information being published publicly</strong></div></label>
+      </div>
+    </div>
+
+    <button class="save-btn" onclick="saveProfile()">Save profile</button>
+    <div class="save-success green" id="profile-success" role="status" aria-live="polite">✓ Profile saved successfully</div>
+    <div style="margin-top:2rem;padding-top:1.25rem;border-top:1px solid var(--border)">
+      <button class="save-btn" onclick="logout()" style="background:transparent;border:1px solid rgba(255,82,82,.35);color:#ff8a80" aria-label="Log out of the app">Log out</button>
+    </div>
+  </div>
+
+  </main><!-- end #main-content -->
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav" id="main-nav" aria-label="Main navigation">
+    <button class="nav-item active" onclick="switchPage('home')" aria-label="Home" aria-current="page"><span aria-hidden="true" class="nav-icon">🏠</span><span class="nav-label">Home</span></button>
+    <button class="nav-item" onclick="switchPage('agenda')" aria-label="Agenda"><span aria-hidden="true" class="nav-icon">📅</span><span class="nav-label">Agenda</span></button>
+    <button class="nav-item" onclick="switchPage('people')" aria-label="People"><span aria-hidden="true" class="nav-icon">👥</span><span class="nav-label">People</span></button>
+    <button class="nav-item" onclick="switchPage('resources')" aria-label="Resources"><span aria-hidden="true" class="nav-icon">📚</span><span class="nav-label">Resources</span></button>
+    <button class="nav-item" onclick="switchPage('noticeboard')" aria-label="Notice board"><span aria-hidden="true" class="nav-icon">📌</span><span class="nav-label">Board</span></button>
+    <button class="nav-item" onclick="switchPage('notifications')" aria-label="Notifications"><span aria-hidden="true" class="nav-icon">🔔</span><span class="nav-label">Alerts</span></button>
+    <button class="nav-item" onclick="switchPage('profile')" aria-label="My profile"><span aria-hidden="true" class="nav-icon">👤</span><span class="nav-label">Profile</span></button>
+  </nav>
+</div>
+
+<!-- INSTALL BANNER (#21) -->
+<div class="install-banner" id="install-banner" role="complementary" aria-label="Add to home screen">
+  <span class="install-banner-text">📱 Add Healing Justice Forum to your home screen for easy access</span>
+  <button class="install-yes" id="install-yes-btn" onclick="doInstall()">Add</button>
+  <button class="install-no" onclick="dismissInstall()" aria-label="Dismiss">✕</button>
+</div>
+
+<!-- PERSON MODAL -->
+<div class="person-modal" id="person-modal" role="dialog" aria-modal="true" aria-labelledby="m-name" onclick="closePersonModalOut(event)">
+  <div class="person-sheet">
+    <button class="modal-close" onclick="document.getElementById('person-modal').classList.remove('open')" aria-label="Close">✕</button>
+    <div class="m-av" id="m-av"></div>
+    <div class="m-name" id="m-name"></div>
+    <div class="m-detail" id="m-pronouns-modal" style="font-style:italic;color:var(--copper)"></div>
+    <div class="m-detail" id="m-role-modal"></div>
+    <div class="m-detail" id="m-loc-modal" style="color:var(--copper)"></div>
+    <div class="m-bio" id="m-bio"></div>
+    <div id="m-tags" style="display:flex;flex-wrap:wrap;justify-content:center;gap:.4rem;margin-top:.75rem"></div>
+  </div>
+</div>
+
+<!-- ADMIN MODAL -->
+<div class="modal-overlay" id="admin-modal" role="dialog" aria-modal="true" aria-labelledby="admin-modal-title">
+  <div class="modal-sheet">
+    <button class="modal-close" onclick="closeAdminModal()" aria-label="Close admin panel">✕</button>
+    <h2 id="admin-modal-title" style="font-family:'Syne';font-size:1.2rem;margin-bottom:1rem">Admin Panel</h2>
+    <div style="display:flex;gap:.4rem;margin-bottom:1rem;flex-wrap:wrap">
+      <button class="aud-btn active" onclick="switchAdminTab(this,'tab-users')" style="font-size:.72rem">👥 Users</button>
+      <button class="aud-btn" onclick="switchAdminTab(this,'tab-sessions')" style="font-size:.72rem">📅 Sessions</button>
+      <button class="aud-btn" onclick="switchAdminTab(this,'tab-posts')" style="font-size:.72rem">📌 Posts</button>
+      <button class="aud-btn" onclick="switchAdminTab(this,'tab-notifs')" style="font-size:.72rem">🔔 Alerts</button>
+    </div>
+    <div id="tab-users">
+      <input type="text" placeholder="Search users…" class="field-input" aria-label="Search users" style="width:100%;margin-bottom:1rem" oninput="renderAdminUsers(this.value)">
+      <div id="admin-user-list"></div>
+    </div>
+    <div id="tab-sessions" style="display:none">
+      <p style="font-size:.78rem;color:#fff;margin-bottom:.75rem">Assign speakers to agenda sessions.</p>
+      <div id="admin-sessions-list"></div>
+    </div>
+    <div id="tab-posts" style="display:none">
+      <p style="font-size:.78rem;color:#fff;margin-bottom:.75rem">Delete posts from the notice board.</p>
+      <div id="admin-posts-list"></div>
+    </div>
+    <div id="tab-notifs" style="display:none">
+      <p style="font-size:.78rem;color:#fff;margin-bottom:.75rem">Manage sent notifications.</p>
+      <div id="admin-notifs-list"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+// CONFIG
+// ══════════════════════════════════════════
+const APPROVED_EMAILS = [
+  "s.rodriguez9@lse.ac.uk",
+  "samar.rod18@gmail.com",
+  "chantelle.young186@gmail.com",
+  "blackqueermovements@gmail.com",
+  "info@caisott.org",
+  "nafulasmamai@gmail.com",
+  "shisiaimmaculate1@gmail.com",
+  "gerald.hayo@york.ac.uk",
+  "wovenfoundationtt@gmail.com"
+];
+const ADMIN_EMAIL = "chantelle.young186@gmail.com";
+// Users with BQM Team or galck+ Team tag get admin access
+function isAdminEmail(email){ return email===ADMIN_EMAIL || email==="blackqueermovements@gmail.com"; }
+function isBqmOrGalckUser(email){
+  const u = userRoster.find(x=>x.email===email);
+  return u && u.tags && (u.tags.includes('BQM Team') || u.tags.includes('galck+ Team'));
+}
+
+// ══════════════════════════════════════════
+// STORAGE HELPERS — persist per email key
+// ══════════════════════════════════════════
+const STORE_KEY = email => 'hjf_user_' + email.replace(/[^a-z0-9]/g,'_');
+const ROSTER_KEY = 'hjf_roster';
+const POSTS_KEY = 'hjf_posts';
+const NOTIFS_KEY = 'hjf_notifs';
+const RESOURCES_KEY = 'hjf_resources_user';
+const SESSIONS_KEY = 'hjf_sessions';
+
+// Seed posts — shown to everyone on first load (stored to localStorage so they become editable/deletable)
+const SEED_POSTS = [
+  {_postId:'seed-venue', name:'Eve K.', avColor:'#f7b168', avTextColor:'#000', initials:'EK', isAdmin:true, text:'🇰🇪 A warm <em>karibu</em> from the GALCK+ team in Nairobi! The venue is confirmed — wheelchair accessible, quiet spaces available, and in a safe, welcoming neighbourhood.', time:'2 days ago', audience:'all'},
+  {_postId:'seed-travel', name:'Whitney O.', avColor:'#d3895c', avTextColor:'#fff', initials:'WO', isAdmin:true, text:'✈️ <strong>Travel arrangements:</strong> All flights and accommodation are being coordinated through our trusted travel partner. You\'ll receive a personalised itinerary by <strong>mid-April</strong>. No costs will be passed to you.', time:'Yesterday · 09:15', audience:'all'},
+  {_postId:'seed-visa', name:'Chantelle M.', avColor:'#d06339', avTextColor:'#fff', initials:'CM', isAdmin:true, text:'📋 <strong>Visa letter requests</strong> — if you need a support letter for your visa application, please fill in the form linked in the welcome email by <strong>1 April</strong>. Reply here or email me directly with any questions.', time:'Today · 11:32', audience:'all'},
+];
+
+function saveUserData(user){
+  try { localStorage.setItem(STORE_KEY(user.email), JSON.stringify(user)); } catch(e){}
+}
+function loadUserData(email){
+  try { const d = localStorage.getItem(STORE_KEY(email)); return d ? JSON.parse(d) : null; } catch(e){ return null; }
+}
+function saveRoster(roster){
+  try { localStorage.setItem(ROSTER_KEY, JSON.stringify(roster)); } catch(e){}
+}
+function loadRoster(){
+  try { const d = localStorage.getItem(ROSTER_KEY); return d ? JSON.parse(d) : null; } catch(e){ return null; }
+}
+function saveSession(email){
+  try { localStorage.setItem('hjf_session', email); } catch(e){}
+}
+function clearSession(){
+  try { localStorage.removeItem('hjf_session'); } catch(e){}
+}
+function getSession(){
+  try { return localStorage.getItem('hjf_session'); } catch(e){ return null; }
+}
+function savePosts(posts){
+  try { localStorage.setItem(POSTS_KEY, JSON.stringify(posts)); } catch(e){}
+}
+function loadPosts(){
+  try { const d = localStorage.getItem(POSTS_KEY); return d ? JSON.parse(d) : null; } catch(e){ return null; }
+}
+function saveNotifs(notifs){
+  try { localStorage.setItem(NOTIFS_KEY, JSON.stringify(notifs)); } catch(e){}
+}
+function loadNotifs(){
+  try { const d = localStorage.getItem(NOTIFS_KEY); return d ? JSON.parse(d) : null; } catch(e){ return null; }
+}
+function saveUserResources(list){
+  try { localStorage.setItem(RESOURCES_KEY, JSON.stringify(list)); } catch(e){}
+}
+function loadUserResources(){
+  try { const d = localStorage.getItem(RESOURCES_KEY); return d ? JSON.parse(d) : null; } catch(e){ return null; }
+}
+function saveSessions(sessions){
+  try { localStorage.setItem(SESSIONS_KEY, JSON.stringify(sessions)); } catch(e){}
+}
+function loadSessions(){
+  try { const d = localStorage.getItem(SESSIONS_KEY); return d ? JSON.parse(d) : null; } catch(e){ return null; }
+}
+
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+let currentUser = {email:'', name:'', role:'', pronouns:'', location:'', org:'', bio:'', link:'', isAdmin:false, avColor:'#d06339', avColorIdx:0, optinEvent:true, optinBqm:false, optinNone:false, photo:null, asks:'', dirType:'', support:[], focus:[], dirConsent:false};
+const avColors = ['#d06339','#d3895c','#7a5a9a','#4a7a5a','#5a6a9a','#9a5a6a'];
+let currentNotifAudience = 'all';
+let currentPostAudience = 'all';
+let deferredInstallPrompt = null;
+
+// Agenda sessions data for speaker assignment
+let agendaSessions = loadSessions() || [
+  {id:'s1', day:1, time:'19:00', title:'Welcome dinner & grounding ritual', speakers:[]},
+  {id:'s2', day:2, time:'09:00', title:'Opening ceremony', speakers:[]},
+  {id:'s3', day:2, time:'10:00', title:'What healing justice looks like across our contexts', speakers:[]},
+  {id:'s4', day:2, time:'13:30', title:'Story-based prompts', speakers:[]},
+  {id:'s5', day:2, time:'15:30', title:'Building the Playbook — core questions', speakers:[]},
+  {id:'s6', day:2, time:'17:00', title:'Working groups — Playbook sections', speakers:[]},
+  {id:'s7', day:2, time:'18:30', title:'Closing circle & next steps', speakers:[]},
+  {id:'s8', day:3, time:'AM', title:'BQM + GALCK+ team debrief', speakers:[]},
+];
+
+// User-submitted resources persisted
+let userResources = loadUserResources() || [];
+
+// User roster for admin tagging — load from storage or use defaults
+let userRoster = loadRoster() || [
+  {name:'Chantelle M.', email:'chantelle.young186@gmail.com', tags:['BQM Team'], avColor:'#d06339'},
+  {name:'Whitney O.', email:'', tags:['BQM Team'], avColor:'#d3895c'},
+  {name:'Eve K.', email:'', tags:['galck+ Team','Speaker'], avColor:'#f7b168'},
+  {name:'Tay B.', email:'', tags:['Attendee'], avColor:'#7a5a9a'},
+  {name:'Zuzi N.', email:'', tags:['Attendee'], avColor:'#4a7a5a'},
+  {name:'SM Rodriguez', email:'s.rodriguez9@lse.ac.uk', tags:['Speaker'], avColor:'#5a6a9a'},
+];
+
+// ══════════════════════════════════════════
+// DIRECTORY & RESOURCES DATA
+// ══════════════════════════════════════════
+const DIRECTORY = [
+  {name:"Dr SM Rodriguez",type:"Individual (researcher)",country:"United Kingdom, United States of America",bio:"SM Rodriguez is a scholar-activist committed to anti-violence in their community and research. Their work spans concerns of the criminalized, queer, and/or disabled people of African descent and relies on engaged methodologies to answer questions of transformative change. Author of The Economies of Queer Inclusion: Transnational Organizing for LGBTI Rights in Uganda (2019).",focus:["Black Feminism","Gender Based Rights","LGBTQ+ Rights","Trans Inclusion"],support:["Advice and Information","Safety and Protection","Community and Social Support"],website:"https://www.smrodriguez.com/",instagram:"https://www.instagram.com/dr_simplicity/",asks:"To add to this directory!"},
+  {name:"CAISO",type:"Organisation",country:"Trinidad and Tobago",bio:"A feminist non-profit civil society organisation committed to ensuring wholeness, justice and inclusion for Trinidad and Tobago's LGBTQI+ communities, by developing analysis, alliances and advocacy.",focus:["Black Feminism","LGBTQ+ Rights"],support:["Health and Wellbeing","Legal Aid"],website:"https://caisott.org/",instagram:"https://www.instagram.com/caisott",asks:"Community Food Bank — accepting canned goods, non-perishables, clothing, vouchers and cash."},
+  {name:"Shantae Porteous",type:"Individual (practitioner)",country:"Jamaica",bio:"Shantae curates safe spaces and resources to help others process their health, worth and well-being, integrating practical, emotional and spiritual dimensions of healing.",focus:["Black Feminism","Gender Based Rights","Racial Justice"],support:["Advice and Information","Health and Wellbeing"],website:"https://taes-intentional-agenda.mailchimpsites.com/",instagram:"https://www.instagram.com/shantaeporteous/",asks:""},
+  {name:"The Woven Foundation",type:"Organisation",country:"Trinidad and Tobago",bio:"A queer feminist, youth-led organization mobilizing women, girls, and gender-diverse people toward collective liberation at the intersection of political education, community care, advocacy, and movement building.",focus:["Black Feminism","Gender Based Rights","Youth","LGBTQ+ Rights"],support:["Community and Social Support","Advice and Information","Employment and Skills","Practical Assistance"],website:"",instagram:"https://www.instagram.com/wovenfoundationtt/",asks:""},
+  {name:"Sandra Mamai",type:"Individual (practitioner)",country:"Kenya",bio:"Working at the intersection of digital systems, economic survival and safety for young LGBTIQ+ people across Africa. Executive Coordinator of the African Queer Youth Initiative (AQYI), holding together a regional network of youth leaders organising under criminalisation, stigma and shrinking civic space.",focus:["Youth","Gender Based Rights","LGBTQ+ Rights","Policy, Law and Advocacy"],support:["Advice and Information","Community and Social Support"],website:"https://www.linkedin.com/in/mamaisandrahrim",instagram:"",asks:""},
+  {name:"Queer Women Human Rights Defenders (QwomenHRDs)",type:"Organisation",country:"Kenya",city:"Nairobi, Kiambu",bio:"A feminist, community-led initiative advancing the rights, inclusion, and mental wellness of LBQ women in Kenya. Providing affirming SRHR education, creating safe healing spaces, and advocating for gender equality and social justice.",focus:["Policy, Law and Advocacy","LGBTQ+ Rights","Gender Based Rights"],support:["Health and Wellbeing","Community and Social Support"],website:"",instagram:"@QWomenHRDs",asks:""},
+  {name:"Gerald Hayo",type:"Individual (practitioner)",country:"Kenya, United Kingdom",city:"Mombasa & York",bio:"For over 15 years, Gerald has worked to promote LGBTQIA+ rights in Kenya. Founder of Rainbow Women of Kenya, the first LBQ-led organization in Mombasa. Currently studying Politics and International Relations at York St John University and chairs Queer Refugee Unite.",focus:["LGBTQ+ Rights"],support:["Community and Social Support","Safety and Protection"],website:"",instagram:"@Jiradgates",asks:"Equal rights, accessibility and fair treatment of queer refugees and people claiming asylum."}
+];
+
+const RESOURCES = [
+  {title:"Reconceptualizing Gender Transitioning: Recognition, Flexibility, and Safety in Nonbinary Identity Journeys",type:"Research / Report",submitter:"Dr SM Rodriguez",desc:"This article interrogates gender transitioning by centering nonbinary experiences, drawing on seven focus groups with 48 nonbinary participants across multiple countries. Explores social, medical, and flexible aesthetic transitioning as an ongoing, fluid process rather than a linear movement toward a fixed endpoint.",focus:["Black Feminism","LGBTQ+ Rights","Trans Inclusion","Gender Based Rights"],link:"https://www.researchgate.net/publication/392908300_Reconceptualizing_Gender_Transitioning_Recognition_Flexibility_and_Safety_in_Nonbinary_Identity_Journeys"},
+  {title:"Inclusive Futures Factsheet 2025",type:"Guide / Toolkit",submitter:"CAISO",desc:"Part of the Inclusive Futures campaign tackling antigender and anti-rights discourses through local, regional, and global research. Covers anti-rights movements affecting the Caribbean region, barriers faced by LGBTQI+ communities, affirmation of trans identities, and SRHR insights.",focus:["Gender Based Rights","LGBTQ+ Rights","Black Feminism","Trans Inclusion"],link:""}
+];
+
+// ══════════════════════════════════════════
+// BOOT — check for existing session
+// ══════════════════════════════════════════
+function announce(msg){document.getElementById('a11y-announcer').textContent=msg;}
+
+// PWA Install
+window.addEventListener('beforeinstallprompt', e=>{
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  setTimeout(()=>document.getElementById('install-banner').classList.add('show'), 3000);
+});
+function doInstall(){
+  document.getElementById('install-banner').classList.remove('show');
+  if(deferredInstallPrompt){ deferredInstallPrompt.prompt(); deferredInstallPrompt=null; }
+}
+function dismissInstall(){document.getElementById('install-banner').classList.remove('show');}
+
+window.addEventListener('DOMContentLoaded', ()=>{
+  const savedEmail = getSession();
+  if(savedEmail && APPROVED_EMAILS.includes(savedEmail)){
+    const saved = loadUserData(savedEmail);
+    if(saved && saved.name){
+      restoreSession(saved);
+      return;
+    }
+  }
+  // Show optin-bqm toggle for directory fields
+  document.getElementById('optin-bqm').addEventListener('change', toggleDirectoryFields);
+  // No session — show login
+});
+
+function checkAndSetAdmin(){
+  currentUser.isAdmin = isAdminEmail(currentUser.email) || isBqmOrGalckUser(currentUser.email);
+}
+
+function restoreSession(saved){
+  Object.assign(currentUser, saved);
+  checkAndSetAdmin();
+  // Load persisted user resources
+  userResources = loadUserResources() || [];
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('app').style.display='block';
+  document.getElementById('main-nav').style.display='flex';
+  applyUserToUI();
+  renderPeople();
+  renderResources('','all');
+  renderDirectory('','all');
+  initPosts();
+  restorePosts();
+  restoreNotifs();
+  if(currentUser.isAdmin){
+    document.getElementById('admin-badge').style.display='inline';
+    document.getElementById('admin-panel-btn').style.display='block';
+    document.getElementById('admin-blast-tool').style.display='block';
+    addDeleteBtnsToSeedPosts();
+  }
+  switchPage('home');
+  announce('Welcome back ' + currentUser.name.split(' ')[0]);
+}
+
+function applyUserToUI(){
+  const ini = initials(currentUser.name || '??');
+  // Header avatar — show photo or initials
+  const hdrAv = document.getElementById('hdr-initials');
+  if(currentUser.photo){
+    hdrAv.innerHTML = `<img src="${currentUser.photo}" alt="Profile photo">`;
+    hdrAv.style.background = 'transparent';
+  } else {
+    hdrAv.textContent = ini;
+    hdrAv.style.background = currentUser.avColor || '#d06339';
+  }
+  // Profile avatar
+  const profAv = document.getElementById('profile-av-display');
+  if(currentUser.photo){
+    profAv.innerHTML = `<img src="${currentUser.photo}" alt="Profile photo">`;
+    profAv.style.background = 'transparent';
+    document.getElementById('cycle-color-btn').style.display = 'none';
+  } else {
+    profAv.textContent = ini;
+    profAv.style.background = currentUser.avColor || '#d06339';
+    document.getElementById('cycle-color-btn').style.display = '';
+  }
+  // Welcome message: first time vs returning (#4)
+  const isFirstTime = !currentUser._hasVisited;
+  if(currentUser.name){
+    document.getElementById('hero-welcome').textContent = isFirstTime
+      ? `Welcome, ${currentUser.name.split(' ')[0]}`
+      : `Welcome back, ${currentUser.name.split(' ')[0]}`;
+  } else {
+    document.getElementById('hero-welcome').textContent = 'Welcome';
+  }
+  // Populate profile fields
+  document.getElementById('pf-name').value = currentUser.name || '';
+  document.getElementById('pf-pronouns').value = currentUser.pronouns || '';
+  document.getElementById('pf-role').value = currentUser.role || '';
+  // Country dropdown
+  const locSel = document.getElementById('pf-location');
+  if(currentUser.location){
+    for(let i=0;i<locSel.options.length;i++){
+      if(locSel.options[i].value===currentUser.location||locSel.options[i].text===currentUser.location){locSel.selectedIndex=i;break;}
+    }
+  }
+  document.getElementById('pf-org').value = currentUser.org || '';
+  document.getElementById('pf-bio').value = currentUser.bio || '';
+  document.getElementById('pf-link').value = currentUser.link || '';
+  document.getElementById('optin-event').checked = currentUser.optinEvent !== false;
+  document.getElementById('optin-bqm').checked = !!currentUser.optinBqm;
+  document.getElementById('optin-none').checked = !!currentUser.optinNone;
+  const idx = avColors.indexOf(currentUser.avColor);
+  if(idx > -1) currentUser.avColorIdx = idx;
+  // Directory extra fields
+  if(currentUser.optinBqm) toggleDirectoryFields(true);
+  if(currentUser.asks) document.getElementById('pf-asks').value = currentUser.asks;
+  if(currentUser.dirType){ const s=document.getElementById('pf-dir-type'); for(let i=0;i<s.options.length;i++) if(s.options[i].value===currentUser.dirType){s.selectedIndex=i;break;} }
+  if(currentUser.support){ document.querySelectorAll('#support-offered-wrap input[type=checkbox]').forEach(cb=>{ cb.checked = currentUser.support.includes(cb.value); }); }
+  if(currentUser.focus){ document.querySelectorAll('#focus-areas-wrap input[type=checkbox]').forEach(cb=>{ cb.checked = currentUser.focus.includes(cb.value); }); }
+  if(currentUser.dirConsent) document.getElementById('dir-consent').checked = true;
+}
+
+// ══════════════════════════════════════════
+// LOGIN & ONBOARDING
+// ══════════════════════════════════════════
+function tryLogin(){
+  const e = document.getElementById('email-in').value.trim().toLowerCase();
+  const status = document.getElementById('login-status');
+  if(!e.includes('@')){status.textContent='Please enter a valid email address.';status.style.color='#ff5252';return;}
+  if(APPROVED_EMAILS.includes(e)){
+    currentUser.email = e;
+    // Check if returning user with saved profile
+    const saved = loadUserData(e);
+    status.textContent = "✓ You're in! Setting up your space…";
+    status.style.color = '#81c784';
+    announce('Login successful.');
+    setTimeout(()=>{
+      document.getElementById('login-screen').style.display='none';
+      document.getElementById('app').style.display='block';
+      if(saved && saved.name){
+        // Returning user — restore directly, skip onboarding
+        Object.assign(currentUser, saved);
+        checkAndSetAdmin();
+        if(currentUser.isAdmin){
+          document.getElementById('admin-badge').style.display='inline';
+          document.getElementById('admin-panel-btn').style.display='block';
+          document.getElementById('admin-blast-tool').style.display='block';
+        }
+        saveSession(e);
+        document.getElementById('main-nav').style.display='flex';
+        applyUserToUI();
+        renderPeople(); renderResources('','all'); renderDirectory('','all');
+        initPosts(); restorePosts(); restoreNotifs();
+        if(currentUser.isAdmin) addDeleteBtnsToSeedPosts();
+        switchPage('home');
+        announce('Welcome back ' + currentUser.name.split(' ')[0]);
+      } else {
+        // New user — show onboarding
+        document.getElementById('onboarding-overlay').classList.add('open');
+        document.getElementById('onboard-name').focus();
+      }
+    },800);
+  } else {
+    status.textContent = '❌ Email not registered — contact the BQM or GALCK+ team';
+    status.style.color = '#ff5252';
+    announce('Login failed. Email not on the approved list.');
+  }
+}
+document.getElementById('email-in').addEventListener('keydown',e=>{if(e.key==='Enter')tryLogin();});
+
+function completeOnboarding(){
+  const n = document.getElementById('onboard-name').value.trim();
+  const r = document.getElementById('onboard-role').value.trim();
+  if(!n){document.getElementById('onboard-name').focus();return;}
+  currentUser.name = n;
+  currentUser.role = r;
+  currentUser._hasVisited = false; // first time
+  // Add to roster if new
+  const existing = userRoster.find(u=>u.email===currentUser.email);
+  if(!existing){
+    userRoster.push({name:n, email:currentUser.email, tags:[], avColor:currentUser.avColor});
+    saveRoster(userRoster);
+  }
+  checkAndSetAdmin();
+  saveSession(currentUser.email);
+  saveUserData(currentUser);
+  document.getElementById('onboarding-overlay').classList.remove('open');
+  document.getElementById('main-nav').style.display='flex';
+  if(currentUser.isAdmin){
+    document.getElementById('admin-badge').style.display='inline';
+    document.getElementById('admin-panel-btn').style.display='block';
+    document.getElementById('admin-blast-tool').style.display='block';
+  }
+  applyUserToUI();
+  renderPeople(); renderResources('','all'); renderDirectory('','all');
+  initPosts(); restorePosts(); restoreNotifs();
+  switchPage('home');
+  announce(`Welcome ${n.split(' ')[0]}. You are now in the Healing Justice Forum app.`);
+  // After onboarding complete, mark visited so next login shows "welcome back"
+  currentUser._hasVisited = true;
+  saveUserData(currentUser);
+}
+
+// ══════════════════════════════════════════
+// LOGOUT
+// ══════════════════════════════════════════
+function logout(){
+  if(!confirm('Log out of the Healing Justice Forum app?')) return;
+  clearSession();
+  currentUser = {email:'', name:'', role:'', pronouns:'', location:'', org:'', bio:'', link:'', isAdmin:false, avColor:'#d06339', avColorIdx:0, optinEvent:true, optinBqm:false, optinNone:false, photo:null, asks:'', dirType:'', support:[], focus:[], dirConsent:false};
+  userResources = [];
+  document.getElementById('app').style.display='none';
+  document.getElementById('main-nav').style.display='none';
+  document.getElementById('login-screen').style.display='flex';
+  document.getElementById('email-in').value='';
+  document.getElementById('login-status').textContent='🔒 Access restricted to confirmed attendees';
+  document.getElementById('login-status').style.color='';
+  document.getElementById('admin-badge').style.display='none';
+  document.getElementById('admin-panel-btn').style.display='none';
+  document.getElementById('admin-blast-tool').style.display='none';
+  document.getElementById('hdr-initials').textContent='??';
+  document.getElementById('hdr-initials').style.background='#d06339';
+  document.getElementById('hdr-initials').innerHTML='??';
+  announce('You have been logged out.');
+}
+
+// ══════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════
+function switchPage(p){
+  document.querySelectorAll('.page').forEach(pg=>pg.classList.remove('active'));
+  const target = document.getElementById('page-'+p);
+  if(target) target.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(ni=>{ni.classList.remove('active');ni.removeAttribute('aria-current');});
+  const navIdx = {'home':0,'agenda':1,'people':2,'resources':3,'noticeboard':4,'notifications':5,'profile':6};
+  const navBtns = document.querySelectorAll('.nav-item');
+  if(navIdx[p]!==undefined && navBtns[navIdx[p]]){navBtns[navIdx[p]].classList.add('active');navBtns[navIdx[p]].setAttribute('aria-current','page');}
+  if(p==='notifications') document.getElementById('notif-dot').style.display='none';
+  if(p==='agenda') injectSessionSpeakers();
+  window.scrollTo(0,0);
+}
+
+// ══════════════════════════════════════════
+// AGENDA
+// ══════════════════════════════════════════
+function switchDay(idx){
+  document.querySelectorAll('.day-tab').forEach((t,i)=>{t.classList.toggle('active',i===idx);t.setAttribute('aria-selected',i===idx);});
+  document.querySelectorAll('.agenda-day').forEach((d,i)=>d.classList.toggle('active',i===idx));
+  injectSessionSpeakers();
+}
+
+function injectSessionSpeakers(){
+  // For each s-card that matches a session with assigned speakers, append speaker chips
+  agendaSessions.forEach(sess=>{
+    if(!sess.speakers.length) return;
+    // Find s-cards by matching title text
+    document.querySelectorAll('.s-title').forEach(el=>{
+      if(el.textContent.trim()===sess.title){
+        const card = el.closest('.s-card');
+        // Remove any existing speaker row
+        card.querySelector('.session-speakers-row')?.remove();
+        const row = document.createElement('div');
+        row.className='session-speakers-row';
+        row.style.cssText='display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.5rem;';
+        row.innerHTML = sess.speakers.map(sp=>`
+          <button data-speaker-name="${sp.replace(/"/g,'&quot;')}" onclick="openPersonBySpeakerBtn(this)" style="display:inline-flex;align-items:center;gap:.3rem;background:rgba(224,144,96,.1);border:1px solid rgba(224,144,96,.25);border-radius:20px;padding:.2rem .6rem;font-size:.68rem;color:var(--copper);cursor:pointer;font-family:'Inter',sans-serif">
+            🎙 ${sp}
+          </button>`).join('');
+        card.appendChild(row);
+      }
+    });
+  });
+}
+
+// ══════════════════════════════════════════
+// PEOPLE
+// ══════════════════════════════════════════
+const PEOPLE = [
+  {name:'Chantelle M.',role:'Event Lead · BQM',location:'London, UK',pronouns:'she/her',bio:'Chantelle leads event operations for the Healing Justice Forum, managing international participant coordination, budget, and logistics across the BQM + GALCK+ partnership.',tags:['BQM Team'],avColor:'#d06339',type:'team'},
+  {name:'Whitney O.',role:'Event Support · BQM',location:'London, UK',pronouns:'she/they',bio:'Whitney handles admin, logistical support, social media and marketing, and leads virtual participant involvement for the Forum.',tags:['BQM Team'],avColor:'#d3895c',type:'team'},
+  {name:'Eve K.',role:'Co-organiser · GALCK+',location:'Nairobi, Kenya',pronouns:'she/her',bio:'Eve is part of the GALCK+ co-organising team, curating the Kenyan delegation and ensuring the space is safe and community-grounded.',tags:['galck+ Team','Speaker'],avColor:'#f7b168',type:'speaker'},
+  {name:'Tay B.',role:'Healer & Practitioner',location:'Caribbean',pronouns:'they/them',bio:'Tay is a healer and community practitioner bringing Caribbean healing justice traditions to the Forum.',tags:['Attendee'],avColor:'#7a5a9a',type:'attendee'},
+  {name:'Zuzi N.',role:'Cultural Worker',location:'South Africa',pronouns:'she/her',bio:'Zuzi is a cultural worker and activist from South Africa, bringing a continental African perspective to the co-creation of the Healing Justice Playbook.',tags:['Attendee'],avColor:'#4a7a5a',type:'attendee'},
+  {name:'SM Rodriguez',role:'Scholar-Activist · LSE',location:'UK / USA',pronouns:'they/she',bio:'SM Rodriguez is a scholar-activist committed to anti-violence work. Their research spans the criminalized, queer, and disabled people of African descent.',tags:['Speaker'],avColor:'#5a6a9a',type:'speaker'},
+];
+let currentPeopleFilter = 'all';
+let currentPeopleSearch = '';
+
+function initials(name){return (name||'??').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();}
+
+function tagBadge(tag, removable, userName){
+  const cls = tag==='BQM Team'?'b-team':tag==='galck+ Team'?'b-galck':tag==='Facilitator'?'b-facilitator':'b-attendee';
+  if(removable){
+    return `<span class="p-badge ${cls}" style="display:inline-flex;align-items:center;gap:4px">${tag}<button class="rm-tag-btn" data-uname="${(userName||'').replace(/"/g,'&quot;')}" data-tag="${tag.replace(/"/g,'&quot;')}" aria-label="Remove ${tag} tag" style="background:none;border:none;color:inherit;cursor:pointer;font-size:.7rem;padding:0;line-height:1;opacity:.7">✕</button></span>`;
+  }
+  return `<span class="p-badge ${cls}">${tag}</span>`;
+}
+
+function syncCurrentUserToPeople(){
+  if(!currentUser.name) return;
+  // Find by email match in roster first, then by name
+  let idx = PEOPLE.findIndex(p=>{
+    const rUser = userRoster.find(u=>u.email===currentUser.email);
+    return rUser && p.name===rUser.name;
+  });
+  // Fallback: find by current name
+  if(idx===-1) idx = PEOPLE.findIndex(p=>p.name===currentUser.name);
+
+  const profile = {
+    name: currentUser.name,
+    role: currentUser.role||'',
+    location: currentUser.location||'',
+    pronouns: currentUser.pronouns||'',
+    bio: currentUser.bio||'',
+    avColor: currentUser.avColor||'#d06339',
+    photo: currentUser.photo||null,
+  };
+
+  if(idx===-1){
+    // Not in PEOPLE yet — add them
+    PEOPLE.push({...profile, tags:[], type:'attendee'});
+  } else {
+    // Update existing entry, preserve tags and type
+    Object.assign(PEOPLE[idx], profile);
+  }
+}
+
+function renderPeople(){
+  const grid = document.getElementById('people-grid');
+  syncCurrentUserToPeople();
+  const q = currentPeopleSearch.toLowerCase();
+  const filtered = PEOPLE.filter(p=>{
+    const matchType = currentPeopleFilter==='all' || p.type===currentPeopleFilter;
+    const matchQ = !q || (p.name+p.role+p.location).toLowerCase().includes(q);
+    return matchType && matchQ;
+  });
+  const count = filtered.length;
+  document.getElementById('people-count').textContent = count===PEOPLE.length ? `${count} people` : `Found ${count} ${count===1?'person':'people'}`;
+  announce(`Found ${count} ${count===1?'person':'people'}`);
+  if(!filtered.length){grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--text-muted)">No results found</div>';return;}
+  grid.innerHTML = filtered.map((p,i)=>{
+    const avInner = p.photo
+      ? `<img src="${p.photo}" alt="${p.name.replace(/"/g,'&quot;')}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
+      : initials(p.name);
+    const avBg = p.photo ? 'transparent' : p.avColor;
+    const peopleIdx = PEOPLE.indexOf(p);
+    return `<button class="person-card" data-people-idx="${peopleIdx}" onclick="openPersonByIdx(this)" aria-label="View profile for ${p.name.replace(/"/g,'&quot;')}">
+      <div class="p-av" style="background:${avBg}">${avInner}</div>
+      <div class="p-name">${p.name}${p.pronouns?` <span style="font-size:.65rem;font-weight:400;color:rgba(255,255,255,.7)">${p.pronouns}</span>`:''}</div>
+      <div class="p-role">${p.role}</div>
+      <div class="p-loc">${p.location}</div>
+      <div class="p-tags">${(p.tags||[]).map(t=>tagBadge(t,false)).join('')}</div>
+    </button>`;
+  }).join('');
+}
+
+function filterPeople(btn,type){
+  document.querySelectorAll('#page-people .filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  currentPeopleFilter = type;
+  renderPeople();
+}
+function searchPeople(q){currentPeopleSearch=q;renderPeople();}
+
+function openPersonByIdx(btn){
+  const idx = parseInt(btn.getAttribute('data-people-idx'),10);
+  const p = PEOPLE[idx]; if(!p) return;
+  _openPersonModal(p);
+}
+
+function openPerson(name){
+  const p = PEOPLE.find(x=>x.name===name); if(!p) return;
+  _openPersonModal(p);
+}
+
+function _openPersonModal(p){
+  const mAv = document.getElementById('m-av');
+  if(p.photo){
+    mAv.innerHTML = `<img src="${p.photo}" alt="${p.name.replace(/"/g,'&quot;')}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+    mAv.style.background = 'transparent';
+  } else {
+    mAv.innerHTML = initials(p.name);
+    mAv.style.background = p.avColor;
+  }
+  document.getElementById('m-name').textContent = p.name;
+  document.getElementById('m-pronouns-modal').textContent = p.pronouns || '';
+  document.getElementById('m-role-modal').textContent = p.role || '';
+  document.getElementById('m-loc-modal').textContent = p.location ? '📍 '+p.location : '';
+  document.getElementById('m-bio').textContent = p.bio || '';
+  const tagsEl = document.getElementById('m-tags');
+  tagsEl.innerHTML = (p.tags||[]).map(t=>tagBadge(t,false)).join('');
+  const modal = document.getElementById('person-modal');
+  modal.classList.add('open');
+  modal.querySelector('.modal-close').focus();
+}
+function closePersonModalOut(e){if(e.target===document.getElementById('person-modal'))document.getElementById('person-modal').classList.remove('open');}
+function openPersonBySpeakerBtn(btn){ openPerson(btn.getAttribute('data-speaker-name')); }
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.getElementById('person-modal').classList.remove('open');document.getElementById('admin-modal').classList.remove('open');}});
+
+// ══════════════════════════════════════════
+// DIRECTORY
+// ══════════════════════════════════════════
+const dirColors=['#d06339','#7a5a9a','#4a7a5a','#5a6a9a','#d3895c','#9a5a6a','#3a7a8a'];
+function getConsentedUserEntries(){
+  // Pull all approved emails, load their data, keep those who consented to BQM directory
+  const entries = [];
+  APPROVED_EMAILS.forEach(email=>{
+    const u = loadUserData(email);
+    if(u && u.optinBqm && u.dirConsent && u.name){
+      // Don't duplicate if already in DIRECTORY seed
+      if(!DIRECTORY.find(d=>d.name===u.name)){
+        entries.push({
+          name: u.name,
+          type: u.dirType || 'Individual (practitioner)',
+          country: u.location || '',
+          bio: u.bio || '',
+          focus: u.focus || [],
+          support: u.support || [],
+          website: u.link || '',
+          instagram: '',
+          asks: u.asks || '',
+          _fromProfile: true
+        });
+      }
+    }
+  });
+  return entries;
+}
+
+function renderDirectory(query,typeFilter){
+  const container = document.getElementById('dir-list');
+  const q=(query||'').toLowerCase();
+  const allEntries = [...DIRECTORY, ...getConsentedUserEntries()];
+  const filtered = allEntries.filter(d=>{
+    const matchType=(!typeFilter||typeFilter==='all')||d.type===typeFilter;
+    const matchQ=!q||(d.name+d.bio+d.country+(d.city||'')+d.focus.join(' ')).toLowerCase().includes(q);
+    return matchType&&matchQ;
+  });
+  if(!filtered.length){container.innerHTML='<div class="dir-empty">No results found</div>';return;}
+  container.innerHTML=filtered.map((d,i)=>{
+    const col=dirColors[i%dirColors.length];
+    const links=[];
+    if(d.website) links.push(`<a class="dir-link" href="${d.website}" target="_blank" rel="noopener">🌐 Website</a>`);
+    if(d.instagram&&d.instagram.startsWith('http')) links.push(`<a class="dir-link" href="${d.instagram}" target="_blank" rel="noopener">📸 Instagram</a>`);
+    else if(d.instagram) links.push(`<span class="dir-link">📸 ${d.instagram}</span>`);
+    const supportHtml=d.support&&d.support.length?`<div class="dir-support"><strong>Support offered</strong>${d.support.join(' · ')}</div>`:'';
+    const asksHtml=d.asks?`<div class="dir-support"><strong>Community asks</strong>${d.asks}</div>`:'';
+    return `<div class="dir-card">
+      <div class="dir-card-header"><div class="dir-av" style="background:${col}">${initials(d.name)}</div>
+      <div><div class="dir-name">${d.name}</div><div class="dir-type">${d.type}</div><div class="dir-country">📍 ${d.city?d.city+', ':''} ${d.country}</div></div></div>
+      <div class="dir-bio">${d.bio}</div>
+      <div class="dir-focus-tags">${(d.focus||[]).map(f=>`<span class="dir-focus-tag">${f}</span>`).join('')}</div>
+      ${links.length?`<div class="dir-links">${links.join('')}</div>`:''}
+      ${supportHtml}${asksHtml}
+    </div>`;
+  }).join('');
+}
+function filterDirectory(query,btn,type){
+  if(btn){document.querySelectorAll('#dir-filter-row .filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+  const activeType=type||(document.querySelector('#dir-filter-row .filter-btn.active')||{}).textContent||'all';
+  const q=query!==''?query:(document.querySelector('.dir-search')||{}).value||'';
+  renderDirectory(q,activeType==='All'||activeType==='all'?null:activeType);
+}
+
+// ══════════════════════════════════════════
+// RESOURCES
+// ══════════════════════════════════════════
+const resIcons={
+  'Research / Report':'📄',
+  'Guide / Toolkit':'📋',
+  'Article / Reading':'📖',
+  'Video':'🎬',
+  'Tool / Template':'🛠',
+  'Creative work (zine, art, podcast, film)':'🎨',
+  'Event / Recording':'🎙',
+  'Funding / Opportunity':'💰',
+  'Service directory / Signposting':'🗺',
+  'Template / Policy document':'📝',
+  'Training / Educational material':'🎓',
+  'Other':'📁'
+};
+
+function renderResources(query,typeFilter){
+  const container=document.getElementById('res-list');
+  const q=(query||'').toLowerCase();
+  // Merge seed + user submitted (deduplicate by title)
+  const allRes = [...RESOURCES];
+  userResources.forEach(r=>{ if(!allRes.find(x=>x.title===r.title)) allRes.push(r); });
+  const filtered=allRes.filter(r=>{
+    const matchType=(!typeFilter||typeFilter==='all')||r.type===typeFilter;
+    const matchQ=!q||(r.title+(r.desc||'')+(r.submitter||'')+((r.focus||[]).join(' '))).toLowerCase().includes(q);
+    return matchType&&matchQ;
+  });
+  if(!filtered.length){container.innerHTML='<div class="dir-empty">No results found</div>';return;}
+  container.innerHTML=filtered.map(r=>{
+    const focusTags = (r.focus||[]).map(f=>`<span class="res-focus-tag">${f}</span>`).join('');
+    const publicBadge = r.isPublic ? `<span style="font-size:.6rem;background:rgba(129,199,132,.15);color:#81c784;border-radius:10px;padding:.1rem .45rem;margin-left:.3rem">Public</span>` : '';
+    const fileLink = r.fileName ? `<span class="res-link-btn" style="cursor:default">📎 ${r.fileName}</span>` : '';
+    return `<div class="res-card">
+      <div class="res-card-header"><div class="res-icon">${resIcons[r.type]||'📁'}</div>
+      <div><div class="res-title">${r.title}</div><div class="res-submitter">Shared by ${r.submitter||'Anonymous'}${publicBadge}</div></div></div>
+      <span class="res-type-chip">${r.type||'Resource'}</span>
+      <div class="res-desc">${r.desc||''}</div>
+      ${focusTags?`<div class="res-focus-tags">${focusTags}</div>`:''}
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.4rem">
+        ${r.link?`<a class="res-link-btn" href="${r.link}" target="_blank" rel="noopener">→ View resource</a>`:''}
+        ${fileLink}
+      </div>
+    </div>`;
+  }).join('');
+}
+function filterResources(query,btn,type){
+  if(btn){document.querySelectorAll('#res-filter-row .filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+  const activeType=type||(document.querySelector('#res-filter-row .filter-btn.active')||{}).textContent||'all';
+  const q=query!==''?query:(document.querySelector('.res-search')||{}).value||'';
+  renderResources(q,activeType==='All'||activeType==='all'?null:activeType);
+}
+
+// ══════════════════════════════════════════
+// SHARE FORM
+// ══════════════════════════════════════════
+function toggleShareForm(){
+  const form=document.getElementById('share-form');const btn=document.getElementById('share-toggle');
+  form.classList.toggle('hidden');btn.style.display=form.classList.contains('hidden')?'flex':'none';
+}
+
+function submitResource(btn){
+  const title = document.getElementById('res-title-in').value.trim();
+  if(!title){ alert('Please add a resource title.'); return; }
+  const desc = document.getElementById('res-desc-in').value.trim();
+  const link = document.getElementById('res-link-in').value.trim();
+  const type = document.getElementById('res-type-in').value || 'Other';
+  const isPublic = document.getElementById('res-perm-public').checked;
+  const focus = [...document.querySelectorAll('#res-focus-wrap input:checked')].map(c=>c.value);
+  const fileInput = document.getElementById('res-file-in');
+  const fileName = fileInput.files[0]?.name || '';
+
+  const newRes = {
+    title,
+    desc: desc || 'No description provided.',
+    link,
+    fileName,
+    type,
+    focus,
+    submitter: currentUser.name || 'Anonymous',
+    submitterEmail: currentUser.email,
+    isPublic,
+    _userSubmitted: true
+  };
+
+  btn.textContent='Submitting…';
+  setTimeout(()=>{
+    btn.textContent='Submit resource';
+    // Save to userResources and add to RESOURCES array
+    userResources.push(newRes);
+    saveUserResources(userResources);
+    RESOURCES.push(newRes);
+    renderResources('','all');
+
+    const s=document.getElementById('resource-success');
+    s.textContent = isPublic ? '✓ Resource submitted and shared publicly!' : '✓ Resource submitted for this event!';
+    s.style.display='block';
+    announce('Resource submitted successfully.');
+    // Reset form
+    document.getElementById('res-title-in').value='';
+    document.getElementById('res-desc-in').value='';
+    document.getElementById('res-link-in').value='';
+    document.getElementById('res-type-in').value='';
+    document.getElementById('res-file-in').value='';
+    document.getElementById('res-perm-public').checked=false;
+    document.querySelectorAll('#res-focus-wrap input').forEach(c=>c.checked=false);
+    setTimeout(()=>s.style.display='none',4000);
+  },800);
+}
+
+// ══════════════════════════════════════════
+// NOTICE BOARD
+// ══════════════════════════════════════════
+// ══════════════════════════════════════════
+// BOARD POSTS — single source of truth in localStorage
+// ══════════════════════════════════════════
+
+function getStoredPosts(){
+  try { const d = localStorage.getItem(POSTS_KEY); return d ? JSON.parse(d) : null; } catch(e){ return null; }
+}
+
+// Ensure posts are initialised (seed on first ever load)
+function initPosts(){
+  const existing = getStoredPosts();
+  if(!existing) savePosts(SEED_POSTS);
+}
+
+// Render a single post element from a data object
+function makeBoardPost(post){
+  const isOwn = currentUser.name && post.name === currentUser.name;
+  const canDelete = !!(currentUser.isAdmin || isOwn);
+  const canEdit   = !!isOwn;
+  const teamChip  = post.isAdmin ? `<span class="team-chip" style="margin-left:5px">Team</span>` : '';
+  const audLabel  = post.audience && post.audience!=='all'
+    ? `<span style="font-size:.6rem;color:var(--copper);margin-left:5px;background:rgba(224,144,96,.1);padding:.1rem .4rem;border-radius:8px">${audienceLabel(post.audience)}</span>` : '';
+  const avStyle   = post.avTextColor ? `background:${post.avColor};color:${post.avTextColor}` : `background:${post.avColor||'#d06339'}`;
+
+  const el = document.createElement('div');
+  el.className = 'notice-post';
+  el.dataset.postId = post._postId;
+  el.innerHTML = `
+    <div class="n-head">
+      <div class="n-av" style="${avStyle}">${post.initials||'??'}</div>
+      <div>
+        <div class="n-poster">${post.name||'Anonymous'}${teamChip}${audLabel}</div>
+        <div class="n-time">${post.time||''}</div>
+      </div>
+    </div>
+    <p class="n-text post-body">${post.text||''}</p>
+    <div class="post-actions" style="display:flex;gap:.4rem;margin-top:.45rem;flex-wrap:wrap">
+      <button class="post-action-btn board-reply-btn" data-pid="${post._postId}">↩ Reply</button>
+      ${canEdit   ? `<button class="post-action-btn board-edit-btn"   data-pid="${post._postId}">✏ Edit</button>` : ''}
+      ${canDelete ? `<button class="post-action-btn board-delete-btn" data-pid="${post._postId}" style="color:#ff8a80;border-color:rgba(255,82,82,.3)">Delete</button>` : ''}
+    </div>
+    <div class="reply-box" style="display:none;margin-top:.5rem;background:var(--mid);border-radius:10px;padding:.6rem">
+      <textarea class="compose-ta reply-ta" placeholder="Write a reply…" rows="2" style="width:100%;min-height:44px;font-size:.82rem"></textarea>
+      <div style="display:flex;justify-content:flex-end;gap:.4rem;margin-top:.35rem">
+        <button class="post-action-btn board-cancel-reply-btn">Cancel</button>
+        <button class="post-action-btn board-submit-reply-btn" style="background:var(--rust);color:#fff;border-color:var(--rust);font-family:'Syne',sans-serif;font-weight:700">Post reply</button>
+      </div>
+    </div>
+    <div class="replies-area" style="margin-top:.2rem"></div>`;
+  return el;
+}
+
+// Render all posts from storage into #posts-container
+function renderBoardPosts(){
+  const container = document.getElementById('posts-container');
+  container.innerHTML = '';
+  const posts = getStoredPosts() || SEED_POSTS;
+  posts.forEach(post => container.appendChild(makeBoardPost(post)));
+}
+
+// Alias used at login/restore
+function restorePosts(){ renderBoardPosts(); }
+
+// Add a new post
+function addPost(){
+  const ta = document.getElementById('post-input');
+  const txt = ta.value.trim(); if(!txt) return;
+  const ini = initials(currentUser.name||'??');
+  const now = new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  const post = {
+    _postId: 'p_'+Date.now(),
+    name: currentUser.name||'Anonymous',
+    avColor: currentUser.avColor||'#d06339',
+    initials: ini,
+    isAdmin: !!currentUser.isAdmin,
+    text: txt,
+    time: `Today · ${now}`,
+    audience: currentPostAudienceVal||'all'
+  };
+  const posts = getStoredPosts() || [];
+  posts.unshift(post);
+  savePosts(posts);
+  renderBoardPosts();
+  ta.value = '';
+  announce('Post added to the notice board.');
+}
+
+// ── Board post actions (called from event delegation below)
+function boardDeletePost(pid){
+  if(!confirm('Delete this post?')) return;
+  const posts = (getStoredPosts()||[]).filter(p => p._postId !== pid);
+  savePosts(posts);
+  renderBoardPosts();
+  announce('Post deleted.');
+}
+
+function boardEditPost(pid){
+  const postEl = document.querySelector(`.notice-post[data-post-id="${pid}"]`);
+  if(!postEl) return;
+  // If already editing, bail
+  if(postEl.querySelector('.edit-ta')) return;
+  const bodyEl = postEl.querySelector('.post-body');
+  const editBtn = postEl.querySelector(`.board-edit-btn[data-pid="${pid}"]`);
+  if(!bodyEl || !editBtn) return;
+
+  const ta = document.createElement('textarea');
+  ta.className = 'compose-ta edit-ta';
+  ta.value = bodyEl.textContent;
+  ta.style.cssText = 'width:100%;min-height:60px;font-size:.85rem;margin-top:.3rem;border:1px solid var(--copper)';
+  bodyEl.after(ta);
+  bodyEl.style.display = 'none';
+  editBtn.textContent = 'Save';
+  editBtn.classList.add('editing');
+
+  function saveEdit(){
+    const newText = ta.value.trim();
+    if(!newText){ ta.focus(); return; }
+    // Update storage
+    const posts = getStoredPosts() || [];
+    const entry = posts.find(p => p._postId === pid);
+    if(entry){ entry.text = newText; savePosts(posts); }
+    renderBoardPosts();
+    announce('Post updated.');
+  }
+  editBtn.addEventListener('click', saveEdit, {once:true});
+}
+
+function boardReply(pid){
+  const postEl = document.querySelector(`.notice-post[data-post-id="${pid}"]`);
+  if(!postEl) return;
+  const box = postEl.querySelector('.reply-box');
+  if(!box) return;
+  const open = box.style.display !== 'none';
+  box.style.display = open ? 'none' : 'block';
+  if(!open) box.querySelector('.reply-ta')?.focus();
+}
+
+function boardSubmitReply(pid){
+  const postEl = document.querySelector(`.notice-post[data-post-id="${pid}"]`);
+  if(!postEl) return;
+  const box = postEl.querySelector('.reply-box');
+  const ta  = box?.querySelector('.reply-ta');
+  const txt = ta?.value.trim();
+  if(!txt) return;
+  const ini = initials(currentUser.name||'??');
+  const now = new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  const reply = document.createElement('div');
+  reply.style.cssText = 'background:rgba(255,255,255,.04);border-left:2px solid var(--border);border-radius:0 8px 8px 0;padding:.5rem .75rem;margin-top:.3rem';
+  reply.innerHTML = `
+    <div style="display:flex;align-items:center;gap:.4rem;margin-bottom:.2rem">
+      <div style="width:22px;height:22px;border-radius:50%;background:${currentUser.avColor||'#d06339'};display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:800;color:#fff;flex-shrink:0">${ini}</div>
+      <span style="font-size:.75rem;font-weight:600;color:#fff">${currentUser.name||'Anonymous'}</span>
+      <span style="font-size:.65rem;color:rgba(255,255,255,.5)">${now}</span>
+    </div>
+    <p style="font-size:.82rem;color:rgba(255,255,255,.85);line-height:1.5;margin:0">${txt}</p>`;
+  postEl.querySelector('.replies-area').appendChild(reply);
+  ta.value = '';
+  box.style.display = 'none';
+  announce('Reply posted.');
+}
+
+// No-op legacy — seed posts are now in JS, not HTML
+function addDeleteBtnsToSeedPosts(){}
+
+// ══════════════════════════════════════════
+// NOTIFICATIONS
+// ══════════════════════════════════════════
+let currentNotifAudienceVal = 'all';
+function setAudience(btn, aud){
+  document.querySelectorAll('#notif-audience-row .aud-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  currentNotifAudienceVal = aud;
+}
+
+function getStoredNotifs(){
+  try{ const d=localStorage.getItem(NOTIFS_KEY); return d?JSON.parse(d):[]; }catch(e){ return []; }
+}
+
+function restoreNotifs(){
+  const stored = getStoredNotifs();
+  if(!stored.length) return;
+  const list = document.getElementById('notif-list');
+  if(list.querySelector('p')) list.innerHTML='';
+  stored.forEach(n=>{
+    const item=document.createElement('div');item.className='notif-card';
+    const audLabel = n.audience && n.audience!=='all'?` · ${audienceLabel(n.audience)}`:'';
+    item.innerHTML=`<div class="notif-text">📢 ${n.text}</div><div class="notif-time">${n.time||''}${audLabel}</div>`;
+    list.appendChild(item);
+  });
+  document.getElementById('notif-dot').style.display='block';
+  document.getElementById('alert-banner').style.display='block';
+  if(stored.length) document.getElementById('alert-banner-text').textContent = stored[0].text;
+}
+
+function sendBlastNotif(){
+  const txt=document.getElementById('blast-input').value.trim();if(!txt)return;
+  const aud = currentNotifAudienceVal;
+  const list=document.getElementById('notif-list');
+  if(list.querySelector('p')) list.innerHTML='';
+  const now = new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  const audLabel = aud!=='all'?` · ${audienceLabel(aud)}`:'';
+  const item=document.createElement('div');item.className='notif-card';
+  item.innerHTML=`<div class="notif-text">📢 ${txt}</div><div class="notif-time">Today · ${now}${audLabel} · Sent by Admin</div>`;
+  list.prepend(item);
+  // Save
+  const stored = getStoredNotifs();
+  stored.unshift({text:txt,time:`Today · ${now} · Sent by Admin`,audience:aud});
+  saveNotifs(stored);
+  document.getElementById('notif-dot').style.display='block';
+  document.getElementById('alert-banner').style.display='block';
+  document.getElementById('alert-banner-text').textContent=txt;
+  document.getElementById('blast-success').style.display='block';
+  const audName = aud==='all'?'all attendees':audienceLabel(aud);
+  document.getElementById('blast-success').textContent=`✓ Alert sent to ${audName}`;
+  document.getElementById('blast-input').value='';
+  announce('Alert sent: '+txt);
+  setTimeout(()=>document.getElementById('blast-success').style.display='none',3500);
+}
+
+// ══════════════════════════════════════════
+// FAQs
+// ══════════════════════════════════════════
+function toggleFaq(btn){
+  const item=btn.parentElement;const isOpen=item.classList.contains('open');
+  item.classList.toggle('open',!isOpen);btn.setAttribute('aria-expanded',String(!isOpen));
+}
+
+// ══════════════════════════════════════════
+// PROFILE
+// ══════════════════════════════════════════
+function cycleAvatarColor(){
+  currentUser.avColorIdx = ((currentUser.avColorIdx||0)+1) % avColors.length;
+  const col = avColors[currentUser.avColorIdx];
+  currentUser.avColor = col;
+  currentUser.photo = null;
+  const ini = initials(currentUser.name||'??');
+  const profAv = document.getElementById('profile-av-display');
+  profAv.style.background = col;
+  profAv.textContent = ini;
+  document.getElementById('hdr-initials').style.background = col;
+  document.getElementById('hdr-initials').textContent = ini;
+  document.getElementById('cycle-color-btn').style.display = '';
+}
+
+function toggleDirectoryFields(forceShow){
+  const show = forceShow===true || document.getElementById('optin-bqm').checked;
+  document.getElementById('directory-extra-fields').style.display = show ? 'block' : 'none';
+}
+
+function handlePhotoUpload(input){
+  const file = input.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    currentUser.photo = e.target.result;
+    const profAv = document.getElementById('profile-av-display');
+    profAv.innerHTML = `<img src="${currentUser.photo}" alt="Profile photo">`;
+    profAv.style.background = 'transparent';
+    const hdrAv = document.getElementById('hdr-initials');
+    hdrAv.innerHTML = `<img src="${currentUser.photo}" alt="Profile photo">`;
+    hdrAv.style.background = 'transparent';
+    document.getElementById('cycle-color-btn').style.display = 'none';
+    saveUserData(currentUser);
+    renderPeople();
+  };
+  reader.readAsDataURL(file);
+}
+
+function saveProfile(){
+  currentUser.name     = document.getElementById('pf-name').value.trim() || currentUser.name;
+  currentUser.pronouns = document.getElementById('pf-pronouns').value.trim();
+  currentUser.role     = document.getElementById('pf-role').value.trim();
+  const locSel = document.getElementById('pf-location');
+  currentUser.location = locSel.options[locSel.selectedIndex]?.text || '';
+  currentUser.org      = document.getElementById('pf-org').value.trim();
+  currentUser.bio      = document.getElementById('pf-bio').value.trim();
+  currentUser.link     = document.getElementById('pf-link').value.trim();
+  currentUser.optinEvent = document.getElementById('optin-event').checked;
+  currentUser.optinBqm   = document.getElementById('optin-bqm').checked;
+  currentUser.optinNone  = document.getElementById('optin-none').checked;
+  // Directory extra fields
+  currentUser.asks     = document.getElementById('pf-asks').value.trim();
+  const dtSel = document.getElementById('pf-dir-type');
+  currentUser.dirType  = dtSel.value || '';
+  currentUser.support  = [...document.querySelectorAll('#support-offered-wrap input:checked')].map(c=>c.value);
+  currentUser.focus    = [...document.querySelectorAll('#focus-areas-wrap input:checked')].map(c=>c.value);
+  currentUser.dirConsent = document.getElementById('dir-consent').checked;
+  currentUser._hasVisited = true;
+  // Persist
+  saveUserData(currentUser);
+  // Update roster with new name
+  const inRoster = userRoster.find(u=>u.email===currentUser.email);
+  if(inRoster){ inRoster.name=currentUser.name; inRoster.avColor=currentUser.avColor; saveRoster(userRoster); }
+  // Rebuild directory with consented profiles
+  renderDirectory('','all');
+  // Update UI
+  if(currentUser.name){
+    const ini = initials(currentUser.name);
+    if(currentUser.photo){
+      document.getElementById('hdr-initials').innerHTML=`<img src="${currentUser.photo}" alt="">`;
+      document.getElementById('profile-av-display').innerHTML=`<img src="${currentUser.photo}" alt="">`;
+    } else {
+      document.getElementById('hdr-initials').textContent = ini;
+      document.getElementById('hdr-initials').style.background = currentUser.avColor;
+      document.getElementById('profile-av-display').textContent = ini;
+    }
+    document.getElementById('hero-welcome').textContent = `Welcome back, ${currentUser.name.split(' ')[0]}`;
+  }
+  renderPeople();
+  const s=document.getElementById('profile-success');s.style.display='block';
+  announce('Profile saved.');
+  setTimeout(()=>s.style.display='none',3500);
+}
+
+// Directory opt-in mutual exclusion
+document.getElementById('optin-none').addEventListener('change',function(){
+  if(this.checked){document.getElementById('optin-event').checked=false;document.getElementById('optin-bqm').checked=false;toggleDirectoryFields(false);}
+});
+['optin-event','optin-bqm'].forEach(id=>{
+  document.getElementById(id).addEventListener('change',function(){
+    if(this.checked)document.getElementById('optin-none').checked=false;
+  });
+});
+document.getElementById('optin-bqm').addEventListener('change', toggleDirectoryFields);
+
+// ══════════════════════════════════════════
+// ADMIN MODAL
+// ══════════════════════════════════════════
+function openAdminModal(){
+  renderAdminUsers('');
+  renderAdminSessions();
+  renderAdminPosts();
+  renderAdminNotifs();
+  document.getElementById('admin-modal').classList.add('open');
+  document.getElementById('admin-modal').querySelector('.modal-close').focus();
+  addDeleteBtnsToSeedPosts();
+}
+function closeAdminModal(){document.getElementById('admin-modal').classList.remove('open');}
+
+function switchAdminTab(btn, tabId){
+  document.querySelectorAll('#admin-modal .aud-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  ['tab-users','tab-sessions','tab-posts','tab-notifs'].forEach(id=>{
+    document.getElementById(id).style.display = id===tabId?'block':'none';
+  });
+}
+
+// ── SPEAKER ASSIGNMENT (#5)
+function renderAdminSessions(){
+  const container = document.getElementById('admin-sessions-list');
+  const speakers = PEOPLE.filter(p=>p.tags.includes('Speaker')||p.type==='speaker');
+  container.innerHTML = agendaSessions.map(sess=>{
+    const assignedHtml = sess.speakers.length
+      ? sess.speakers.map(s=>`<span style="display:inline-flex;align-items:center;gap:4px;background:rgba(208,99,57,.15);color:var(--amber);border-radius:12px;padding:.1rem .5rem;font-size:.7rem">${s}<button class="rm-spk-btn" data-sess="${sess.id}" data-spk="${s.replace(/"/g,'&quot;')}" style="background:none;border:none;color:inherit;cursor:pointer;font-size:.65rem;padding:0;opacity:.7">✕</button></span>`).join(' ')
+      : '<span style="font-size:.72rem;color:rgba(255,255,255,.4)">No speakers assigned</span>';
+    const speakerOpts = speakers.map(sp=>`<option value="${sp.name}">${sp.name}</option>`).join('');
+    return `<div style="padding:.75rem 0;border-bottom:1px solid var(--border)">
+      <div style="font-size:.78rem;color:var(--copper);margin-bottom:.2rem">Day ${sess.day} · ${sess.time}</div>
+      <div style="font-size:.85rem;font-weight:600;color:#fff;margin-bottom:.4rem">${sess.title}</div>
+      <div style="display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:.5rem">${assignedHtml}</div>
+      <select aria-label="Assign speaker to ${sess.title}" style="background:var(--mid);color:#fff;border:1px solid var(--border);padding:.3rem .5rem;border-radius:6px;font-size:.78rem;width:100%" onchange="assignSpeakerToSession('${sess.id}',this)">
+        <option value="">+ Assign speaker…</option>${speakerOpts}
+      </select>
+    </div>`;
+  }).join('');
+}
+
+function assignSpeakerToSession(sessId, select){
+  const name = select.value; if(!name) return;
+  const sess = agendaSessions.find(s=>s.id===sessId); if(!sess) return;
+  if(!sess.speakers.includes(name)) sess.speakers.push(name);
+  select.value='';
+  saveSessions(agendaSessions);
+  renderAdminSessions();
+  announce(`${name} assigned to ${sess.title}`);
+}
+
+function removeSpeakerFromSession(sessId, name){
+  const sess = agendaSessions.find(s=>s.id===sessId); if(!sess) return;
+  sess.speakers = sess.speakers.filter(s=>s!==name);
+  saveSessions(agendaSessions);
+  renderAdminSessions();
+}
+function removeSpeakerBtn(btn){ removeSpeakerFromSession(btn.getAttribute('data-sess'), btn.getAttribute('data-spk')); }
+
+// ── ADMIN POSTS TAB (#16)
+function renderAdminPosts(){
+  const container = document.getElementById('admin-posts-list');
+  const posts = getStoredPosts() || [];
+  if(!posts.length){ container.innerHTML='<p style="color:rgba(255,255,255,.5);font-size:.82rem">No posts yet.</p>'; return; }
+  container.innerHTML = '';
+  posts.forEach((post, i)=>{
+    const text = (post.text||'').replace(/<[^>]+>/g,'');
+    const div = document.createElement('div');
+    div.style.cssText='padding:.6rem 0;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:.5rem';
+    div.innerHTML=`<div style="font-size:.78rem;color:#fff;flex:1"><strong>${post.name||'Unknown'}</strong> · <span style="color:rgba(255,255,255,.5);font-size:.68rem">${post.time||''}</span><br><span style="color:rgba(255,255,255,.6);font-size:.72rem">${text.slice(0,70)}${text.length>70?'…':''}</span></div>
+      <button data-admin-del-post="${i}" style="background:rgba(255,82,82,.15);color:#ff5252;border:1px solid rgba(255,82,82,.25);border-radius:6px;padding:.2rem .6rem;font-size:.62rem;cursor:pointer;font-family:'Inter',sans-serif;white-space:nowrap">Delete</button>`;
+    container.appendChild(div);
+  });
+}
+
+function adminDeletePost(idx){
+  if(!confirm('Delete this post?')) return;
+  const posts = getStoredPosts() || [];
+  if(idx < 0 || idx >= posts.length) return;
+  posts.splice(idx, 1);
+  savePosts(posts);
+  renderBoardPosts();
+  renderAdminPosts();
+  announce('Post deleted.');
+}
+
+// ── ADMIN NOTIFS TAB (#16)
+function renderAdminNotifs(){
+  const container = document.getElementById('admin-notifs-list');
+  const stored = getStoredNotifs();
+  if(!stored.length){ container.innerHTML='<p style="color:rgba(255,255,255,.5);font-size:.82rem">No alerts sent yet.</p>'; return; }
+  container.innerHTML = stored.map((n,i)=>`
+    <div style="padding:.6rem 0;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:.5rem">
+      <div style="font-size:.78rem;color:#fff;flex:1">${n.text}<br><span style="color:rgba(255,255,255,.5);font-size:.68rem">${n.time||''}</span></div>
+      <button data-admin-del-notif="${i}" style="background:rgba(255,82,82,.15);color:#ff5252;border:1px solid rgba(255,82,82,.25);border-radius:6px;padding:.2rem .6rem;font-size:.62rem;cursor:pointer;font-family:'Inter',sans-serif;white-space:nowrap">Delete</button>
+    </div>`).join('');
+}
+
+function adminDeleteNotif(idx){
+  if(!confirm('Delete this notification?')) return;
+  const stored = getStoredNotifs();
+  stored.splice(idx,1);
+  saveNotifs(stored);
+  restoreNotifsUI();
+  renderAdminNotifs();
+}
+
+function restoreNotifsUI(){
+  const stored = getStoredNotifs();
+  const list = document.getElementById('notif-list');
+  list.innerHTML = '';
+  if(!stored.length){ list.innerHTML='<p style="text-align:center;color:#fff;font-size:.85rem;padding:2rem 0">No notifications yet.</p>'; return; }
+  stored.forEach(n=>{
+    const item=document.createElement('div');item.className='notif-card';
+    const audLabel=n.audience&&n.audience!=='all'?` · ${audienceLabel(n.audience)}`:'';
+    item.innerHTML=`<div class="notif-text">📢 ${n.text}</div><div class="notif-time">${n.time||''}${audLabel}</div>`;
+    list.appendChild(item);
+  });
+}
+
+// ── EVENT DELEGATION — single listener handles all dynamic buttons
+document.addEventListener('click', function(e){
+  // ── Board post buttons (use class + closest .notice-post for pid)
+  const post = e.target.closest('.notice-post');
+  if(post){
+    const pid = post.dataset.postId;
+    if(e.target.closest('.board-delete-btn'))      { boardDeletePost(pid); return; }
+    if(e.target.closest('.board-edit-btn'))         { boardEditPost(pid); return; }
+    if(e.target.closest('.board-reply-btn'))        { boardReply(pid); return; }
+    if(e.target.closest('.board-submit-reply-btn')) { boardSubmitReply(pid); return; }
+    if(e.target.closest('.board-cancel-reply-btn')) {
+      post.querySelector('.reply-box').style.display='none'; return;
+    }
+  }
+  // ── Remove tag button
+  const rmTag = e.target.closest('.rm-tag-btn');
+  if(rmTag){ removeTagFromUser(rmTag.dataset.uname, rmTag.dataset.tag); return; }
+  // ── Admin user row buttons
+  const adminBtn = e.target.closest('[data-admin-action]');
+  if(adminBtn){
+    const action = adminBtn.dataset.adminAction;
+    if(action==='delete-user')  adminDeleteUser(adminBtn.dataset.uname);
+    else if(action==='toggle-admin')  adminToggleAdminUser(adminBtn);
+    else if(action==='edit-name')     adminEditUserName(adminBtn);
+    else if(action==='edit-profile')  adminEditUserProfile(adminBtn);
+    return;
+  }
+  // ── Admin post/notif delete
+  const delPost = e.target.closest('[data-admin-del-post]');
+  if(delPost){ adminDeletePost(parseInt(delPost.dataset.adminDelPost, 10)); return; }
+  const delNotif = e.target.closest('[data-admin-del-notif]');
+  if(delNotif){ adminDeleteNotif(parseInt(delNotif.dataset.adminDelNotif, 10)); return; }
+  // ── Remove speaker chip
+  const rmSpk = e.target.closest('.rm-spk-btn');
+  if(rmSpk){ removeSpeakerFromSession(rmSpk.dataset.sess, rmSpk.dataset.spk); return; }
+});
+
+function renderAdminUsers(q){
+  const container=document.getElementById('admin-user-list');
+  const lq=(q||'').toLowerCase();
+  const filtered=userRoster.filter(u=>!lq||u.name.toLowerCase().includes(lq));
+  if(!filtered.length){container.innerHTML='<p style="color:#fff;font-size:.82rem;padding:.5rem 0">No users found.</p>';return;}
+  container.innerHTML = '';
+  filtered.forEach(u=>{
+    const isAdminUser = u.tags.includes('BQM Team') || u.tags.includes('galck+ Team') || !!u.isAdmin;
+    const tagHtml = u.tags.length
+      ? u.tags.map(t=>tagBadge(t,true,u.name)).join('')
+      : '<span style="font-size:.72rem;color:rgba(255,255,255,.6)">No tags yet</span>';
+    const adminBadge = isAdminUser ? `<span style="font-size:.6rem;background:rgba(66,165,245,.2);color:#90caf9;border-radius:8px;padding:.1rem .4rem;margin-left:.4rem">Admin</span>` : '';
+    const safeName = u.name.replace(/"/g,'&quot;');
+    const div = document.createElement('div');
+    div.className = 'admin-user-row';
+    div.dataset.uname = u.name;
+    div.style.cssText = 'padding:.75rem 0;border-bottom:1px solid var(--border)';
+    div.innerHTML = `
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:.4rem;gap:.4rem">
+        <div style="flex:1;min-width:0">
+          <span class="admin-user-name-display" style="font-weight:600;font-size:.88rem;color:#fff">${u.name}</span>${adminBadge}
+          ${u.email?`<span style="font-size:.7rem;color:rgba(255,255,255,.6);display:block">${u.email}</span>`:'<span style="font-size:.7rem;color:rgba(255,255,255,.35);display:block">No email set</span>'}
+        </div>
+        <div style="display:flex;gap:.3rem;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end">
+          <button data-admin-action="edit-name" data-uname="${safeName}" style="background:rgba(224,144,96,.12);color:var(--copper);border:1px solid rgba(224,144,96,.2);border-radius:6px;padding:.2rem .55rem;font-size:.62rem;cursor:pointer;font-family:'Inter',sans-serif">Edit name</button>
+          <button data-admin-action="edit-profile" data-uname="${safeName}" style="background:rgba(247,177,104,.1);color:var(--amber);border:1px solid rgba(247,177,104,.2);border-radius:6px;padding:.2rem .55rem;font-size:.62rem;cursor:pointer;font-family:'Inter',sans-serif">Edit profile</button>
+          <button data-admin-action="toggle-admin" data-uname="${safeName}" style="background:rgba(66,165,245,.1);color:#90caf9;border:1px solid rgba(66,165,245,.2);border-radius:6px;padding:.2rem .55rem;font-size:.62rem;cursor:pointer;font-family:'Inter',sans-serif">${isAdminUser?'Revoke admin':'Make admin'}</button>
+          <button data-admin-action="delete-user" data-uname="${safeName}" style="background:rgba(255,82,82,.12);color:#ff8a80;border:1px solid rgba(255,82,82,.2);border-radius:6px;padding:.2rem .55rem;font-size:.62rem;cursor:pointer;font-family:'Inter',sans-serif">Remove</button>
+        </div>
+      </div>
+      <div class="user-tag-area" style="display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:.5rem">${tagHtml}</div>
+      <select data-uname="${safeName}" aria-label="Add tag to ${safeName}" class="add-tag-sel" style="background:var(--mid);color:#fff;border:1px solid var(--border);padding:.3rem .5rem;border-radius:6px;font-size:.78rem">
+        <option value="">+ Add tag</option>
+        <option>Speaker</option><option>Attendee</option><option>BQM Team</option><option>galck+ Team</option><option>Facilitator</option>
+      </select>`;
+    // Attach the select onchange here directly (not via inline html attribute)
+    div.querySelector('.add-tag-sel').addEventListener('change', function(){ addTagToUser(this.dataset.uname, this); });
+    container.appendChild(div);
+  });
+}
+
+function adminToggleAdminUser(btn){
+  const name = btn.dataset.uname;
+  const u = userRoster.find(x=>x.name===name); if(!u) return;
+  const isAdminNow = u.tags.includes('BQM Team') || u.tags.includes('galck+ Team') || !!u.isAdmin;
+  if(isAdminNow){
+    u.tags = u.tags.filter(t=>t!=='BQM Team'&&t!=='galck+ Team');
+    u.isAdmin = false;
+  } else {
+    if(!u.tags.includes('BQM Team')) u.tags.push('BQM Team');
+    u.isAdmin = true;
+  }
+  saveRoster(userRoster);
+  if(u.email && u.email===currentUser.email){
+    checkAndSetAdmin();
+    document.getElementById('admin-badge').style.display = currentUser.isAdmin?'inline':'none';
+    document.getElementById('admin-panel-btn').style.display = currentUser.isAdmin?'block':'none';
+    document.getElementById('admin-blast-tool').style.display = currentUser.isAdmin?'block':'none';
+  }
+  renderAdminUsers(document.querySelector('#tab-users input[type=text]')?.value||'');
+  announce(`${name} admin status updated.`);
+}
+
+function adminEditUserName(btn){
+  const row = btn.closest('.admin-user-row'); if(!row) return;
+  const oldName = row.dataset.uname;
+  const nameDisplay = row.querySelector('.admin-user-name-display'); if(!nameDisplay) return;
+  const input = document.createElement('input');
+  input.value = oldName;
+  input.style.cssText='background:var(--mid);border:1px solid var(--copper);border-radius:6px;padding:.2rem .5rem;color:#fff;font-size:.85rem;font-family:"Inter",sans-serif;width:140px;max-width:100%';
+  nameDisplay.replaceWith(input);
+  input.focus(); input.select();
+  btn.textContent = 'Save';
+  btn.dataset.adminAction = 'save-name';
+  btn.addEventListener('click', function saveName(){
+    const newName = input.value.trim();
+    if(!newName){ input.focus(); return; }
+    const u = userRoster.find(x=>x.name===oldName);
+    if(u){ u.name=newName; saveRoster(userRoster); }
+    const p = PEOPLE.find(x=>x.name===oldName);
+    if(p) p.name=newName;
+    agendaSessions.forEach(sess=>{ sess.speakers=sess.speakers.map(s=>s===oldName?newName:s); });
+    saveSessions(agendaSessions);
+    renderAdminUsers(document.querySelector('#tab-users input[type=text]')?.value||'');
+    renderPeople();
+    announce(`Name updated to ${newName}`);
+    btn.removeEventListener('click', saveName);
+  }, {once:true});
+}
+
+// #4 — Edit user profile from admin panel
+function adminEditUserProfile(btn){
+  const name = btn.dataset.uname;
+  const u = userRoster.find(x=>x.name===name); if(!u) return;
+  const saved = u.email ? loadUserData(u.email) : null;
+  const row = btn.closest('.admin-user-row'); if(!row) return;
+  const existing = row.querySelector('.admin-profile-edit-form');
+  if(existing){ existing.remove(); btn.textContent='Edit profile'; return; }
+  btn.textContent = 'Close ✕';
+  const form = document.createElement('div');
+  form.className = 'admin-profile-edit-form';
+  form.style.cssText='background:var(--mid);border-radius:10px;padding:.85rem;margin-top:.5rem';
+  form.innerHTML=`
+    <div style="font-size:.72rem;color:var(--copper);font-weight:600;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.6rem">Edit profile: ${u.name}</div>
+    <div style="display:grid;gap:.5rem">
+      <input class="field-input" placeholder="Email address" data-pf="email" value="${u.email||''}" style="font-size:.82rem;padding:.5rem .75rem">
+      <input class="field-input" placeholder="Pronouns (e.g. she/her)" data-pf="pronouns" value="${saved?.pronouns||''}" style="font-size:.82rem;padding:.5rem .75rem">
+      <input class="field-input" placeholder="Role / discipline" data-pf="role" value="${saved?.role||u.role||''}" style="font-size:.82rem;padding:.5rem .75rem">
+      <textarea class="field-input" placeholder="Bio" data-pf="bio" rows="2" style="font-size:.82rem;padding:.5rem .75rem;resize:vertical">${saved?.bio||''}</textarea>
+      <input class="field-input" placeholder="Organisation" data-pf="org" value="${saved?.org||''}" style="font-size:.82rem;padding:.5rem .75rem">
+    </div>
+    <button class="admin-save-profile-btn" style="background:var(--rust);border:none;border-radius:8px;padding:.45rem 1rem;color:#fff;font-family:'Syne',sans-serif;font-weight:700;font-size:.76rem;cursor:pointer;margin-top:.6rem;width:100%">Save changes</button>
+    <div class="profile-save-msg" style="display:none;font-size:.72rem;color:#81c784;margin-top:.4rem;text-align:center">✓ Saved</div>`;
+  form.querySelector('.admin-save-profile-btn').addEventListener('click', ()=>{
+    const vals = {};
+    form.querySelectorAll('[data-pf]').forEach(el=>{ vals[el.dataset.pf]=el.tagName==='TEXTAREA'?el.value.trim():el.value.trim(); });
+    u.email = vals.email || u.email;
+    u.role  = vals.role;
+    saveRoster(userRoster);
+    if(u.email){
+      const profileData = loadUserData(u.email) || {email:u.email, name:u.name, avColor:u.avColor||'#d06339', avColorIdx:0, optinEvent:true, optinBqm:false, optinNone:false};
+      profileData.pronouns = vals.pronouns;
+      profileData.role     = vals.role;
+      profileData.bio      = vals.bio;
+      profileData.org      = vals.org;
+      profileData.name     = u.name;
+      saveUserData(profileData);
+    }
+    const p = PEOPLE.find(x=>x.name===u.name);
+    if(p){ p.role=vals.role; if(vals.bio) p.bio=vals.bio; if(vals.pronouns) p.pronouns=vals.pronouns; }
+    renderPeople();
+    renderAdminUsers(document.querySelector('#tab-users input[type=text]')?.value||'');
+    form.querySelector('.profile-save-msg').style.display='block';
+    announce(`Profile for ${u.name} updated`);
+  });
+  row.appendChild(form);
+}
+
+function adminDeleteUser(name){
+  if(!confirm(`Remove "${name}" from the roster?`)) return;
+  const idx = userRoster.findIndex(u=>u.name===name);
+  if(idx>-1){ userRoster.splice(idx,1); saveRoster(userRoster); }
+  const pIdx = PEOPLE.findIndex(p=>p.name===name);
+  if(pIdx>-1) PEOPLE.splice(pIdx,1);
+  renderAdminUsers(document.querySelector('#tab-users input[type=text]')?.value||'');
+  renderPeople();
+  announce(`${name} removed from roster.`);
+}
+
+function addTagToUser(name,select){
+  const tag=select.value;if(!tag)return;
+  const user=userRoster.find(u=>u.name===name);
+  if(user&&!user.tags.includes(tag)){user.tags.push(tag);saveRoster(userRoster);renderPeople();}
+  select.value='';
+  renderAdminUsers(document.querySelector('#tab-users input[type=text]')?.value||'');
+  if(user&&user.email===currentUser.email){
+    checkAndSetAdmin();
+    if(currentUser.isAdmin){
+      document.getElementById('admin-badge').style.display='inline';
+      document.getElementById('admin-panel-btn').style.display='block';
+      document.getElementById('admin-blast-tool').style.display='block';
+    }
+  }
+}
+
+function removeTagFromUser(name,tag){
+  const user=userRoster.find(u=>u.name===name);
+  if(!user)return;
+  user.tags=user.tags.filter(t=>t!==tag);
+  saveRoster(userRoster);
+  renderPeople();
+  renderAdminUsers(document.querySelector('#tab-users input[type=text]')?.value||'');
+  announce(`Removed tag ${tag} from ${name}`);
+}
+
+</script>
+</body>
+</html>
