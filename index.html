@@ -236,8 +236,11 @@ body{font-family:'Inter',sans-serif;background:var(--black);color:var(--text);mi
 .multiselect-wrap{background:var(--mid);border:1px solid var(--border);border-radius:10px;padding:.6rem .8rem;max-height:180px;overflow-y:auto}
 .multiselect-wrap label{display:flex;align-items:center;gap:.5rem;font-size:.82rem;color:#fff;padding:.25rem 0;cursor:pointer}
 .multiselect-wrap input[type=checkbox]{width:15px;height:15px;accent-color:var(--rust);flex-shrink:0}
-/* ── COUNTRY SELECT ── */
-#pf-location{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23e09060' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .9rem center;background-color:var(--mid)}
+/* ── COUNTRY PICKER ── */
+.country-tag{display:inline-flex;align-items:center;gap:4px;background:rgba(224,144,96,.15);color:var(--copper);border:1px solid rgba(224,144,96,.3);border-radius:12px;padding:.15rem .5rem;font-size:.75rem}
+.country-tag button{background:none;border:none;color:inherit;cursor:pointer;font-size:.7rem;padding:0;line-height:1;opacity:.7}
+#pf-location-dropdown .country-opt{padding:.4rem .7rem;font-size:.82rem;color:#fff;cursor:pointer}
+#pf-location-dropdown .country-opt:hover,.country-opt.selected{background:rgba(224,144,96,.15);color:var(--copper)}
 /* ── PROFILE layout ── */
 .profile-avatar-area{display:flex;flex-direction:column;align-items:center;margin-bottom:1.5rem}
 .profile-av-edit{font-size:.75rem;color:var(--copper);cursor:pointer;background:none;border:1px solid rgba(224,144,96,.3);border-radius:20px;padding:.3rem .8rem;font-family:'Inter',sans-serif;margin-top:.4rem}
@@ -612,8 +615,14 @@ select.field-input option{background:var(--mid)}
     <div class="field-group"><label class="field-label" for="pf-name">Display name</label><input class="field-input" id="pf-name" type="text" placeholder="Your name or preferred name"></div>
     <div class="field-group"><label class="field-label" for="pf-pronouns">Pronouns</label><input class="field-input" id="pf-pronouns" type="text" placeholder="e.g. she/her, they/them"></div>
     <div class="field-group"><label class="field-label" for="pf-role">Role / discipline</label><input class="field-input" id="pf-role" type="text" placeholder="e.g. Healer, Organiser, Academic"></div>
-    <div class="field-group"><label class="field-label" for="pf-location">Location (country)</label>
-      <select class="field-input" id="pf-location"><option value="">Select country…</option><option>Afghanistan</option><option>Albania</option><option>Algeria</option><option>Angola</option><option>Argentina</option><option>Australia</option><option>Austria</option><option>Bangladesh</option><option>Belgium</option><option>Belize</option><option>Bolivia</option><option>Bosnia and Herzegovina</option><option>Botswana</option><option>Brazil</option><option>Burkina Faso</option><option>Burundi</option><option>Cambodia</option><option>Cameroon</option><option>Canada</option><option>Chad</option><option>Chile</option><option>China</option><option>Colombia</option><option>Congo (DRC)</option><option>Costa Rica</option><option>Côte d'Ivoire</option><option>Croatia</option><option>Cuba</option><option>Czech Republic</option><option>Denmark</option><option>Dominican Republic</option><option>Ecuador</option><option>Egypt</option><option>El Salvador</option><option>Ethiopia</option><option>Finland</option><option>France</option><option>Germany</option><option>Ghana</option><option>Greece</option><option>Guatemala</option><option>Guinea</option><option>Haiti</option><option>Honduras</option><option>Hungary</option><option>India</option><option>Indonesia</option><option>Iran</option><option>Iraq</option><option>Ireland</option><option>Israel</option><option>Italy</option><option>Jamaica</option><option>Japan</option><option>Jordan</option><option>Kazakhstan</option><option>Kenya</option><option>Malawi</option><option>Malaysia</option><option>Mali</option><option>Mexico</option><option>Morocco</option><option>Mozambique</option><option>Myanmar</option><option>Namibia</option><option>Nepal</option><option>Netherlands</option><option>New Zealand</option><option>Nicaragua</option><option>Niger</option><option>Nigeria</option><option>Norway</option><option>Pakistan</option><option>Panama</option><option>Peru</option><option>Philippines</option><option>Poland</option><option>Portugal</option><option>Romania</option><option>Russia</option><option>Rwanda</option><option>Senegal</option><option>Sierra Leone</option><option>Somalia</option><option>South Africa</option><option>South Sudan</option><option>Spain</option><option>Sri Lanka</option><option>Sudan</option><option>Sweden</option><option>Switzerland</option><option>Syria</option><option>Tanzania</option><option>Thailand</option><option>Trinidad and Tobago</option><option>Tunisia</option><option>Turkey</option><option>Uganda</option><option>Ukraine</option><option>United Kingdom</option><option>United States of America</option><option>Uruguay</option><option>Venezuela</option><option>Vietnam</option><option>Yemen</option><option>Zambia</option><option>Zimbabwe</option></select>
+    <div class="field-group"><label class="field-label" for="pf-location-search">Location (countries — select one or more)</label>
+      <div id="pf-location-wrap" style="position:relative">
+        <div id="pf-location-tags" style="display:flex;flex-wrap:wrap;gap:.3rem;min-height:36px;background:var(--mid);border:1px solid var(--border);border-radius:10px;padding:.45rem .6rem;cursor:text" onclick="document.getElementById('pf-location-search').focus()"></div>
+        <input id="pf-location-search" type="text" placeholder="Type to search countries…" autocomplete="off"
+          style="width:100%;background:var(--mid);border:1px solid var(--border);border-top:none;border-radius:0 0 10px 10px;padding:.4rem .7rem;color:#fff;font-family:'Inter',sans-serif;font-size:.85rem;outline:none;display:none"
+          oninput="filterCountryDropdown(this.value)" onfocus="showCountryDropdown()" onblur="setTimeout(hideCountryDropdown,200)">
+        <div id="pf-location-dropdown" style="display:none;position:absolute;z-index:200;width:100%;max-height:180px;overflow-y:auto;background:var(--mid);border:1px solid var(--copper);border-top:none;border-radius:0 0 10px 10px"></div>
+      </div>
     </div>
     <div class="field-group"><label class="field-label" for="pf-org">Organisation (optional)</label><input class="field-input" id="pf-org" type="text" placeholder="Your organisation or collective"></div>
     <div class="field-group"><label class="field-label" for="pf-bio">Bio (optional)</label><textarea class="field-input" id="pf-bio" placeholder="A short intro — who you are, what brings you here…"></textarea></div>
@@ -835,7 +844,7 @@ function loadSessions(){
 let currentUser = {email:'', name:'', role:'', pronouns:'', location:'', org:'', bio:'', link:'', isAdmin:false, avColor:'#d06339', avColorIdx:0, optinEvent:true, optinBqm:false, optinNone:false, photo:null, asks:'', dirType:'', support:[], focus:[], dirConsent:false};
 const avColors = ['#d06339','#d3895c','#7a5a9a','#4a7a5a','#5a6a9a','#9a5a6a'];
 let currentNotifAudience = 'all';
-let currentPostAudience = 'all';
+let currentPostAudienceVal = 'all';
 let deferredInstallPrompt = null;
 
 // Agenda sessions data for speaker assignment
@@ -976,12 +985,10 @@ function applyUserToUI(){
   document.getElementById('pf-name').value = currentUser.name || '';
   document.getElementById('pf-pronouns').value = currentUser.pronouns || '';
   document.getElementById('pf-role').value = currentUser.role || '';
-  // Country dropdown
-  const locSel = document.getElementById('pf-location');
+  // Multi-country picker
   if(currentUser.location){
-    for(let i=0;i<locSel.options.length;i++){
-      if(locSel.options[i].value===currentUser.location||locSel.options[i].text===currentUser.location){locSel.selectedIndex=i;break;}
-    }
+    const countries = currentUser.location.split(' / ').map(s=>s.trim()).filter(Boolean);
+    setSelectedCountries(countries);
   }
   document.getElementById('pf-org').value = currentUser.org || '';
   document.getElementById('pf-bio').value = currentUser.bio || '';
@@ -1117,6 +1124,11 @@ function switchPage(p){
   if(navIdx[p]!==undefined && navBtns[navIdx[p]]){navBtns[navIdx[p]].classList.add('active');navBtns[navIdx[p]].setAttribute('aria-current','page');}
   if(p==='notifications') document.getElementById('notif-dot').style.display='none';
   if(p==='agenda') injectSessionSpeakers();
+  if(p==='profile'){
+    // Re-seed the country picker from currentUser.location
+    const countries = (currentUser.location||'').split('/').map(s=>s.trim()).filter(Boolean);
+    setSelectedCountries(countries);
+  }
   window.scrollTo(0,0);
 }
 
@@ -1155,14 +1167,8 @@ function injectSessionSpeakers(){
 // ══════════════════════════════════════════
 // PEOPLE
 // ══════════════════════════════════════════
-const PEOPLE = [
-  {name:'Chantelle M.',role:'Event Lead · BQM',location:'London, UK',pronouns:'she/her',bio:'Chantelle leads event operations for the Healing Justice Forum, managing international participant coordination, budget, and logistics across the BQM + GALCK+ partnership.',tags:['BQM Team'],avColor:'#d06339',type:'team'},
-  {name:'Whitney O.',role:'Event Support · BQM',location:'London, UK',pronouns:'she/they',bio:'Whitney handles admin, logistical support, social media and marketing, and leads virtual participant involvement for the Forum.',tags:['BQM Team'],avColor:'#d3895c',type:'team'},
-  {name:'Eve K.',role:'Co-organiser · GALCK+',location:'Nairobi, Kenya',pronouns:'she/her',bio:'Eve is part of the GALCK+ co-organising team, curating the Kenyan delegation and ensuring the space is safe and community-grounded.',tags:['galck+ Team','Speaker'],avColor:'#f7b168',type:'speaker'},
-  {name:'Tay B.',role:'Healer & Practitioner',location:'Caribbean',pronouns:'they/them',bio:'Tay is a healer and community practitioner bringing Caribbean healing justice traditions to the Forum.',tags:['Attendee'],avColor:'#7a5a9a',type:'attendee'},
-  {name:'Zuzi N.',role:'Cultural Worker',location:'South Africa',pronouns:'she/her',bio:'Zuzi is a cultural worker and activist from South Africa, bringing a continental African perspective to the co-creation of the Healing Justice Playbook.',tags:['Attendee'],avColor:'#4a7a5a',type:'attendee'},
-  {name:'SM Rodriguez',role:'Scholar-Activist · LSE',location:'UK / USA',pronouns:'they/she',bio:'SM Rodriguez is a scholar-activist committed to anti-violence work. Their research spans the criminalized, queer, and disabled people of African descent.',tags:['Speaker'],avColor:'#5a6a9a',type:'speaker'},
-];
+// PEOPLE is built dynamically from roster + saved profiles — not hardcoded
+let PEOPLE = [];
 let currentPeopleFilter = 'all';
 let currentPeopleSearch = '';
 
@@ -1176,38 +1182,61 @@ function tagBadge(tag, removable, userName){
   return `<span class="p-badge ${cls}">${tag}</span>`;
 }
 
-function syncCurrentUserToPeople(){
-  if(!currentUser.name) return;
-  // Find by email match in roster first, then by name
-  let idx = PEOPLE.findIndex(p=>{
-    const rUser = userRoster.find(u=>u.email===currentUser.email);
-    return rUser && p.name===rUser.name;
+// Determine card type from tags
+function typeFromTags(tags){
+  if(!tags) return 'attendee';
+  if(tags.includes('BQM Team')||tags.includes('galck+ Team')) return 'team';
+  if(tags.includes('Speaker')) return 'speaker';
+  if(tags.includes('Facilitator')) return 'facilitator';
+  return 'attendee';
+}
+
+// Rebuild PEOPLE array fresh from roster + saved profile data + current user
+function rebuildPeople(){
+  PEOPLE = [];
+  userRoster.forEach(u => {
+    // Load the saved profile for this person if they have an email
+    const saved = u.email ? loadUserData(u.email) : null;
+    PEOPLE.push({
+      name:      saved?.name      || u.name        || '',
+      role:      saved?.role      || u.role         || '',
+      location:  saved?.location  || u.location     || '',
+      pronouns:  saved?.pronouns  || u.pronouns     || '',
+      bio:       saved?.bio       || u.bio          || '',
+      org:       saved?.org       || u.org          || '',
+      avColor:   saved?.avColor   || u.avColor      || '#d06339',
+      photo:     saved?.photo     || u.photo        || null,
+      tags:      u.tags || [],
+      type:      typeFromTags(u.tags),
+      email:     u.email || '',
+    });
   });
-  // Fallback: find by current name
-  if(idx===-1) idx = PEOPLE.findIndex(p=>p.name===currentUser.name);
-
-  const profile = {
-    name: currentUser.name,
-    role: currentUser.role||'',
-    location: currentUser.location||'',
-    pronouns: currentUser.pronouns||'',
-    bio: currentUser.bio||'',
-    avColor: currentUser.avColor||'#d06339',
-    photo: currentUser.photo||null,
-  };
-
-  if(idx===-1){
-    // Not in PEOPLE yet — add them
-    PEOPLE.push({...profile, tags:[], type:'attendee'});
-  } else {
-    // Update existing entry, preserve tags and type
-    Object.assign(PEOPLE[idx], profile);
+  // Ensure current user is present/updated
+  if(currentUser.name){
+    const idx = PEOPLE.findIndex(p => p.email && p.email === currentUser.email);
+    const profile = {
+      name:     currentUser.name,
+      role:     currentUser.role||'',
+      location: currentUser.location||'',
+      pronouns: currentUser.pronouns||'',
+      bio:      currentUser.bio||'',
+      org:      currentUser.org||'',
+      avColor:  currentUser.avColor||'#d06339',
+      photo:    currentUser.photo||null,
+      email:    currentUser.email,
+    };
+    if(idx === -1){
+      // Not in roster yet — add as attendee
+      PEOPLE.push({...profile, tags:[], type:'attendee'});
+    } else {
+      Object.assign(PEOPLE[idx], profile);
+    }
   }
 }
 
 function renderPeople(){
   const grid = document.getElementById('people-grid');
-  syncCurrentUserToPeople();
+  rebuildPeople();
   const q = currentPeopleSearch.toLowerCase();
   const filtered = PEOPLE.filter(p=>{
     const matchType = currentPeopleFilter==='all' || p.type===currentPeopleFilter;
@@ -1684,6 +1713,83 @@ function toggleFaq(btn){
 }
 
 // ══════════════════════════════════════════
+// MULTI-COUNTRY PICKER
+// ══════════════════════════════════════════
+const COUNTRIES = ['Afghanistan','Albania','Algeria','Angola','Argentina','Australia','Austria','Bangladesh','Belgium','Belize','Bolivia','Bosnia and Herzegovina','Botswana','Brazil','Burkina Faso','Burundi','Cambodia','Cameroon','Canada','Chad','Chile','China','Colombia','Congo (DRC)','Costa Rica',"Côte d'Ivoire",'Croatia','Cuba','Czech Republic','Denmark','Dominican Republic','Ecuador','Egypt','El Salvador','Ethiopia','Finland','France','Germany','Ghana','Greece','Guatemala','Guinea','Haiti','Honduras','Hungary','India','Indonesia','Iran','Iraq','Ireland','Israel','Italy','Jamaica','Japan','Jordan','Kazakhstan','Kenya','Malawi','Malaysia','Mali','Mexico','Morocco','Mozambique','Myanmar','Namibia','Nepal','Netherlands','New Zealand','Nicaragua','Niger','Nigeria','Norway','Pakistan','Panama','Peru','Philippines','Poland','Portugal','Romania','Russia','Rwanda','Senegal','Sierra Leone','Somalia','South Africa','South Sudan','Spain','Sri Lanka','Sudan','Sweden','Switzerland','Syria','Tanzania','Thailand','Trinidad and Tobago','Tunisia','Turkey','Uganda','Ukraine','United Kingdom','United States of America','Uruguay','Venezuela','Vietnam','Yemen','Zambia','Zimbabwe'];
+let selectedCountries = [];
+
+function renderCountryTags(){
+  const wrap = document.getElementById('pf-location-tags'); if(!wrap) return;
+  if(selectedCountries.length){
+    wrap.innerHTML = selectedCountries.map(c=>
+      `<span class="country-tag">${c}<button type="button" data-rm-country="${c.replace(/"/g,'&quot;')}" style="background:none;border:none;color:inherit;cursor:pointer;font-size:.7rem;padding:0;margin-left:3px;opacity:.7">✕</button></span>`
+    ).join('');
+  } else {
+    wrap.innerHTML = '<span style="color:rgba(255,255,255,.3);font-size:.82rem;font-family:\'Inter\',sans-serif;line-height:2">Click to select countries…</span>';
+  }
+}
+
+function showCountryDropdown(){
+  const inp = document.getElementById('pf-location-search');
+  const dd  = document.getElementById('pf-location-dropdown');
+  if(!inp||!dd) return;
+  inp.style.display = 'block';
+  dd.style.display  = 'block';
+  filterCountryDropdown(inp.value);
+}
+
+function hideCountryDropdown(){
+  const inp = document.getElementById('pf-location-search');
+  const dd  = document.getElementById('pf-location-dropdown');
+  if(inp) inp.style.display = 'none';
+  if(dd)  dd.style.display  = 'none';
+}
+
+function filterCountryDropdown(q){
+  const dd = document.getElementById('pf-location-dropdown'); if(!dd) return;
+  const matches = COUNTRIES.filter(c => c.toLowerCase().includes((q||'').toLowerCase()));
+  dd.innerHTML = matches.length
+    ? matches.map(c => {
+        const sel = selectedCountries.includes(c);
+        return `<div class="country-opt${sel?' selected':''}" data-country="${c.replace(/"/g,'&quot;')}">${sel?'✓ ':''} ${c}</div>`;
+      }).join('')
+    : '<div style="padding:.4rem .7rem;font-size:.8rem;color:rgba(255,255,255,.4)">No matches</div>';
+}
+
+function getSelectedCountries(){ return [...selectedCountries]; }
+
+function setSelectedCountries(countries){
+  selectedCountries = (countries||[]).filter(Boolean);
+  renderCountryTags();
+}
+
+// Delegated click handler for country picker (tag remove + dropdown select)
+document.addEventListener('click', function(e){
+  // Remove country tag
+  const rmBtn = e.target.closest('[data-rm-country]');
+  if(rmBtn){
+    const c = rmBtn.dataset.rmCountry;
+    selectedCountries = selectedCountries.filter(x=>x!==c);
+    renderCountryTags();
+    filterCountryDropdown(document.getElementById('pf-location-search')?.value||'');
+    return;
+  }
+  // Select from dropdown
+  const opt = e.target.closest('.country-opt');
+  if(opt){
+    const c = opt.dataset.country;
+    if(selectedCountries.includes(c)){
+      selectedCountries = selectedCountries.filter(x=>x!==c);
+    } else {
+      selectedCountries.push(c);
+    }
+    renderCountryTags();
+    filterCountryDropdown(document.getElementById('pf-location-search')?.value||'');
+    return;
+  }
+});
+
+// ══════════════════════════════════════════
 // PROFILE
 // ══════════════════════════════════════════
 function cycleAvatarColor(){
@@ -1727,8 +1833,7 @@ function saveProfile(){
   currentUser.name     = document.getElementById('pf-name').value.trim() || currentUser.name;
   currentUser.pronouns = document.getElementById('pf-pronouns').value.trim();
   currentUser.role     = document.getElementById('pf-role').value.trim();
-  const locSel = document.getElementById('pf-location');
-  currentUser.location = locSel.options[locSel.selectedIndex]?.text || '';
+  currentUser.location = getSelectedCountries().join(' / ');
   currentUser.org      = document.getElementById('pf-org').value.trim();
   currentUser.bio      = document.getElementById('pf-bio').value.trim();
   currentUser.link     = document.getElementById('pf-link').value.trim();
@@ -2054,9 +2159,14 @@ function adminEditUserProfile(btn){
   form.querySelector('.admin-save-profile-btn').addEventListener('click', ()=>{
     const vals = {};
     form.querySelectorAll('[data-pf]').forEach(el=>{ vals[el.dataset.pf]=el.tagName==='TEXTAREA'?el.value.trim():el.value.trim(); });
-    u.email = vals.email || u.email;
-    u.role  = vals.role;
+    // Update roster entry
+    u.email     = vals.email || u.email;
+    u.role      = vals.role;
+    u.pronouns  = vals.pronouns;
+    u.bio       = vals.bio;
+    u.org       = vals.org;
     saveRoster(userRoster);
+    // If email present, also write a full profile to localStorage so they see it on login
     if(u.email){
       const profileData = loadUserData(u.email) || {email:u.email, name:u.name, avColor:u.avColor||'#d06339', avColorIdx:0, optinEvent:true, optinBqm:false, optinNone:false};
       profileData.pronouns = vals.pronouns;
@@ -2066,8 +2176,6 @@ function adminEditUserProfile(btn){
       profileData.name     = u.name;
       saveUserData(profileData);
     }
-    const p = PEOPLE.find(x=>x.name===u.name);
-    if(p){ p.role=vals.role; if(vals.bio) p.bio=vals.bio; if(vals.pronouns) p.pronouns=vals.pronouns; }
     renderPeople();
     renderAdminUsers(document.querySelector('#tab-users input[type=text]')?.value||'');
     form.querySelector('.profile-save-msg').style.display='block';
